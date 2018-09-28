@@ -1,37 +1,44 @@
-# coder
+[![Deploy to now](https://deploy.now.sh/static/button.svg)](https://deploy.now.sh/?repo=https://github.com/zeit/next.js/tree/master/examples/with-ant-design-less)
 
-#### 项目介绍
-以web的多种语言代码框架生成平台，基于next.js框架
+# Ant Design example
 
-#### 软件架构
-软件架构说明
+## How to use
 
+### Using `create-next-app`
 
-#### 安装教程
+Execute [`create-next-app`](https://github.com/segmentio/create-next-app) with [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) or [npx](https://github.com/zkat/npx#readme) to bootstrap the example:
 
-1. xxxx
-2. xxxx
-3. xxxx
+```bash
+npx create-next-app --example with-ant-design-less with-ant-design-app
+# or
+yarn create next-app --example with-ant-design-less with-ant-design-app
+```
 
-#### 使用说明
+### Download manually
 
-1. xxxx
-2. xxxx
-3. xxxx
+Download the example:
 
-#### 参与贡献
+```bash
+curl https://codeload.github.com/zeit/next.js/tar.gz/canary | tar -xz --strip=2 next.js-canary/examples/with-ant-design-less
+cd with-ant-design-less
+```
 
-1. Fork 本项目
-2. 新建 Feat_xxx 分支
-3. 提交代码
-4. 新建 Pull Request
+Install it and run:
 
+```bash
+npm install
+npm run dev
+# or
+yarn
+yarn dev
+```
 
-#### 码云特技
+Deploy it to the cloud with [now](https://zeit.co/now) ([download](https://zeit.co/download))
 
-1. 使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2. 码云官方博客 [blog.gitee.com](https://blog.gitee.com)
-3. 你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解码云上的优秀开源项目
-4. [GVP](https://gitee.com/gvp) 全称是码云最有价值开源项目，是码云综合评定出的优秀开源项目
-5. 码云官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6. 码云封面人物是一档用来展示码云会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+```bash
+now
+```
+
+## The idea behind the example
+
+This example shows how to use Next.js along with [Ant Design of React](http://ant.design). This is intended to show the integration of this UI toolkit with the Framework.

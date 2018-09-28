@@ -1,3 +1,7 @@
+node_modules/
+files/
+dist/
+
 # Logs
 logs
 *.log

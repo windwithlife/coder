@@ -12,8 +12,12 @@ import {
 //import EditableCell from '../common/components/form/editablecell.js';
 //import NewModal from './components/modal.js';
 import router from 'next/router';
-import Layout from '../../layout';
+import Layout from '../common/pages/layout';
 import '../common/styles/TableSearch.less';
+
+
+
+
 
 const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
@@ -29,6 +33,8 @@ const rowSelection = {
 
 
 class ListExample extends React.Component{
+
+
     state = {
         list: [],
         count:0,
@@ -47,21 +53,15 @@ class ListExample extends React.Component{
                 });
                 
                 fieldColumns.push({
-                  title: "表说明",
+                  title: "说明",
                   dataIndex: 'description',
                   key: 'description'
                 });
                 
                 fieldColumns.push({
-                  title: "表",
-                  dataIndex: 'mytable',
-                  key: 'mytable'
-                });
-                
-                fieldColumns.push({
-                  title: "表字段类型",
-                  dataIndex: 'fieldtype',
-                  key: 'fieldtype'
+                  title: "所属项目",
+                  dataIndex: 'myproject',
+                  key: 'myproject'
                 });
                 
                 fieldColumns.push({
@@ -96,47 +96,33 @@ class ListExample extends React.Component{
     }
 
     onFooterBack(){
-        router.back();
-    }
-    getParentParams(){
-        if (this.props.query.parentId){
-            return {parentId:this.props.query.parentId}
-        }else{return {}}
+
+        
+        router.replace({pathname:"/project/edit" ,query:this.props.query});
+        
     }
 
-    componentWillMount() {
 
-        var that = this;
-        this.startHeader();
+componentWillMount() {
+    var that = this;
+    this.startHeader();
+    
+    if(this.props.query.projectId){
+        model.queryReferListBy("xmodule","myproject",{id:this.props.query.projectId},function(response){
+            if (response && response.data) {
+                console.log(response.data);
+                response.data.map(function(item, i) {
+                    item.key = item.id
+                });
+                that.setState({
+                    list: response.data
+                });
 
-        if(this.props.query.tabledefineId){
-            model.queryReferListBy("tablecolumn","mytable",{id:this.props.query.tabledefineId},function(response){
-                if (response && response.data) {
-                    console.log(response.data);
-                    response.data.map(function(item, i) {
-                        item.key = item.id
-                    });
-                    that.setState({
-                        list: response.data
-                    });
-
-                }
-            })
-        }else {
-            model.queryAll(function (response) {
-                if (response && response.data) {
-                    console.log(JSON.stringify(response.data));
-                    console.log(response.data);
-                    response.data.map(function(item, i) {
-                        item.key = item.id
-                    });
-                    that.setState({
-                        list: response.data
-                    });
-                }
-            });
-        }
+            }
+        });
     }
+    
+}
 
     pagination() {
         return {
@@ -151,24 +137,24 @@ class ListExample extends React.Component{
         };
     }
     handleLineUpdate(index, record) {
-
+        let that = this;
 
         this.state.currentItem = record;
         this.state.currentItem.index = index;
-        //console.log('record:' + record);
-        //this.context.router.push({pathname:'/client/tablecolumn/edit',state:{item:record}});
-        router.push({pathname:'/tablecolumn/edit',query:{id:record.id}});
+        router.push({pathname:'/xmodule/edit',query: {...that.props.query,xmoduleId:record.id}});
         
       
 
     }
     handleLineDetail(record) {
+        let that = this;
 
         this.state.currentItem = record;
         //this.state.currentItem.index = index;
         //console.log('record:' + record);
-        //this.context.router.push({pathname:'/client/tablecolumn/detail',state:{item:record}});
-        router.push({pathname:'/tablecolumn/detail',query:{id:record.id}});
+        //this.context.router.push({pathname:'//xmodule/detail',state:{item:record}});
+        router.push({pathname:'/xmodule/detail',query:{...that.props.query,xmoduleId:record.id}});
+
 
     }
     handleLineDetailModal(record) {
@@ -181,9 +167,9 @@ class ListExample extends React.Component{
     }
 
     handleLineAdd() {
-
-        //this.context.router.push({pathname:'/client/tablecolumn/add'});
-        router.push({pathname:'/tablecolumn/add',query:this.getParentParams()});
+        let that = this;
+        //this.context.router.push({pathname:'//xmodule/add'});
+        router.push({pathname:'/xmodule/add',query:{...that.props.query}});
     }
     handleLineDelete(index, record) {
         var that = this;
@@ -224,37 +210,19 @@ class ListExample extends React.Component{
        model.queryByNameLike(param.keyword,function(response){
             if (response&& response.data) {
                 console.log(JSON.stringify(response.data));
-                var displayItemsData = [];
                 response.data.map(function(item, i) {
-                     var itemData = {};
-
-                     itemData.key = item.id;
-                     itemData.id = item.id;
-
-                    
-                    itemData.name =item.name;
-                
-                    itemData.description =item.description;
-                
-                    itemData.mytable =item.mytable;
-                
-                    itemData.fieldtype =item.fieldtype;
-                
-                    itemData.isenable =item.isenable;
-                
-
-                    displayItemsData.push(itemData);
+                    item.key = item.id;
                 });
                 that.setState({
-                    list: displayItemsData
+                    list: response.data
                 });
             }
        });
 
     }
     render() {
-
         var that = this;
+        
         return (
             < div >
             <div>
@@ -287,7 +255,7 @@ class ListExample extends React.Component{
                 this.title
             }
             footer = {
-                () => (<Button onClick={that.onFooterBack.bind(that)}>Back</Button>)
+                 () => (<Button onClick={that.onFooterBack.bind(that)}>Back</Button>)
             }
             />
 

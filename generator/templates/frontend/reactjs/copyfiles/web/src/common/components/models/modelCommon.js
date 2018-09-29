@@ -66,8 +66,8 @@ ModelClass.prototype.queryReferListByName = function (refer, cb) {
     model.get(serverPath + "/" + refer + "/queryAll", {}, cb);
 };
 
-ModelClass.prototype.queryReferListBy = function (refer,params, cb) {
-    model.get(serverPath + "/" + refer + "/queryBy" + firstUpperCase(this.moduleName), params, cb);
+ModelClass.prototype.queryReferListBy = function (refer,moduleName,params, cb) {
+    model.get(serverPath + "/" + refer + "/queryBy" + firstUpperCase(moduleName), params, cb);
 };
 
 ModelClass.prototype.queryDictionaryByCategory = function (params, cb) {

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import router from 'next/router';
-import Layout from '../../layout';
+import Layout from '../common/pages/layout';
 import { Form, Input,Button} from 'antd';
 import {Card} from 'antd';
 import FileUpload from '../common/components/form/upload';
@@ -42,7 +42,7 @@ class EditForm extends React.Component {
     handleSaveAndEdit(childModuleName,data) {
 
         let that = this;
-        let params = {...that.props.query};
+        let params = {...that.props.query,fromModule:'tabledefine'};
         router.push({pathname:'/'+ childModuleName+ '/list',query:params});
     }
 
@@ -144,7 +144,7 @@ render()
                     getFieldDecorator("isenable", {
                         initialValue: listItems.isenable,
                     })(
-                        < XSelect  category="tablestatus" refer =""  />
+                        < XSelect  category="tablestatus" refer ="" display= {this.props.query.fromModule =='' ? 'no':'yes'} />
                     )}
                     < /Form.Item>
                         </Card>

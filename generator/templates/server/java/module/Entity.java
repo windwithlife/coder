@@ -55,7 +55,7 @@ public class <%=data.moduleNameCLS%> implements Serializable {
        <%
        for (var field in data.moduleDefine){
            var fieldDef = data.moduleDefine[field];
-           var keyName     = data.firstUpper(field);
+           var keyName     = fieldDef.nameCLS;
            var displayName = fieldDef.dName;
            var type        = fieldDef.type;
            var refer       = fieldDef.refer;

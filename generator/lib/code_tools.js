@@ -9,9 +9,16 @@ var fs       = require('fs');
 
 
 function generateCode(templateFile, params, outFile){
+    console.log("Generate source *template file*:[[" + templateFile + "]]")
+    console.log("Generate source *Output   file*:[["+outFile +"]]");
+    console.log("The PARAMS transfered to template:***");
+    console.log(params);
+
     var temple = fs.readFileSync(templateFile, 'utf-8');
-      var strResult = ejsTool.render(temple, {data: params});
-     fs.writeFileSync(outFile,strResult,'utf-8');
+    var strResult = ejsTool.render(temple, {data: params});
+    fs.writeFileSync(outFile,strResult,'utf-8');
+
+    console.log("***********Finished to create source file************");
 }
 function generateH5Code(templateFile, params, outFile){
     var temple = fs.readFileSync(templateFile, 'utf-8');

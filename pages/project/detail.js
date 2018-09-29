@@ -20,7 +20,7 @@ class EditForm extends React.Component {
 
         var that = this;
         console.log("edit id:=" + this.props.query.id);
-        model.queryById(this.props.query.<%=data.moduleName%>Id,function(response) {
+        model.queryById(this.props.query.projectId,function(response) {
             if (response && response.data) {
                 console.log(response.data);
                 that.setState({items:response.data});
@@ -44,38 +44,45 @@ render()
     return (
             <Card >
             <Form  onSubmit={this.handleSubmit.bind(this)}>
-               <%
-                for (var field in data.moduleDefine){
-                    var fieldDisplayName = data.moduleDefine[field].dName;
-                    var fieldShow = data.moduleDefine[field].show;
-                    var fieldRefer =  data.moduleDefine[field].refer;
-                    if (fieldRefer){
-                        referMapfield =fieldRefer.mapField;
-                    }
-
-                    if (fieldShow=="image"){
-                %>
-                <Card type="inner">
-                <FormItem label="<%=fieldDisplayName%>" >
-                            <image src= "{listItems.<%=field%>} />
-                </FormItem>
-                </Card>
-
-                <%}else if(fieldShow=="list"){%>
-
-                    <Form.Item >
-                        <XList  onEdit ={null} refer ="<%=fieldRefer.module%>" mapField="<%=referMapfield%>" byId={that.props.query.<%=data.moduleName%>Id}  title="<%=fieldDisplayName%>" />
-                        </Form.Item>
-
-                <%}else if((fieldShow=="yes")||(fieldShow=='select')){%>
+               
                         <Card type="inner">
                         <FormItem
-                            label="<%=fieldDisplayName%>"
+                            label="名称"
                             >
-                            {listItems.<%=field%>}
+                            {listItems.name}
                         </FormItem>
                         </Card>
-                <%}}%>
+                
+                        <Card type="inner">
+                        <FormItem
+                            label="说明"
+                            >
+                            {listItems.description}
+                        </FormItem>
+                        </Card>
+                
+
+                    <Form.Item >
+                        <XList  onEdit ={null} refer ="xmodule" mapField="myproject" byId={that.props.query.projectId}  title="模块" />
+                        </Form.Item>
+
+                
+                        <Card type="inner">
+                        <FormItem
+                            label="站点"
+                            >
+                            {listItems.website}
+                        </FormItem>
+                        </Card>
+                
+                        <Card type="inner">
+                        <FormItem
+                            label="SOA地址"
+                            >
+                            {listItems.soaIp}
+                        </FormItem>
+                        </Card>
+                
                  <Card type="inner">
                  <FormItem className="form-item-clear" >
                     <Button type="primary" htmlType="submit" size="large">Back</Button>

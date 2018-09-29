@@ -84,10 +84,6 @@ function createReleasePackageFiles() {
 
 function buildParams(moduleDefine) {
     var params = Object.assign({}, moduleDefine.properties);
-
-    params.moduleDefine = moduleDefine.fields;
-    console.log("current params:----------------");
-    console.log(JSON.stringify(params));
     return params;
 }
 function createServerBZModules(moduleName, moduleDefine) {

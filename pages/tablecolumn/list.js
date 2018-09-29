@@ -12,7 +12,7 @@ import {
 //import EditableCell from '../common/components/form/editablecell.js';
 //import NewModal from './components/modal.js';
 import router from 'next/router';
-import Layout from '../../layout';
+import Layout from '../common/pages/layout';
 import '../common/styles/TableSearch.less';
 
 
@@ -59,7 +59,7 @@ class ListExample extends React.Component{
                 });
                 
                 fieldColumns.push({
-                  title: "表",
+                  title: "所属表",
                   dataIndex: 'mytable',
                   key: 'mytable'
                 });
@@ -158,7 +158,7 @@ componentWillMount() {
         this.state.currentItem = record;
         //this.state.currentItem.index = index;
         //console.log('record:' + record);
-        //this.context.router.push({pathname:'/client/tablecolumn/detail',state:{item:record}});
+        //this.context.router.push({pathname:'//tablecolumn/detail',state:{item:record}});
         router.push({pathname:'/tablecolumn/detail',query:{...that.props.query,tablecolumnId:record.id}});
 
 
@@ -174,7 +174,7 @@ componentWillMount() {
 
     handleLineAdd() {
         let that = this;
-        //this.context.router.push({pathname:'/client/tablecolumn/add'});
+        //this.context.router.push({pathname:'//tablecolumn/add'});
         router.push({pathname:'/tablecolumn/add',query:{...that.props.query}});
     }
     handleLineDelete(index, record) {

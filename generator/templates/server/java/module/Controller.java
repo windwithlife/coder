@@ -30,21 +30,24 @@ public class <%=data.moduleNameCLS%>Controller {
 	@Autowired
     <%=data.moduleNameCLS%>QueryDao queryDao;
 
-  <% for (var field in data.moduleDefine){
+    <% for (var referName in data.refers){
+            var refer  = data.refers[referName];
+    %>
+    @Autowired
+       private  <%=refer.moduleCLS%>Service <%=refer.module%>Service;
+    <% }%>
+
+
+   <% for (var field in data.moduleDefine){
                 var fieldDef  = data.moduleDefine[field];
                 var fieldName = fieldDef.dName;
                 var keyName = field;
 
                 var refer = fieldDef.refer;
-                if (refer) {
-                    var clsName = refer.moduleCLS;
+                if ((refer) && (refer.map=='ManyToOne')){
                     var fieldNameUpper = fieldDef.nameCLS;
-                %>
-   @Autowired
-   private  <%=clsName%>Service <%=refer.module%>Service;
-                <%
-                    if(refer.map=='ManyToOne'){
-                %>
+
+   %>
    @ResponseBody
    @RequestMapping(value = "/queryBy<%=fieldNameUpper%>", method = RequestMethod.GET)
    public List<<%=data.moduleNameCLS%>> findBy<%=fieldNameUpper%>(@RequestParam("id") Long id) {
@@ -52,7 +55,7 @@ public class <%=data.moduleNameCLS%>Controller {
        return result;
    }
 
-                   <%}
+   <%
                 }
         }
     %>
@@ -96,7 +99,7 @@ public class <%=data.moduleNameCLS%>Controller {
 	public <%=data.moduleNameCLS%> save2(@RequestBody <%=data.moduleNameCLS%> item) {
 
 		System.out.println("input device params:" + item.toString());
-		<%=data.moduleName%> result = service.save(item);
+		<%=data.moduleNameCLS%> result = service.save(item);
 		System.out.println("output device result data:" + result.toString());
 		return result;
 	}
@@ -108,7 +111,7 @@ public class <%=data.moduleNameCLS%>Controller {
     public <%=data.moduleNameCLS%> updateSave(@RequestBody <%=data.moduleNameCLS%> item,@PathVariable Long id) {
 
      	 System.out.println("input device params:" + item.toString());
-     	 <%=data.moduleName%> result = service.save(item);
+     	 <%=data.moduleNameCLS%> result = service.save(item);
      	 System.out.println("output device result data:" + result.toString());
      	 return result;
     }
@@ -129,7 +132,7 @@ public class <%=data.moduleNameCLS%>Controller {
     }
 
 
-   <%if(data.moduleName=='Dictionary'){%>
+   <%if(data.moduleName=='dictionary'){%>
    	@ResponseBody
        @RequestMapping(value = "/queryByCategoryName/", method = RequestMethod.GET)
        public List<Dictionary> findByCategoryName(@RequestParam("category") String categoryName) {

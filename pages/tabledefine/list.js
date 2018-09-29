@@ -12,7 +12,7 @@ import {
 //import EditableCell from '../common/components/form/editablecell.js';
 //import NewModal from './components/modal.js';
 import router from 'next/router';
-import Layout from '../../layout';
+import Layout from '../common/pages/layout';
 import '../common/styles/TableSearch.less';
 
 
@@ -145,7 +145,7 @@ componentWillMount() {
         this.state.currentItem = record;
         //this.state.currentItem.index = index;
         //console.log('record:' + record);
-        //this.context.router.push({pathname:'/client/tabledefine/detail',state:{item:record}});
+        //this.context.router.push({pathname:'//tabledefine/detail',state:{item:record}});
         router.push({pathname:'/tabledefine/detail',query:{...that.props.query,tabledefineId:record.id}});
 
 
@@ -161,7 +161,7 @@ componentWillMount() {
 
     handleLineAdd() {
         let that = this;
-        //this.context.router.push({pathname:'/client/tabledefine/add'});
+        //this.context.router.push({pathname:'//tabledefine/add'});
         router.push({pathname:'/tabledefine/add',query:{...that.props.query}});
     }
     handleLineDelete(index, record) {

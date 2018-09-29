@@ -1,95 +1,87 @@
 import React from 'react';
-import { browserHistory } from 'react-router';
+import router from 'next/router';
+import Layout from '../common/pages/layout';
 import { Form, Input,Button} from 'antd';
+import {Card} from 'antd';
 import FileUpload from '../common/components/form/upload';
 import XSelect from '../common/components/form/select';
+import XList from '../common/components/form/referlist';
 import model from './models/model.js';
-import '../common/styles/App.less';
+//import '../common/styles/App.less';
 
 const FormItem = Form.Item;
-const formItemLayout = {
-    labelCol: {
-        span: 6,
-    },
-    wrapperCol: {
-        span: 14,
-    },
-};
-
 
 class EditForm extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {};
-        this.state.item = this.props.location.state.item;
 
+    state={
+        items:{id:-1},
     }
     componentWillMount(){
-        this.setState({item:this.props.location.state.item});
+
+        var that = this;
+        console.log("edit id:=" + this.props.query.id);
+        model.queryById(this.props.query.dictionaryId,function(response) {
+            if (response && response.data) {
+                console.log(response.data);
+                that.setState({items:response.data});
+            }
+        })
     }
-    
+
     handleSubmit(e) {
-        browserHistory.push('/client/dictionary/');
+        e.preventDefault();
+        router.back();
     }
-   
-
-checkNumber(rule, value, callback)
-{
-    if (!value) {
-        callback(new Error('年龄未填写'));
-    }
-    if (!/^[\d]{1,2}$/.test(value)) {
-        callback(new Error('年龄不合法'));
-    } else {
-        callback();
-    }
-}
-
 
 render()
 {
-        
-    var listItem = this.state.item;
+    var that = this;
+    var listItems = this.state.items;
+    console.log(listItems);
     const { getFieldDecorator } = this.props.form;
-    console.log("modal interal" + JSON.stringify(listItem));
+    console.log("detail render data:" + JSON.stringify(listItems));
     
     return (
-        
-            <Form horizontal onSubmit={this.handleSubmit.bind(this)}>
-                
+            <Card >
+            <Form  onSubmit={this.handleSubmit.bind(this)}>
+               
+                        <Card type="inner">
                         <FormItem
                             label="显示名称"
-                            hasFeedback
-                            {...formItemLayout}
                             >
-                            {getFieldDecorator("name", {
-                                initialValue: 'test',
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
-                            })(
-                                <Input type="text" />
-                            )}
+                            {listItems.name}
                         </FormItem>
+                        </Card>
                 
-
-                <Form.Item label="字典类别"
-                            hasFeedback {...formItemLayout}> {
-                    getFieldDecorator("category", {
-                        initialValue: {id:"-1"},
-                    })(
-                        < XSelect  category="" refer ="category"  />
-                    )}
-                    < /Form.Item>
-
+                        <Card type="inner">
+                        <FormItem
+                            label="字典类别"
+                            >
+                            {listItems.category}
+                        </FormItem>
+                        </Card>
                 
+                 <Card type="inner">
                  <FormItem className="form-item-clear" >
-                    <Button type="primary" htmlType="submit" size="large">Go Back</Button>
+                    <Button type="primary" htmlType="submit" size="large">Back</Button>
                 </FormItem>
+                </Card>
             </Form>
-        
+        </Card>
     );
 }
 }
 
-export default Form.create()(EditForm);
+
+const MyForm = Form.create()(EditForm);
+
+export default class Page extends React.Component{
+
+    render(){
+        return (<Layout><MyForm query={this.props.query}/></Layout>)
+    }
+}
+Page.getInitialProps = async function(context){
+    return {query:context.query};
+}
+

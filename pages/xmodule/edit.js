@@ -1,10 +1,12 @@
 import React from 'react';
-//import { browserHistory } from 'react-router';
+
 import router from 'next/router';
-import Layout from '../../layout';
+import Layout from '../common/pages/layout';
 import { Form, Input,Button} from 'antd';
+import {Card} from 'antd';
 import FileUpload from '../common/components/form/upload';
 import XSelect from '../common/components/form/select';
+import XList from '../common/components/form/referlist';
 import model from './models/model.js';
 //import '../common/styles/App.less';
 
@@ -23,26 +25,46 @@ const formItemLayout = {
 class EditForm extends React.Component {
 
     state={
-        items:null,
+        items:{id:-1},
     }
     componentWillMount(){
-       // this.setState({item:this.props.location.state.item});
-        model.queryById(this.props.query.id,function(response) {
+        // this.setState({item:this.props.location.state.item});
+        var that = this;
+        console.log("edit id:=" + this.props.query.xmoduleid);
+        model.queryById(this.props.query.xmoduleId,function(response) {
             if (response && response.data) {
-                console.log(data);
-                //browserHistory.push('/client/tablecolumn/');
-                //router.push({pathname:'/tablecolumn/list'});
-                this.setState(items:data);
+                console.log(response.data);
+                that.setState({items:response.data});
             }
         })
     }
-    
+
+    handleSaveAndEdit(childModuleName,data) {
+
+        let that = this;
+        let params = {...that.props.query,fromModule:'xmodule'};
+        router.push({pathname:'/'+ childModuleName+ '/list',query:params});
+    }
+
+    onSaveAndEdit(childModuleName,e){
+        e.preventDefault();
+        var that = this;
+        this.props.form.validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                const data = {...values};
+                console.log('Received values of form: ', values);
+                that.handleSaveAndEdit(childModuleName,data);
+            }
+        });
+    }
+
     handleSubmitUpdate(data) {
+        let that = this;
         model.update(data, function(response) {
             if (response && response.data) {
                 console.log(data);
-                //browserHistory.push('/client/tablecolumn/');
-                router.push({pathname:'/tablecolumn/list'});
+                let params = {...that.props.query};
+                router.push({pathname:'/xmodule/list',query:params});
             }
         })
 
@@ -64,18 +86,19 @@ class EditForm extends React.Component {
 
 render()
 {
-        
+    var that = this;
     var listItems = this.state.items;
     console.log(listItems);
-    let selectIndex = listItems.sex? listItems.sex:-1;
+   // let selectIndex = listItems.sex? listItems.sex:-1;
 
     const { getFieldDecorator } = this.props.form;
     console.log("modal interal" + JSON.stringify(listItems));
     
     return (
-        
+            <Card>
             <Form  onSubmit={this.handleSubmit.bind(this)}>
                
+                        <Card type="inner">
                         <FormItem
                             label="名称"
                             hasFeedback
@@ -90,9 +113,11 @@ render()
                                 <Input type="text" />
                             )}
                         </FormItem>
+                        </Card>
                 
+                        <Card type="inner">
                         <FormItem
-                            label="表说明"
+                            label="说明"
                             hasFeedback
                             {...formItemLayout}
                             >
@@ -105,49 +130,37 @@ render()
                                 <Input type="text" />
                             )}
                         </FormItem>
+                        </Card>
                 
-                        <FormItem
-                            label="表"
-                            hasFeedback
-                            {...formItemLayout}
-                            >
-                            {getFieldDecorator("mytable", {
-                                initialValue: listItems.mytable,
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
-                            })(
-                                <Input type="text" />
-                            )}
-                        </FormItem>
-                
-
-                <Form.Item label="表字段类型"
+                    <Card type="inner">
+                <Form.Item label="所属项目"
                             hasFeedback {...formItemLayout}> {
-                    getFieldDecorator("fieldtype", {
-                        initialValue: {id:selectIndex},
+                    getFieldDecorator("myproject", {
+                        initialValue: listItems.myproject,
                     })(
-                        < XSelect  category="fieldtype" refer =""  />
+                        < XSelect  category="" refer ="project" display= {this.props.query.fromModule =='project' ? 'no':'yes'} />
                     )}
                     < /Form.Item>
-
-                
-
+                        </Card>
+                        
+                    <Card type="inner">
                 <Form.Item label="是否使用"
                             hasFeedback {...formItemLayout}> {
                     getFieldDecorator("isenable", {
-                        initialValue: {id:selectIndex},
+                        initialValue: listItems.isenable,
                     })(
-                        < XSelect  category="tablestatus" refer =""  />
+                        < XSelect  category="enablestatus" refer ="" display= {this.props.query.fromModule =='' ? 'no':'yes'} />
                     )}
                     < /Form.Item>
-
-                
+                        </Card>
+                        
+                 <Card type="inner">
                  <FormItem className="form-item-clear" >
                     <Button type="primary" htmlType="submit" size="large">Save</Button>
                 </FormItem>
+                </Card>
             </Form>
-        
+        </Card>
     );
 }
 }
@@ -158,10 +171,10 @@ const MyForm = Form.create()(EditForm);
 export default class Page extends React.Component{
 
     render(){
-        return (<Layout><MyForm {...this.props.ctx}/></Layout>)
-    }
+        return (<Layout><MyForm query={this.props.query}/></Layout>)
+}
 }
 Page.getInitialProps = async function(context){
-    return {ctx:context};
+    return {query:context.query};
 }
 

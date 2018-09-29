@@ -12,7 +12,7 @@ import {
 //import EditableCell from '../common/components/form/editablecell.js';
 //import NewModal from './components/modal.js';
 import router from 'next/router';
-import Layout from '../../layout';
+import Layout from '../common/pages/layout';
 import '../common/styles/TableSearch.less';
 
 

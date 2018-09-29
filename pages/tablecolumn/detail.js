@@ -1,6 +1,6 @@
 import React from 'react';
 import router from 'next/router';
-import Layout from '../../layout';
+import Layout from '../common/pages/layout';
 import { Form, Input,Button} from 'antd';
 import {Card} from 'antd';
 import FileUpload from '../common/components/form/upload';
@@ -63,7 +63,7 @@ render()
                 
                         <Card type="inner">
                         <FormItem
-                            label="表"
+                            label="所属表"
                             >
                             {listItems.mytable}
                         </FormItem>

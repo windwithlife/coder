@@ -45,7 +45,6 @@ public class <%=data.moduleNameCLS%>Service {
 							 var fieldNameUpper = fieldDef.nameCLS;
                              var refer = fieldDef.refer;
                              if (refer) {
-                                 var clsName = refer.moduleCLS;
                                  if(refer.map=='ManyToOne'){
                              %>
 

@@ -6,7 +6,7 @@ import FileUpload from '../common/components/form/upload';
 import XSelect from '../common/components/form/select';
 import XList from '../common/components/form/referlist';
 import router from 'next/router';
-import Layout from '../../layout';
+import Layout from '../common/pages/layout';
 
 
 const FormItem = Form.Item;
@@ -54,7 +54,7 @@ class EditForm extends React.Component {
         model.add(data, function(response) {
                 if (response && response.data) {
                     console.log(response.data);
-                    let params = {...that.props.query,tablecolumnId:response.data.id};
+                    let params = {...that.props.query,tablecolumnId:response.data.id,fromModule:'tablecolumn'};
                     router.push({pathname:'/'+ childModuleName+ '/list',query:params});
                 }
         });
@@ -96,6 +96,7 @@ render()
                             )}
                 </FormItem>
                 </Card>
+                
                 <Card type="inner">
                 <FormItem label="表说明" >
                             {getFieldDecorator("description", {
@@ -108,25 +109,25 @@ render()
                             )}
                 </FormItem>
                 </Card>
-                <Card type="inner">
-                <FormItem label="表" >
-                            {getFieldDecorator("mytable", {
-                                initialValue: '',
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
-                            })(
-                                <Input type="text" />
-                            )}
-                </FormItem>
-                </Card>
+                
+                    <Card type="inner">
+                <Form.Item label="所属表" >
+                            {
+                    getFieldDecorator("mytable", {
+                        initialValue: "-1",
+                    })(
+                        < XSelect  category="" refer ="tabledefine" display= {(this.props.query.fromModule =='tabledefine') ? 'no':'yes' } />
+                    )}
+                < /Form.Item>
+                    </Card>
+                
                     <Card type="inner">
                 <Form.Item label="表字段类型" >
                             {
                     getFieldDecorator("fieldtype", {
                         initialValue: "-1",
                     })(
-                        < XSelect  category="fieldtype" refer =""  />
+                        < XSelect  category="fieldtype" refer ="" display= {(this.props.query.fromModule =='') ? 'no':'yes' } />
                     )}
                 < /Form.Item>
                     </Card>
@@ -137,7 +138,7 @@ render()
                     getFieldDecorator("isenable", {
                         initialValue: "-1",
                     })(
-                        < XSelect  category="tablestatus" refer =""  />
+                        < XSelect  category="tablestatus" refer ="" display= {(this.props.query.fromModule =='') ? 'no':'yes' } />
                     )}
                 < /Form.Item>
                     </Card>

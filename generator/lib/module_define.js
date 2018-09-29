@@ -77,24 +77,22 @@ ModuleDefines.prototype.adjustData = function () {
 
 ModuleDefines.prototype.adjustFields = function (module) {
     module.properties = {};
-    //module.properties.moduleDefine = module;
+    module.properties.moduleDefine = module.fields;
     module.properties.moduleName = module.name;
-    //module.properties.originModuleName = module.name;
-
-    module.properties.moduleClassName = firstUpperCase(module.name);
     module.properties.moduleNameCLS = firstUpperCase(module.name);
-    module.properties.clsName = firstUpperCase(module.name);
 
     module.properties.packageName  = this.projectSetting.basePackage;
     module.properties.apiServer  = this.projectSetting.apiServer;
 
-
+    module.properties.refers = {};
     for (var field in module.fields){
         var fieldDef  = module.fields[field];
+        fieldDef.name = field;
+        fieldDef.nameCLS = firstUpperCase(field);
         if (fieldDef.refer){
 
             fieldDef.refer.moduleCLS = firstUpperCase(fieldDef.refer.module);
-            fieldDef.nameCLS = firstUpperCase(field);
+            module.properties.refers[fieldDef.refer.module] = fieldDef.refer;
 
             if (fieldDef.refer.mapField=='yes'){
                 module.properties.isChildModule = true;
@@ -103,11 +101,12 @@ ModuleDefines.prototype.adjustFields = function (module) {
             }
         }
     }
+
 }
 
 ModuleDefines.prototype.buildParams = function (module) {
     var params = Object.assign({},module.properties);
-    params.moduleDefine = module.fields;
+    //params.moduleDefine = module.fields;
     return params;
 }
 

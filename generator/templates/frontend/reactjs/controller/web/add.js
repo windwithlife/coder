@@ -6,7 +6,7 @@ import FileUpload from '../common/components/form/upload';
 import XSelect from '../common/components/form/select';
 import XList from '../common/components/form/referlist';
 import router from 'next/router';
-import Layout from '../../layout';
+import Layout from '../common/pages/layout';
 
 
 const FormItem = Form.Item;
@@ -54,7 +54,7 @@ class EditForm extends React.Component {
         model.add(data, function(response) {
                 if (response && response.data) {
                     console.log(response.data);
-                    let params = {...that.props.query,<%=data.moduleName%>Id:response.data.id};
+                    let params = {...that.props.query,<%=data.moduleName%>Id:response.data.id,fromModule:'<%=data.moduleName%>'};
                     router.push({pathname:'/'+ childModuleName+ '/list',query:params});
                 }
         });
@@ -126,7 +126,7 @@ render()
                     getFieldDecorator("<%=field%>", {
                         initialValue: "-1",
                     })(
-                        < XSelect  category="<%=referCategory%>" refer ="<%=referm%>"  />
+                        < XSelect  category="<%=referCategory%>" refer ="<%=referm%>" display= {(this.props.query.fromModule =='<%=referm%>') ? 'no':'yes' } />
                     )}
                 < /Form.Item>
                     </Card>

@@ -1,8 +1,9 @@
 import React from 'react';
-//import { browserHistory } from 'react-router';
+
 import router from 'next/router';
-import Layout from '../../layout';
+import Layout from '../common/pages/layout';
 import { Form, Input,Button} from 'antd';
+import {Card} from 'antd';
 import FileUpload from '../common/components/form/upload';
 import XSelect from '../common/components/form/select';
 import XList from '../common/components/form/referlist';
@@ -24,56 +25,46 @@ const formItemLayout = {
 class EditForm extends React.Component {
 
     state={
-        items:{
-            id:this.props.query.id,
-            sex:-1
-        }
+        items:{id:-1},
     }
     componentWillMount(){
-       // this.setState({item:this.props.location.state.item});
+        // this.setState({item:this.props.location.state.item});
         var that = this;
-        console.log("edit id:=" + this.props.query.id);
-        model.queryById(this.props.query.id,function(response) {
+        console.log("edit id:=" + this.props.query.projectid);
+        model.queryById(this.props.query.projectId,function(response) {
             if (response && response.data) {
                 console.log(response.data);
-                //browserHistory.push('/client/tabledefine/');
-                //router.push({pathname:'/tabledefine/list'});
                 that.setState({items:response.data});
             }
         })
     }
-    handleSaveAndEdit(childModule,data) {
-        //if (this.props.query.parentId){data.parentId = this.props.query.parentId;};
-        router.push({pathname:'/' + childModule + '/list',query:{parentId:this.props.query.id}});
-        //data.id = 0;
-        /*
-         model.add(data, function(response) {
-         if (response && response.data) {
-         console.log(response.data);
-         router.push({pathname:'/tablecolumn/list',query:{parentId:response.data.id}});
-         }
-         })*/
 
+    handleSaveAndEdit(childModuleName,data) {
+
+        let that = this;
+        let params = {...that.props.query,fromModule:'project'};
+        router.push({pathname:'/'+ childModuleName+ '/list',query:params});
     }
-    onSaveAndEdit(childModule,e){
-        e.preventDefault();
 
+    onSaveAndEdit(childModuleName,e){
+        e.preventDefault();
         var that = this;
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
                 const data = {...values};
                 console.log('Received values of form: ', values);
-                that.handleSaveAndEdit(childModule,data);
+                that.handleSaveAndEdit(childModuleName,data);
             }
         });
     }
 
     handleSubmitUpdate(data) {
+        let that = this;
         model.update(data, function(response) {
             if (response && response.data) {
                 console.log(data);
-                //browserHistory.push('/client/tabledefine/');
-                router.push({pathname:'/tabledefine/list'});
+                let params = {...that.props.query};
+                router.push({pathname:'/project/list',query:params});
             }
         })
 
@@ -97,14 +88,17 @@ render()
 {
     var that = this;
     var listItems = this.state.items;
-
-    console.log("render the form content" + JSON.stringify(listItems));
+    console.log(listItems);
+   // let selectIndex = listItems.sex? listItems.sex:-1;
 
     const { getFieldDecorator } = this.props.form;
+    console.log("modal interal" + JSON.stringify(listItems));
+    
     return (
-        
-            <Form  onSubmit={that.handleSubmit.bind(that)}>
+            <Card>
+            <Form  onSubmit={this.handleSubmit.bind(this)}>
                
+                        <Card type="inner">
                         <FormItem
                             label="名称"
                             hasFeedback
@@ -119,9 +113,11 @@ render()
                                 <Input type="text" />
                             )}
                         </FormItem>
+                        </Card>
                 
+                        <Card type="inner">
                         <FormItem
-                            label="表说明"
+                            label="说明"
                             hasFeedback
                             {...formItemLayout}
                             >
@@ -134,25 +130,55 @@ render()
                                 <Input type="text" />
                             )}
                         </FormItem>
-                        <Form.Item >
-                            <XList onEdit={that.onSaveAndEdit.bind(that,"tablecolumn")} refer ="tablecolumn" module="mytable" byId={listItems.id}  title="表字段" />
+                        </Card>
+                
+
+                    <Form.Item >
+                        <XList  onEdit ={that.onSaveAndEdit.bind(that,"xmodule")} refer ="xmodule" mapField="myproject" byId={that.props.query.projectId}  title="模块" />
                         </Form.Item>
 
-                <Form.Item label="是否使用"
-                            hasFeedback {...formItemLayout}> {
-                    getFieldDecorator("isenable", {
-                        initialValue: listItems.isenable,
-                    })(
-                        < XSelect  category="tablestatus" refer =""  />
-                    )}
-                    < /Form.Item>
-
                 
+                        <Card type="inner">
+                        <FormItem
+                            label="站点"
+                            hasFeedback
+                            {...formItemLayout}
+                            >
+                            {getFieldDecorator("website", {
+                                initialValue: listItems.website,
+                                rules: [
+                                    {required: true, message: '名称未填写'},
+                                ],
+                            })(
+                                <Input type="text" />
+                            )}
+                        </FormItem>
+                        </Card>
+                
+                        <Card type="inner">
+                        <FormItem
+                            label="SOA地址"
+                            hasFeedback
+                            {...formItemLayout}
+                            >
+                            {getFieldDecorator("soaIp", {
+                                initialValue: listItems.soaIp,
+                                rules: [
+                                    {required: true, message: '名称未填写'},
+                                ],
+                            })(
+                                <Input type="text" />
+                            )}
+                        </FormItem>
+                        </Card>
+                
+                 <Card type="inner">
                  <FormItem className="form-item-clear" >
                     <Button type="primary" htmlType="submit" size="large">Save</Button>
                 </FormItem>
+                </Card>
             </Form>
-        
+        </Card>
     );
 }
 }
@@ -164,7 +190,7 @@ export default class Page extends React.Component{
 
     render(){
         return (<Layout><MyForm query={this.props.query}/></Layout>)
-    }
+}
 }
 Page.getInitialProps = async function(context){
     return {query:context.query};

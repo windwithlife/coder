@@ -17,7 +17,6 @@ public interface <%=data.moduleNameCLS%>Repository extends JpaRepository<<%=data
                     var fieldNameUpper = fieldDef.nameCLS;
                     var refer = fieldDef.refer;
                     if (refer) {
-                        var clsName = refer.moduleCLS;
                         if(refer.map=='ManyToOne'){
                     %>
        public List<<%=data.moduleNameCLS%>> findBy<%=fieldNameUpper%>(Long id);

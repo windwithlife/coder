@@ -11,9 +11,9 @@ export default class XList extends React.Component {
         options:[]
     }
     componentWillMount() {
-        console.log('begin to get referlist data!')
+        console.log('begin to get referlist data! ID=' + this.props.byId);
         var that = this;
-        model.queryReferListBy(that.props.refer,that.props.module,{id:that.props.byId},function (response) {
+        model.queryReferListBy(that.props.refer,that.props.mapField,{id:that.props.byId},function (response) {
             if (response && response.status===200) {
                 console.log("successful to get refer data");
                 console.log(response.data);

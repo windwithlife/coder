@@ -1,4 +1,4 @@
 var model = require('../../common/components/models/modelCommon');
-var moduleName = "tablecolumn";
+var moduleName = "xmodule";
 
 module.exports = new model(moduleName);

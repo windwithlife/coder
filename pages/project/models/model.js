@@ -1,4 +1,4 @@
 var model = require('../../common/components/models/modelCommon');
-var moduleName = "book";
+var moduleName = "project";
 
 module.exports = new model(moduleName);

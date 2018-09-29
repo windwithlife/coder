@@ -1,6 +1,6 @@
 
-//import stylesheet from '../styles/index.less';
-import stylesheet from 'antd/dist/antd.min.css'
+import stylesheet from '../styles/index.less';
+//import stylesheet from 'antd/dist/antd.min.css'
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
 
 const { SubMenu } = Menu;
@@ -11,7 +11,7 @@ const { Header, Content, Sider } = Layout;
 const MyLayout = (props) => (
 
 <Layout>
-  <style dangerouslySetInnerHTML={{ __html: stylesheet }} />
+
 
   <Header className="header">
     <div className="logo" />

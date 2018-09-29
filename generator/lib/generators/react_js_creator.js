@@ -58,34 +58,6 @@ function createReleasePackageFiles(){
 
 function buildParams(moduleName,moduleDefine){
     var params = Object.assign({},moduleDefine.properties);
-    params.moduleDefine = moduleDefine.fields;
-    //console.log(params);
-    /*
-    var params = config.buildBaseParams();
-    params.moduleDefine = moduleDefine;
-    params.moduleName = moduleName;
-    params.moduleClassName = codeTools.firstUpper(moduleName);
-    params.packageName = config.basePackage;
-    params.firstUpper = codeTools.firstUpper;
-    params.refers = [];
-    params.fields = [];
-    for (var field in moduleDefine){
-        var fieldDef  = moduleDefine[field];
-        if (fieldDef.refer){
-            var refer = fieldDef.refer;
-            var referModule = refer.module;
-            var referMap   = refer.map;
-            var referModuleClass = codeTools.firstUpper(referModule);
-            params.refers.push({module:referModule,cls:referModuleClass,map:referMap});
-            if (fieldDef.refer.mapField=='yes'){
-                params.isChildModule = true;
-                params.parentModule = fieldDef.refer.module;
-                params.parentMapField = field;
-            }
-        }
-        params.fields.push({def:fieldDef,name:field,cls:codeTools.firstUpper(field)});
-    }
-    */
     return params;
 }
 function createModel(moduleName,moduleDefine){
@@ -147,7 +119,7 @@ function generateModuleByName(moduleName,defines,platformName){
     //var mdefine = defines[moduleName];
     var mdefine = defines;
     if (!mdefine){return;}
-    console.log('module defines:' + JSON.stringify(mdefine));
+    //console.log('module defines:' + JSON.stringify(mdefine));
     config.platform= platformName;
     generateClientModule(mdefine.name,mdefine);
 

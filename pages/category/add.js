@@ -1,16 +1,15 @@
 import React from 'react';
-//import { browserHistory } from 'react-router';
 import { Form, Input,Button,Select} from 'antd';
+import {Card} from 'antd';
 import model from './models/model.js';
 import FileUpload from '../common/components/form/upload';
 import XSelect from '../common/components/form/select';
 import XList from '../common/components/form/referlist';
 import router from 'next/router';
-import Layout from '../../layout';
+import Layout from '../common/pages/layout';
 
 
 const FormItem = Form.Item;
-
 
 
 
@@ -24,12 +23,12 @@ class EditForm extends React.Component {
 
 
     handleSubmitUpdate(data) {
-        if (this.props.query.parentId){data. = this.props.query.parentId;};
-        //data.id = 0;
+        
+        let that = this;
         model.add(data, function(response) {
             if (response && response.data) {
                 console.log(data);
-                router.push('/category/list');
+                router.push({pathname:'/category/list',query:{...that.props.query}});
             }
         })
 
@@ -46,23 +45,45 @@ class EditForm extends React.Component {
             }
         });
     }
+    handleSaveAndEdit(childModuleName,data) {
+        let that = this;
+        model.add(data, function(response) {
+                if (response && response.data) {
+                    console.log(response.data);
+                    let params = {...that.props.query,categoryId:response.data.id,fromModule:'category'};
+                    router.push({pathname:'/'+ childModuleName+ '/list',query:params});
+                }
+        });
+    }
 
+    onSaveAndEdit(childModuleName,e){
+        e.preventDefault();
+        var that = this;
+        this.props.form.validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                const data = {...values};
+                console.log('Received values of form: ', values);
+                that.handleSaveAndEdit(childModuleName,data);
+            }
+        });
+    }
 
 
 render()
 {
 
-
+    var that = this;
     const { getFieldDecorator } = this.props.form;
 
 
     return (
-
+            <Card>
             <Form  onSubmit={this.handleSubmit.bind(this)}>
             
+                <Card type="inner">
                 <FormItem label="字典类别名称" >
                             {getFieldDecorator("name", {
-                                initialValue: 'test',
+                                initialValue: '',
                                 rules: [
                                     {required: true, message: '名称未填写'},
                                 ],
@@ -70,10 +91,12 @@ render()
                                 <Input type="text" />
                             )}
                 </FormItem>
+                </Card>
                 
+                <Card type="inner">
                 <FormItem label="类别用途描述" >
                             {getFieldDecorator("description", {
-                                initialValue: 'test',
+                                initialValue: '',
                                 rules: [
                                     {required: true, message: '名称未填写'},
                                 ],
@@ -81,14 +104,16 @@ render()
                                 <Input type="text" />
                             )}
                 </FormItem>
+                </Card>
                 
 
-
+                 <Card type="inner">
                  <FormItem className="form-item-clear" >
                     <Button type="primary" htmlType="submit" size="large">Save</Button>
-                </FormItem>
+                 </FormItem>
+                 </Card>
             </Form>
-
+        </Card>
     );
 }
 }
@@ -99,11 +124,11 @@ const MyForm = Form.create()(EditForm);
 export default class Page extends React.Component{
 
     render(){
-        return (<Layout><MyForm {...this.props.ctx}/></Layout>)
+        return (<Layout><MyForm query={this.props.query}/></Layout>)
     }
 }
 Page.getInitialProps = async function(context){
-    return {ctx:context};
+    return {query:context.query};
 }
 
 //export default()=>(<Layout> <MyForm/></Layout>)

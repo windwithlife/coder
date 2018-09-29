@@ -1,16 +1,15 @@
 import React from 'react';
-//import { browserHistory } from 'react-router';
 import { Form, Input,Button,Select} from 'antd';
+import {Card} from 'antd';
 import model from './models/model.js';
 import FileUpload from '../common/components/form/upload';
 import XSelect from '../common/components/form/select';
 import XList from '../common/components/form/referlist';
 import router from 'next/router';
-import Layout from '../../layout';
+import Layout from '../common/pages/layout';
 
 
 const FormItem = Form.Item;
-
 
 
 
@@ -24,38 +23,19 @@ class EditForm extends React.Component {
 
 
     handleSubmitUpdate(data) {
-        if (this.props.query.parentId){data.parentId = this.props.query.parentId;};
-        //data.id = 0;
+        
+        if (this.props.query.projectId) {
+            data. myproject = this.props.query. projectId;
+        }
+        
+        let that = this;
         model.add(data, function(response) {
             if (response && response.data) {
                 console.log(data);
-                router.push('/tabledefine/list');
+                router.push({pathname:'/xmodule/list',query:{...that.props.query}});
             }
         })
 
-    }
-    handleSaveAndEdit(data) {
-        if (this.props.query.parentId){data.parentId = this.props.query.parentId;};
-        //data.id = 0;
-        model.add(data, function(response) {
-            if (response && response.data) {
-                console.log(response.data);
-                router.push({pathname:'/tablecolumn/list',query:{parentId:response.data.id}});
-            }
-        })
-
-    }
-    onSaveAndEdit(childModuleName,e){
-        e.preventDefault();
-        console.log("Chilld moudle name :" + childModuleName);
-        var that = this;
-        this.props.form.validateFieldsAndScroll((err, values) => {
-            if (!err) {
-                const data = {...values};
-                console.log('Received values of form: ', values);
-                that.handleSaveAndEdit(data);
-            }
-        });
     }
     handleSubmit(e) {
         e.preventDefault();
@@ -69,8 +49,28 @@ class EditForm extends React.Component {
             }
         });
     }
+    handleSaveAndEdit(childModuleName,data) {
+        let that = this;
+        model.add(data, function(response) {
+                if (response && response.data) {
+                    console.log(response.data);
+                    let params = {...that.props.query,xmoduleId:response.data.id,fromModule:'xmodule'};
+                    router.push({pathname:'/'+ childModuleName+ '/list',query:params});
+                }
+        });
+    }
 
-
+    onSaveAndEdit(childModuleName,e){
+        e.preventDefault();
+        var that = this;
+        this.props.form.validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                const data = {...values};
+                console.log('Received values of form: ', values);
+                that.handleSaveAndEdit(childModuleName,data);
+            }
+        });
+    }
 
 
 render()
@@ -81,12 +81,13 @@ render()
 
 
     return (
-
+            <Card>
             <Form  onSubmit={this.handleSubmit.bind(this)}>
             
+                <Card type="inner">
                 <FormItem label="名称" >
                             {getFieldDecorator("name", {
-                                initialValue: 'test',
+                                initialValue: '',
                                 rules: [
                                     {required: true, message: '名称未填写'},
                                 ],
@@ -94,10 +95,12 @@ render()
                                 <Input type="text" />
                             )}
                 </FormItem>
+                </Card>
                 
-                <FormItem label="表说明" >
+                <Card type="inner">
+                <FormItem label="说明" >
                             {getFieldDecorator("description", {
-                                initialValue: 'test',
+                                initialValue: '',
                                 rules: [
                                     {required: true, message: '名称未填写'},
                                 ],
@@ -105,28 +108,38 @@ render()
                                 <Input type="text" />
                             )}
                 </FormItem>
+                </Card>
                 
-                <Form.Item >
-                    <XList onEdit={that.onSaveAndEdit.bind(that,"tablecolumn")} refer ="tablecolumn" module="mytable" byId='-1'  title="表字段" />
-                </Form.Item>
-
-
+                    <Card type="inner">
+                <Form.Item label="所属项目" >
+                            {
+                    getFieldDecorator("myproject", {
+                        initialValue: "-1",
+                    })(
+                        < XSelect  category="" refer ="project" display= {(this.props.query.fromModule =='project') ? 'no':'yes' } />
+                    )}
+                < /Form.Item>
+                    </Card>
+                
+                    <Card type="inner">
                 <Form.Item label="是否使用" >
                             {
                     getFieldDecorator("isenable", {
                         initialValue: "-1",
                     })(
-                        < XSelect  category="tablestatus" refer =""  />
+                        < XSelect  category="enablestatus" refer ="" display= {(this.props.query.fromModule =='') ? 'no':'yes' } />
                     )}
                 < /Form.Item>
+                    </Card>
                 
 
-
+                 <Card type="inner">
                  <FormItem className="form-item-clear" >
                     <Button type="primary" htmlType="submit" size="large">Save</Button>
-                </FormItem>
+                 </FormItem>
+                 </Card>
             </Form>
-
+        </Card>
     );
 }
 }
@@ -141,8 +154,6 @@ export default class Page extends React.Component{
     }
 }
 Page.getInitialProps = async function(context){
-    console.log("Initialize the page data")
-
     return {query:context.query};
 }
 

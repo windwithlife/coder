@@ -6,7 +6,7 @@ import FileUpload from '../common/components/form/upload';
 import XSelect from '../common/components/form/select';
 import XList from '../common/components/form/referlist';
 import router from 'next/router';
-import Layout from '../../layout';
+import Layout from '../common/pages/layout';
 
 
 const FormItem = Form.Item;
@@ -50,7 +50,7 @@ class EditForm extends React.Component {
         model.add(data, function(response) {
                 if (response && response.data) {
                     console.log(response.data);
-                    let params = {...that.props.query,tabledefineId:response.data.id};
+                    let params = {...that.props.query,tabledefineId:response.data.id,fromModule:'tabledefine'};
                     router.push({pathname:'/'+ childModuleName+ '/list',query:params});
                 }
         });
@@ -91,6 +91,7 @@ render()
                                 <Input type="text" />
                             )}
                 </FormItem>
+                </Card>
                 
                 <Card type="inner">
                 <FormItem label="表说明" >
@@ -104,6 +105,7 @@ render()
                             )}
                 </FormItem>
                 </Card>
+                
                 <Form.Item >
                     <XList  onEdit ={that.onSaveAndEdit.bind(that,'tablecolumn')} refer ="tablecolumn" mapField="mytable" byId='-1'  title="表字段" />
                 </Form.Item>
@@ -114,7 +116,7 @@ render()
                     getFieldDecorator("isenable", {
                         initialValue: "-1",
                     })(
-                        < XSelect  category="tablestatus" refer =""  />
+                        < XSelect  category="tablestatus" refer ="" display= {(this.props.query.fromModule =='') ? 'no':'yes' } />
                     )}
                 < /Form.Item>
                     </Card>

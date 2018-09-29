@@ -1,7 +1,7 @@
 import React from 'react';
 
 import router from 'next/router';
-import Layout from '../../layout';
+import Layout from '../common/pages/layout';
 import { Form, Input,Button} from 'antd';
 import {Card} from 'antd';
 import FileUpload from '../common/components/form/upload';
@@ -42,7 +42,7 @@ class EditForm extends React.Component {
     handleSaveAndEdit(childModuleName,data) {
 
         let that = this;
-        let params = {...that.props.query};
+        let params = {...that.props.query,fromModule:'<%=data.moduleName%>'};
         router.push({pathname:'/'+ childModuleName+ '/list',query:params});
     }
 
@@ -139,7 +139,7 @@ render()
                     getFieldDecorator("<%=field%>", {
                         initialValue: listItems.<%=field%>,
                     })(
-                        < XSelect  category="<%=referCategory%>" refer ="<%=referm%>"  />
+                        < XSelect  category="<%=referCategory%>" refer ="<%=referm%>" display= {this.props.query.fromModule =='<%=referm%>' ? 'no':'yes'} />
                     )}
                     < /Form.Item>
                         </Card>

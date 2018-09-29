@@ -24,7 +24,7 @@ import App from '../common/pages/app';
 const routes = (
 
     <Router history={browserHistory}>
-    <Route path="/client/book" component={App}>
+    <Route path="/client/xmodule" component={App}>
         <IndexRoute component={Home} />
     <Route path="home" component={Home} />
     <Route path="list" component={List} />

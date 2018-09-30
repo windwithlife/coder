@@ -57,7 +57,12 @@ class EditForm extends React.Component {
             }
         });
     }
-
+    onAssociationEdit(aName,e){
+        e.preventDefault();
+        var that = this;
+        let params = {...that.props.query,associationName:aName};
+        router.push({pathname:'/'+ <%=data.moduleName%>+ '/association',query:params});
+    }
     handleSubmitUpdate(data) {
         let that = this;
         model.update(data, function(response) {
@@ -148,7 +153,10 @@ render()
                     <Form.Item >
                         <XList  onEdit ={that.onSaveAndEdit.bind(that,"<%=fieldRefer.module%>")} refer ="<%=fieldRefer.module%>" mapField="<%=referMapfield%>" byId={that.props.query.<%=data.moduleName%>Id}  title="<%=fieldDisplayName%>" />
                         </Form.Item>
-
+                <%}else if(fieldShow=="M2MList"){%>
+                    <Form.Item >
+                        <XList  onEdit ={that.onAssociationEdit.bind(that,'<%=fieldRefer.associationTable%>')} refer ="<%=fieldRefer.associationTable%>" mapField="<%=data.moduleName%>Id" byId={that.props.query.<%=data.moduleName%>Id}  title="<%=fieldDisplayName%>" />
+                    </Form.Item>
                 <%}else if(fieldShow=="yes"){%>
                         <Card type="inner">
                         <FormItem

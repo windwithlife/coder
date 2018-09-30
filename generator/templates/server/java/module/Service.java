@@ -44,15 +44,15 @@ public class <%=data.moduleNameCLS%>Service {
                              var keyName = field;
 							 var fieldNameUpper = fieldDef.nameCLS;
                              var refer = fieldDef.refer;
-                             if (refer) {
-                                 if(refer.map=='ManyToOne'){
+                              if (((refer) && (refer.map=='ManyToOne'))|| (data.isAssociation == 'true')) {
+
                              %>
 
     public  List<<%=data.moduleNameCLS%>> findBy<%=fieldNameUpper%>(Long id){
         return dao.findBy<%=fieldNameUpper%>(id);
     }
 
-                                <%}
-                             }
+                             <%}
+
     }%>
 }

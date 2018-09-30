@@ -77,6 +77,7 @@ ModuleDefines.prototype.adjustData = function () {
 
 ModuleDefines.prototype.adjustFields = function (module) {
     module.properties = {};
+    module.properties.isAssociation = module.isAssociation;
     module.properties.moduleDefine = module.fields;
     module.properties.moduleName = module.name;
     module.properties.moduleNameCLS = firstUpperCase(module.name);
@@ -94,6 +95,21 @@ ModuleDefines.prototype.adjustFields = function (module) {
             fieldDef.refer.moduleCLS = firstUpperCase(fieldDef.refer.module);
             module.properties.refers[fieldDef.refer.module] = fieldDef.refer;
 
+            if (fieldDef.refer.map=='ManyToMany'){
+                var mapName = module.name + refer.module;
+                fieldDef.refer.associationTable = mapName;
+                fieldDef.display = "M2MList";
+                var newMapModule = {isAssociationModule:true};
+                newMapModule.name = mapName;
+                newMapModule.fields={};
+                newMapModule.fields["id"] = {type: 'Long'};
+                newMapModule.fields[module.name +"Id"] = {type: 'Long'};
+                newMapModule.fields[module.refer.module +"Id"] = {type: 'Long'};
+
+                this.modules[mapName] = newMapModule;
+                this.projectSetting.enables.push(mapName);
+                this.adjustFields(newMapModule);
+            }
             if (fieldDef.refer.mapField=='yes'){
                 module.properties.isChildModule = true;
                 module.properties.parentModule = fieldDef.refer.module;

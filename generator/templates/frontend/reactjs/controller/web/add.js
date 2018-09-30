@@ -134,6 +134,10 @@ render()
                 <Form.Item >
                     <XList  onEdit ={that.onSaveAndEdit.bind(that,'<%=fieldRefer.module%>')} refer ="<%=fieldRefer.module%>" mapField="<%=referMapfield%>" byId='-1'  title="<%=fieldDisplayName%>" />
                 </Form.Item>
+                <%}else if(fieldShow=="M2MList"){%>
+                <Form.Item >
+                    <XList  onEdit ={that.onAssociationEdit.bind(that,'<%=fieldRefer.associationTable%>')} refer ="<%=fieldRefer.associationTable%>" mapField="<%=data.moduleName%>Id" byId='-1'  title="<%=fieldDisplayName%>" />
+                </Form.Item>
                 <%}else if(fieldShow=="yes"){%>
                 <Card type="inner">
                 <FormItem label="<%=fieldDisplayName%>" >

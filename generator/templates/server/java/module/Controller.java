@@ -44,7 +44,7 @@ public class <%=data.moduleNameCLS%>Controller {
                 var keyName = field;
 
                 var refer = fieldDef.refer;
-                if ((refer) && (refer.map=='ManyToOne')){
+                if (((refer) && (refer.map=='ManyToOne'))|| (data.isAssociation == 'true')){
                     var fieldNameUpper = fieldDef.nameCLS;
 
    %>
@@ -134,15 +134,43 @@ public class <%=data.moduleNameCLS%>Controller {
 
    <%if(data.moduleName=='dictionary'){%>
    	@ResponseBody
-       @RequestMapping(value = "/queryByCategoryName/", method = RequestMethod.GET)
-       public List<Dictionary> findByCategoryName(@RequestParam("category") String categoryName) {
+    @RequestMapping(value = "/queryByCategoryName/", method = RequestMethod.GET)
+    public List<Dictionary> findByCategoryName(@RequestParam("category") String categoryName) {
            	System.out.println("input param category:" + categoryName);
             Category cItem  = categoryService.findOneByName(categoryName);
             if(cItem==null){return null;}else{
                 List<Dictionary> result = service.findByCategory(cItem.getId());
                 return result;
             }
-       }
+    }
+    <%}%>
+
+    <%if(data.isAssociation=='true'){%>
+    @ResponseBody
+    @RequestMapping(value = "/addNewByList", method = RequestMethod.POST)
+    public int addNewByList(@RequestBody list<<%=data.moduleNameCLS%>> items) {
+            for(<%=data.moduleNameCLS%> item:items){
+                System.out.println("input device params:" + item.toString());
+                <%=data.moduleNameCLS%> result = service.save(item);
+                System.out.println("output device result data:" + result.toString());
+
+            }
+            return items.size();
+
+    }
+    @ResponseBody
+    @RequestMapping(value = "/removeByList", method = RequestMethod.POST)
+    public int removeByList(@RequestBody list<<%=data.moduleNameCLS%>> items) {
+                for(<%=data.moduleNameCLS%> item:items){
+                    System.out.println("input device params:" + item.toString());
+                    service.remove(item.getId());
+                    System.out.println("output device result data:" + result.toString());
+
+                }
+                return items.size();
+
+    }
+
     <%}%>
 
 }

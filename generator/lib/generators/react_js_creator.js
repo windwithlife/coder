@@ -110,6 +110,7 @@ function generateClientModule(moduleName,moduleDefine){
     createFunctionViewAndController("edit",moduleName,moduleDefine);
     createFunctionViewAndController("list",moduleName,moduleDefine);
     createFunctionViewAndController("detail",moduleName,moduleDefine);
+    createFunctionViewAndController("association",moduleName,moduleDefine);
     //createFunctionViewAndController("home",moduleName,moduleDefine);
 
 }

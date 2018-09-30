@@ -45,20 +45,31 @@ class ListExample extends React.Component{
     startHeader() {
         var that = this;
         var fieldColumns=[];
-        <%
-                for (var field in data.moduleDefine){
-                    var fieldDisplayName = data.moduleDefine[field].dName;
-                    var fieldShow = data.moduleDefine[field].show;
-                    var fieldRefer =  data.moduleDefine[field].refer;
-
-                    if ((fieldShow=="select")||(fieldShow=="yes")||(fieldShow=="image")){
-                %>
+        
                 fieldColumns.push({
-                  title: "<%=fieldDisplayName%>",
-                  dataIndex: '<%=field%>',
-                  key: '<%=field%>'
+                  title: "名称",
+                  dataIndex: 'name',
+                  key: 'name'
                 });
-                <%}}%>
+                
+                fieldColumns.push({
+                  title: "说明",
+                  dataIndex: 'description',
+                  key: 'description'
+                });
+                
+                fieldColumns.push({
+                  title: "所属项目",
+                  dataIndex: 'myproject',
+                  key: 'myproject'
+                });
+                
+                fieldColumns.push({
+                  title: "是否使用",
+                  dataIndex: 'isenable',
+                  key: 'isenable'
+                });
+                
 
 
 
@@ -86,20 +97,18 @@ class ListExample extends React.Component{
 
     onFooterBack(){
 
-        <%if (data.isChildModule){%>
-        router.replace({pathname:"/<%=data.parentModule%>/edit" ,query:this.props.query});
-        <%}else{%>
-        router.back();
-        <%}%>
+        
+        router.replace({pathname:"/project/edit" ,query:this.props.query});
+        
     }
 
 
 componentWillMount() {
     var that = this;
     this.startHeader();
-    <%if (data.isChildModule){%>
-    if(this.props.query.<%=data.parentModule%>Id){
-        model.queryReferListBy("<%=data.moduleName%>","<%=data.parentMapField%>",{id:this.props.query.<%=data.parentModule%>Id},function(response){
+    
+    if(this.props.query.projectId){
+        model.queryReferListBy("channel","myproject",{id:this.props.query.projectId},function(response){
             if (response && response.data) {
                 console.log(response.data);
                 response.data.map(function(item, i) {
@@ -125,21 +134,7 @@ componentWillMount() {
             }
         });
     }
-    <%}else{%>
-
-        model.queryAll(function (response) {
-            if (response && response.data) {
-                console.log(JSON.stringify(response.data));
-                console.log(response.data);
-                response.data.map(function(item, i) {
-                    item.key = item.id
-                });
-                that.setState({
-                    list: response.data
-                });
-            }
-        });
-    <%}%>
+    
 }
 
     pagination() {
@@ -159,7 +154,7 @@ componentWillMount() {
 
         this.state.currentItem = record;
         this.state.currentItem.index = index;
-        router.push({pathname:'/<%=data.moduleName%>/edit',query: {...that.props.query,<%=data.moduleName%>Id:record.id}});
+        router.push({pathname:'/channel/edit',query: {...that.props.query,channelId:record.id}});
         
       
 
@@ -170,8 +165,8 @@ componentWillMount() {
         this.state.currentItem = record;
         //this.state.currentItem.index = index;
         //console.log('record:' + record);
-        //this.context.router.push({pathname:'/<%=data.endName%>/<%=data.moduleName%>/detail',state:{item:record}});
-        router.push({pathname:'/<%=data.moduleName%>/detail',query:{...that.props.query,<%=data.moduleName%>Id:record.id}});
+        //this.context.router.push({pathname:'//channel/detail',state:{item:record}});
+        router.push({pathname:'/channel/detail',query:{...that.props.query,channelId:record.id}});
 
 
     }
@@ -186,8 +181,8 @@ componentWillMount() {
 
     handleLineAdd() {
         let that = this;
-        //this.context.router.push({pathname:'/<%=data.endName%>/<%=data.moduleName%>/add'});
-        router.push({pathname:'/<%=data.moduleName%>/add',query:{...that.props.query}});
+        //this.context.router.push({pathname:'//channel/add'});
+        router.push({pathname:'/channel/add',query:{...that.props.query}});
     }
     handleLineDelete(index, record) {
         var that = this;

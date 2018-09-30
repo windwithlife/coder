@@ -39,12 +39,13 @@ public class <%=data.moduleNameCLS%>Service {
 
 
 	<% for (var field in data.moduleDefine){
+							if ((field == 'id')||(field == 'name')){break;}
                              var fieldDef  = data.moduleDefine[field];
                              var fieldName = fieldDef.dName;
                              var keyName = field;
 							 var fieldNameUpper = fieldDef.nameCLS;
                              var refer = fieldDef.refer;
-                              if (((refer) && (refer.map=='ManyToOne'))|| (data.isAssociation == 'true')) {
+                              if (((refer) && (refer.map=='ManyToOne'))|| (data.isAssociation == 'yes')) {
 
                              %>
 

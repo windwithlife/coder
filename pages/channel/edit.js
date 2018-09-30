@@ -30,8 +30,8 @@ class EditForm extends React.Component {
     componentWillMount(){
         // this.setState({item:this.props.location.state.item});
         var that = this;
-        console.log("edit id:=" + this.props.query.projectid);
-        model.queryById(this.props.query.projectId,function(response) {
+        console.log("edit id:=" + this.props.query.channelid);
+        model.queryById(this.props.query.channelId,function(response) {
             if (response && response.data) {
                 console.log(response.data);
                 that.setState({items:response.data});
@@ -42,7 +42,7 @@ class EditForm extends React.Component {
     handleSaveAndEdit(childModuleName,data) {
 
         let that = this;
-        let params = {...that.props.query,fromModule:'project'};
+        let params = {...that.props.query,fromModule:'channel'};
         router.push({pathname:'/'+ childModuleName+ '/list',query:params});
     }
 
@@ -57,11 +57,11 @@ class EditForm extends React.Component {
             }
         });
     }
-    onAssociationEdit(aName,e){
+    onAssociationEdit(aName,referm,e){
         e.preventDefault();
         var that = this;
-        let params = {...that.props.query,associationName:aName};
-        router.push({pathname:'/'+ project+ '/association',query:params});
+        let params = {...that.props.query,associationName:aName,referModule:referm};
+        router.push({pathname:'/channel/association',query:params});
     }
     handleSubmitUpdate(data) {
         let that = this;
@@ -69,7 +69,7 @@ class EditForm extends React.Component {
             if (response && response.data) {
                 console.log(data);
                 let params = {...that.props.query};
-                router.push({pathname:'/project/list',query:params});
+                router.push({pathname:'/channel/list',query:params});
             }
         })
 
@@ -137,45 +137,32 @@ render()
                         </FormItem>
                         </Card>
                 
-
+                    <Card type="inner">
+                <Form.Item label="所属项目"
+                            hasFeedback {...formItemLayout}> {
+                    getFieldDecorator("myproject", {
+                        initialValue: listItems.myproject,
+                    })(
+                        < XSelect  category="" refer ="project" display= {this.props.query.fromModule =='project' ? 'no':'yes'} />
+                    )}
+                    < /Form.Item>
+                        </Card>
+                        
                     <Form.Item >
-                        <XList  onEdit ={that.onSaveAndEdit.bind(that,"channel")} refer ="channel" mapField="myproject" byId={that.props.query.projectId}  title="模块" />
-                        </Form.Item>
+                        <XList  onEdit ={that.onAssociationEdit.bind(that,'channeltabledefine','tabledefine')} refer ="channeltabledefine" mapField="channelId" byId={that.props.query.channelId}  title="所用表" />
+                    </Form.Item>
                 
-                        <Card type="inner">
-                        <FormItem
-                            label="站点"
-                            hasFeedback
-                            {...formItemLayout}
-                            >
-                            {getFieldDecorator("website", {
-                                initialValue: listItems.website,
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
-                            })(
-                                <Input type="text" />
-                            )}
-                        </FormItem>
+                    <Card type="inner">
+                <Form.Item label="是否使用"
+                            hasFeedback {...formItemLayout}> {
+                    getFieldDecorator("isenable", {
+                        initialValue: listItems.isenable,
+                    })(
+                        < XSelect  category="tablestatus" refer ="" display= {this.props.query.fromModule =='' ? 'no':'yes'} />
+                    )}
+                    < /Form.Item>
                         </Card>
-                
-                        <Card type="inner">
-                        <FormItem
-                            label="SOA地址"
-                            hasFeedback
-                            {...formItemLayout}
-                            >
-                            {getFieldDecorator("soaIp", {
-                                initialValue: listItems.soaIp,
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
-                            })(
-                                <Input type="text" />
-                            )}
-                        </FormItem>
-                        </Card>
-                
+                        
                  <Card type="inner">
                  <FormItem className="form-item-clear" >
                     <Button type="primary" htmlType="submit" size="large">Save</Button>

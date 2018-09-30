@@ -96,15 +96,16 @@ ModuleDefines.prototype.adjustFields = function (module) {
             module.properties.refers[fieldDef.refer.module] = fieldDef.refer;
 
             if (fieldDef.refer.map=='ManyToMany'){
-                var mapName = module.name + refer.module;
+                var mapName = module.name + fieldDef.refer.module;
                 fieldDef.refer.associationTable = mapName;
-                fieldDef.display = "M2MList";
-                var newMapModule = {isAssociationModule:true};
+                fieldDef.show = "M2MList";
+                var newMapModule = {isAssociation:'yes'};
                 newMapModule.name = mapName;
                 newMapModule.fields={};
                 newMapModule.fields["id"] = {type: 'Long'};
+                newMapModule.fields["name"] = {type: 'String'};
                 newMapModule.fields[module.name +"Id"] = {type: 'Long'};
-                newMapModule.fields[module.refer.module +"Id"] = {type: 'Long'};
+                newMapModule.fields[fieldDef.refer.module +"Id"] = {type: 'Long'};
 
                 this.modules[mapName] = newMapModule;
                 this.projectSetting.enables.push(mapName);

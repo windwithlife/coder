@@ -46,23 +46,51 @@ class ListExample extends React.Component{
         var that = this;
         var fieldColumns=[];
         var fieldColumnsAssociation=[];
-    <%
-        for (var field in data.moduleDefine){
-            var fieldDisplayName = data.moduleDefine[field].dName;
-            var fieldShow = data.moduleDefine[field].show;
-            if (fieldShow=="yes"){
-            %>
+    
                 fieldColumns.push({
-                    title: "<%=fieldDisplayName%>",
-                    dataIndex: '<%=field%>',
-                    key: '<%=field%>'
+                    title: "名称",
+                    dataIndex: 'name',
+                    key: 'name'
                 });
                 fieldColumnsAssociation.push({
-                    title: "<%=fieldDisplayName%>",
-                    dataIndex: '<%=field%>',
-                    key: '<%=field%>'
+                    title: "名称",
+                    dataIndex: 'name',
+                    key: 'name'
                 });
-            <%}}%>
+            
+                fieldColumns.push({
+                    title: "说明",
+                    dataIndex: 'description',
+                    key: 'description'
+                });
+                fieldColumnsAssociation.push({
+                    title: "说明",
+                    dataIndex: 'description',
+                    key: 'description'
+                });
+            
+                fieldColumns.push({
+                    title: "站点",
+                    dataIndex: 'website',
+                    key: 'website'
+                });
+                fieldColumnsAssociation.push({
+                    title: "站点",
+                    dataIndex: 'website',
+                    key: 'website'
+                });
+            
+                fieldColumns.push({
+                    title: "SOA地址",
+                    dataIndex: 'soaIp',
+                    key: 'soaIp'
+                });
+                fieldColumnsAssociation.push({
+                    title: "SOA地址",
+                    dataIndex: 'soaIp',
+                    key: 'soaIp'
+                });
+            
 
 
 
@@ -97,10 +125,8 @@ onFooterBack(){
 componentWillMount() {
     var that = this;
     var associationName = this.props.query.associationName;
-    var referModuleName = this.props.query.referModule;
-    var moduleId  = this.props.query.<%=data.moduleName%>Id;
-
-    var moduleField = "<%=data.moduleName%>Id";
+    var moduleId  = this.props.query.projectId;
+    var moduleField = "projectId";
     this.startHeader();
 
     model.queryReferListBy(associationName,moduleField,{id:moduleId},function(response){
@@ -117,8 +143,8 @@ componentWillMount() {
     });
 
 
-    var referModulePath = referModuleName +"/queryAll";
-    model.queryRaw(referModulePath,{},function (response) {
+    var associationPath = associationName +"/queryAll";
+    model.queryRaw(associationPath,{},function (response) {
             if (response && response.data) {
                 console.log(JSON.stringify(response.data));
                 console.log(response.data);
@@ -149,7 +175,7 @@ handleLineUpdate(index, record) {
 
     this.state.currentItem = record;
     this.state.currentItem.index = index;
-    router.push({pathname:'/<%=data.moduleName%>/edit',query: {...that.props.query,<%=data.moduleName%>Id:record.id}});
+    router.push({pathname:'/project/edit',query: {...that.props.query,projectId:record.id}});
 
 
 
@@ -160,8 +186,8 @@ handleLineDetail(record) {
     this.state.currentItem = record;
     //this.state.currentItem.index = index;
     //console.log('record:' + record);
-    //this.context.router.push({pathname:'/<%=data.endName%>/<%=data.moduleName%>/detail',state:{item:record}});
-    router.push({pathname:'/<%=data.moduleName%>/detail',query:{...that.props.query,<%=data.moduleName%>Id:record.id}});
+    //this.context.router.push({pathname:'//project/detail',state:{item:record}});
+    router.push({pathname:'/project/detail',query:{...that.props.query,projectId:record.id}});
 
 
 }
@@ -176,8 +202,8 @@ handleLineDetailModal(record) {
 
 handleLineAdd() {
     let that = this;
-    //this.context.router.push({pathname:'/<%=data.endName%>/<%=data.moduleName%>/add'});
-    router.push({pathname:'/<%=data.moduleName%>/add',query:{...that.props.query}});
+    //this.context.router.push({pathname:'//project/add'});
+    router.push({pathname:'/project/add',query:{...that.props.query}});
 }
 handleLineDelete(index, record) {
     var that = this;

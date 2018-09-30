@@ -45,20 +45,7 @@ class ListExample extends React.Component{
     startHeader() {
         var that = this;
         var fieldColumns=[];
-        <%
-                for (var field in data.moduleDefine){
-                    var fieldDisplayName = data.moduleDefine[field].dName;
-                    var fieldShow = data.moduleDefine[field].show;
-                    var fieldRefer =  data.moduleDefine[field].refer;
-
-                    if ((fieldShow=="select")||(fieldShow=="yes")||(fieldShow=="image")){
-                %>
-                fieldColumns.push({
-                  title: "<%=fieldDisplayName%>",
-                  dataIndex: '<%=field%>',
-                  key: '<%=field%>'
-                });
-                <%}}%>
+        
 
 
 
@@ -86,46 +73,16 @@ class ListExample extends React.Component{
 
     onFooterBack(){
 
-        <%if (data.isChildModule){%>
-        router.replace({pathname:"/<%=data.parentModule%>/edit" ,query:this.props.query});
-        <%}else{%>
+        
         router.back();
-        <%}%>
+        
     }
 
 
 componentWillMount() {
     var that = this;
     this.startHeader();
-    <%if (data.isChildModule){%>
-    if(this.props.query.<%=data.parentModule%>Id){
-        model.queryReferListBy("<%=data.moduleName%>","<%=data.parentMapField%>",{id:this.props.query.<%=data.parentModule%>Id},function(response){
-            if (response && response.data) {
-                console.log(response.data);
-                response.data.map(function(item, i) {
-                    item.key = item.id
-                });
-                that.setState({
-                    list: response.data
-                });
-
-            }
-        });
-    }else{
-        model.queryAll(function (response) {
-            if (response && response.data) {
-                console.log(JSON.stringify(response.data));
-                console.log(response.data);
-                response.data.map(function(item, i) {
-                    item.key = item.id
-                });
-                that.setState({
-                    list: response.data
-                });
-            }
-        });
-    }
-    <%}else{%>
+    
 
         model.queryAll(function (response) {
             if (response && response.data) {
@@ -139,7 +96,7 @@ componentWillMount() {
                 });
             }
         });
-    <%}%>
+    
 }
 
     pagination() {
@@ -159,7 +116,7 @@ componentWillMount() {
 
         this.state.currentItem = record;
         this.state.currentItem.index = index;
-        router.push({pathname:'/<%=data.moduleName%>/edit',query: {...that.props.query,<%=data.moduleName%>Id:record.id}});
+        router.push({pathname:'/channeltabledefine/edit',query: {...that.props.query,channeltabledefineId:record.id}});
         
       
 
@@ -170,8 +127,8 @@ componentWillMount() {
         this.state.currentItem = record;
         //this.state.currentItem.index = index;
         //console.log('record:' + record);
-        //this.context.router.push({pathname:'/<%=data.endName%>/<%=data.moduleName%>/detail',state:{item:record}});
-        router.push({pathname:'/<%=data.moduleName%>/detail',query:{...that.props.query,<%=data.moduleName%>Id:record.id}});
+        //this.context.router.push({pathname:'//channeltabledefine/detail',state:{item:record}});
+        router.push({pathname:'/channeltabledefine/detail',query:{...that.props.query,channeltabledefineId:record.id}});
 
 
     }
@@ -186,8 +143,8 @@ componentWillMount() {
 
     handleLineAdd() {
         let that = this;
-        //this.context.router.push({pathname:'/<%=data.endName%>/<%=data.moduleName%>/add'});
-        router.push({pathname:'/<%=data.moduleName%>/add',query:{...that.props.query}});
+        //this.context.router.push({pathname:'//channeltabledefine/add'});
+        router.push({pathname:'/channeltabledefine/add',query:{...that.props.query}});
     }
     handleLineDelete(index, record) {
         var that = this;

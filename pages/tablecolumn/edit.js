@@ -57,7 +57,12 @@ class EditForm extends React.Component {
             }
         });
     }
-
+    onAssociationEdit(aName,e){
+        e.preventDefault();
+        var that = this;
+        let params = {...that.props.query,associationName:aName};
+        router.push({pathname:'/'+ tablecolumn+ '/association',query:params});
+    }
     handleSubmitUpdate(data) {
         let that = this;
         model.update(data, function(response) {

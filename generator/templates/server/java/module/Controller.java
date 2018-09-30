@@ -39,18 +39,20 @@ public class <%=data.moduleNameCLS%>Controller {
 
 
    <% for (var field in data.moduleDefine){
+                if ((field == 'id')||(field == 'name')){break;}
                 var fieldDef  = data.moduleDefine[field];
+
                 var fieldName = fieldDef.dName;
                 var keyName = field;
 
                 var refer = fieldDef.refer;
-                if (((refer) && (refer.map=='ManyToOne'))|| (data.isAssociation == 'true')){
+                if (((refer) && (refer.map=='ManyToOne'))|| (data.isAssociation == 'yes')){
                     var fieldNameUpper = fieldDef.nameCLS;
 
    %>
    @ResponseBody
    @RequestMapping(value = "/queryBy<%=fieldNameUpper%>", method = RequestMethod.GET)
-   public List<<%=data.moduleNameCLS%>> findBy<%=fieldNameUpper%>(@RequestParam("id") Long id) {
+   public List<<%=data.moduleNameCLS%>> queryBy<%=fieldNameUpper%>(@RequestParam("id") Long id) {
        List<<%=data.moduleNameCLS%>> result = service.findBy<%=fieldNameUpper%>(id);
        return result;
    }
@@ -72,7 +74,7 @@ public class <%=data.moduleNameCLS%>Controller {
 	}
 	@ResponseBody
     @RequestMapping(value = "/query/{id}", method = RequestMethod.GET)
-    public <%=data.moduleNameCLS%> findById(@PathVariable Long id) {
+    public <%=data.moduleNameCLS%> findByKeyId(@PathVariable Long id) {
        	System.out.println("input param Id:" + id);
        	<%=data.moduleNameCLS%> result = service.findById(id);
     	return result;
@@ -145,10 +147,10 @@ public class <%=data.moduleNameCLS%>Controller {
     }
     <%}%>
 
-    <%if(data.isAssociation=='true'){%>
+    <%if(data.isAssociation=='yes'){%>
     @ResponseBody
     @RequestMapping(value = "/addNewByList", method = RequestMethod.POST)
-    public int addNewByList(@RequestBody list<<%=data.moduleNameCLS%>> items) {
+    public int addNewByList(@RequestBody List<<%=data.moduleNameCLS%>> items) {
             for(<%=data.moduleNameCLS%> item:items){
                 System.out.println("input device params:" + item.toString());
                 <%=data.moduleNameCLS%> result = service.save(item);
@@ -160,11 +162,11 @@ public class <%=data.moduleNameCLS%>Controller {
     }
     @ResponseBody
     @RequestMapping(value = "/removeByList", method = RequestMethod.POST)
-    public int removeByList(@RequestBody list<<%=data.moduleNameCLS%>> items) {
+    public int removeByList(@RequestBody List<<%=data.moduleNameCLS%>> items) {
                 for(<%=data.moduleNameCLS%> item:items){
                     System.out.println("input device params:" + item.toString());
                     service.remove(item.getId());
-                    System.out.println("output device result data:" + result.toString());
+                    //System.out.println("output device result data:" + result.toString());
 
                 }
                 return items.size();

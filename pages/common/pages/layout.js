@@ -65,7 +65,7 @@ export default ({ children }) =>
               <Menu.Item key="11">接口</Menu.Item>
 
             </SubMenu>
-            <SubMenu key="sub3" title={<span><Icon type="notification" />基本配置</span>}>
+            <SubMenu key="sub4" title={<span><Icon type="notification" />基本配置</span>}>
                 <Menu.Item key="16">主题管理</Menu.Item>
                 <Menu.Item key="17">当前主题</Menu.Item>
                 <Menu.Item key="18">其它</Menu.Item>

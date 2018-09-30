@@ -24,11 +24,15 @@ class EditForm extends React.Component {
 
     handleSubmitUpdate(data) {
         
+        if (this.props.query.projectId) {
+            data. myproject = this.props.query. projectId;
+        }
+        
         let that = this;
         model.add(data, function(response) {
             if (response && response.data) {
                 console.log(data);
-                router.push({pathname:'/project/list',query:{...that.props.query}});
+                router.push({pathname:'/channel/list',query:{...that.props.query}});
             }
         })
 
@@ -50,7 +54,7 @@ class EditForm extends React.Component {
         model.add(data, function(response) {
                 if (response && response.data) {
                     console.log(response.data);
-                    let params = {...that.props.query,projectId:response.data.id,fromModule:'project'};
+                    let params = {...that.props.query,channelId:response.data.id,fromModule:'channel'};
                     router.push({pathname:'/'+ childModuleName+ '/list',query:params});
                 }
         });
@@ -68,6 +72,30 @@ class EditForm extends React.Component {
         });
     }
 
+    onAssociationEdit(aName,referm,e){
+        e.preventDefault();
+        var that = this;
+        this.props.form.validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                const data = {...values};
+                console.log('Received values of form: ', values);
+                that.handleAssociationEdit(aName,referm,data);
+            }
+        });
+
+
+    }
+
+    handleAssociationEdit(associationModule,referm,data) {
+        let that = this;
+        model.add(data, function(response) {
+            if (response && response.data) {
+                console.log(response.data);
+                let params = {...that.props.query,channelId:response.data.id,associationName:associationModule,referModule:referm};
+                router.push({pathname:'/channel/association',query:params});
+            }
+        });
+    }
 
 render()
 {
@@ -106,35 +134,31 @@ render()
                 </FormItem>
                 </Card>
                 
+                    <Card type="inner">
+                <Form.Item label="所属项目" >
+                            {
+                    getFieldDecorator("myproject", {
+                        initialValue: "-1",
+                    })(
+                        < XSelect  category="" refer ="project" display= {(this.props.query.fromModule =='project') ? 'no':'yes' } />
+                    )}
+                < /Form.Item>
+                    </Card>
+                
                 <Form.Item >
-                    <XList  onEdit ={that.onSaveAndEdit.bind(that,'channel')} refer ="channel" mapField="myproject" byId='-1'  title="模块" />
+                    <XList  onEdit ={that.onAssociationEdit.bind(that,'channeltabledefine','tabledefine')} refer ="channeltabledefine" mapField="channelId" byId='-1'  title="所用表" />
                 </Form.Item>
                 
-                <Card type="inner">
-                <FormItem label="站点" >
-                            {getFieldDecorator("website", {
-                                initialValue: '',
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
-                            })(
-                                <Input type="text" />
-                            )}
-                </FormItem>
-                </Card>
-                
-                <Card type="inner">
-                <FormItem label="SOA地址" >
-                            {getFieldDecorator("soaIp", {
-                                initialValue: '',
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
-                            })(
-                                <Input type="text" />
-                            )}
-                </FormItem>
-                </Card>
+                    <Card type="inner">
+                <Form.Item label="是否使用" >
+                            {
+                    getFieldDecorator("isenable", {
+                        initialValue: "-1",
+                    })(
+                        < XSelect  category="tablestatus" refer ="" display= {(this.props.query.fromModule =='') ? 'no':'yes' } />
+                    )}
+                < /Form.Item>
+                    </Card>
                 
 
                  <Card type="inner">

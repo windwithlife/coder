@@ -20,7 +20,7 @@ class EditForm extends React.Component {
 
         var that = this;
         console.log("edit id:=" + this.props.query.id);
-        model.queryById(this.props.query.projectId,function(response) {
+        model.queryById(this.props.query.channeltabledefineId,function(response) {
             if (response && response.data) {
                 console.log(response.data);
                 that.setState({items:response.data});
@@ -45,44 +45,6 @@ render()
             <Card >
             <Form  onSubmit={this.handleSubmit.bind(this)}>
                
-                        <Card type="inner">
-                        <FormItem
-                            label="名称"
-                            >
-                            {listItems.name}
-                        </FormItem>
-                        </Card>
-                
-                        <Card type="inner">
-                        <FormItem
-                            label="说明"
-                            >
-                            {listItems.description}
-                        </FormItem>
-                        </Card>
-                
-
-                    <Form.Item >
-                        <XList  onEdit ={null} refer ="channel" mapField="myproject" byId={that.props.query.projectId}  title="模块" />
-                        </Form.Item>
-
-                
-                        <Card type="inner">
-                        <FormItem
-                            label="站点"
-                            >
-                            {listItems.website}
-                        </FormItem>
-                        </Card>
-                
-                        <Card type="inner">
-                        <FormItem
-                            label="SOA地址"
-                            >
-                            {listItems.soaIp}
-                        </FormItem>
-                        </Card>
-                
                  <Card type="inner">
                  <FormItem className="form-item-clear" >
                     <Button type="primary" htmlType="submit" size="large">Back</Button>

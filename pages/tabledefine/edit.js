@@ -57,7 +57,12 @@ class EditForm extends React.Component {
             }
         });
     }
-
+    onAssociationEdit(aName,e){
+        e.preventDefault();
+        var that = this;
+        let params = {...that.props.query,associationName:aName};
+        router.push({pathname:'/'+ tabledefine+ '/association',query:params});
+    }
     handleSubmitUpdate(data) {
         let that = this;
         model.update(data, function(response) {
@@ -136,7 +141,6 @@ render()
                     <Form.Item >
                         <XList  onEdit ={that.onSaveAndEdit.bind(that,"tablecolumn")} refer ="tablecolumn" mapField="mytable" byId={that.props.query.tabledefineId}  title="表字段" />
                         </Form.Item>
-
                 
                     <Card type="inner">
                 <Form.Item label="是否使用"

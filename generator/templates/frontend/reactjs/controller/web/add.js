@@ -72,6 +72,30 @@ class EditForm extends React.Component {
         });
     }
 
+    onAssociationEdit(aName,referModule,e){
+        e.preventDefault();
+        var that = this;
+        this.props.form.validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                const data = {...values};
+                console.log('Received values of form: ', values);
+                that.handleAssociationEdit(aName,referModule,data);
+            }
+        });
+
+
+    }
+
+    handleAssociationEdit(associationModule,referm,data) {
+        let that = this;
+        model.add(data, function(response) {
+            if (response && response.data) {
+                console.log(response.data);
+                let params = {...that.props.query,<%=data.moduleName%>Id:response.data.id,associationName:associationModule,referModule:referm};
+                router.push({pathname:'/<%=data.moduleName%>/association',query:params});
+            }
+        });
+    }
 
 render()
 {
@@ -136,7 +160,7 @@ render()
                 </Form.Item>
                 <%}else if(fieldShow=="M2MList"){%>
                 <Form.Item >
-                    <XList  onEdit ={that.onAssociationEdit.bind(that,'<%=fieldRefer.associationTable%>')} refer ="<%=fieldRefer.associationTable%>" mapField="<%=data.moduleName%>Id" byId='-1'  title="<%=fieldDisplayName%>" />
+                    <XList  onEdit ={that.onAssociationEdit.bind(that,'<%=fieldRefer.associationTable%>','<%=referm%>')} refer ="<%=fieldRefer.associationTable%>" mapField="<%=data.moduleName%>Id" byId='-1'  title="<%=fieldDisplayName%>" />
                 </Form.Item>
                 <%}else if(fieldShow=="yes"){%>
                 <Card type="inner">

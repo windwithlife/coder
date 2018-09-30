@@ -28,7 +28,7 @@ class EditForm extends React.Component {
         model.add(data, function(response) {
             if (response && response.data) {
                 console.log(data);
-                router.push({pathname:'/project/list',query:{...that.props.query}});
+                router.push({pathname:'/channeltabledefine/list',query:{...that.props.query}});
             }
         })
 
@@ -50,7 +50,7 @@ class EditForm extends React.Component {
         model.add(data, function(response) {
                 if (response && response.data) {
                     console.log(response.data);
-                    let params = {...that.props.query,projectId:response.data.id,fromModule:'project'};
+                    let params = {...that.props.query,channeltabledefineId:response.data.id,fromModule:'channeltabledefine'};
                     router.push({pathname:'/'+ childModuleName+ '/list',query:params});
                 }
         });
@@ -68,6 +68,30 @@ class EditForm extends React.Component {
         });
     }
 
+    onAssociationEdit(aName,e){
+        e.preventDefault();
+        var that = this;
+        this.props.form.validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                const data = {...values};
+                console.log('Received values of form: ', values);
+                that.handleAssociationEdit(aName,data);
+            }
+        });
+
+
+    }
+
+    handleAssociationEdit(associationModule,data) {
+        let that = this;
+        model.add(data, function(response) {
+            if (response && response.data) {
+                console.log(response.data);
+                let params = {...that.props.query,associationName:associationModule};
+                router.push({pathname:'/'+ channeltabledefine+ '/association',query:params});
+            }
+        });
+    }
 
 render()
 {
@@ -80,62 +104,6 @@ render()
             <Card>
             <Form  onSubmit={this.handleSubmit.bind(this)}>
             
-                <Card type="inner">
-                <FormItem label="名称" >
-                            {getFieldDecorator("name", {
-                                initialValue: '',
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
-                            })(
-                                <Input type="text" />
-                            )}
-                </FormItem>
-                </Card>
-                
-                <Card type="inner">
-                <FormItem label="说明" >
-                            {getFieldDecorator("description", {
-                                initialValue: '',
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
-                            })(
-                                <Input type="text" />
-                            )}
-                </FormItem>
-                </Card>
-                
-                <Form.Item >
-                    <XList  onEdit ={that.onSaveAndEdit.bind(that,'channel')} refer ="channel" mapField="myproject" byId='-1'  title="模块" />
-                </Form.Item>
-                
-                <Card type="inner">
-                <FormItem label="站点" >
-                            {getFieldDecorator("website", {
-                                initialValue: '',
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
-                            })(
-                                <Input type="text" />
-                            )}
-                </FormItem>
-                </Card>
-                
-                <Card type="inner">
-                <FormItem label="SOA地址" >
-                            {getFieldDecorator("soaIp", {
-                                initialValue: '',
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
-                            })(
-                                <Input type="text" />
-                            )}
-                </FormItem>
-                </Card>
-                
 
                  <Card type="inner">
                  <FormItem className="form-item-clear" >

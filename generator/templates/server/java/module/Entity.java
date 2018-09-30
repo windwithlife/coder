@@ -86,6 +86,6 @@ public class <%=data.moduleNameCLS%> implements Serializable {
 
 	@Override
 	public String toString() {
-		return "CLASS DATA: [id=" + id + ", name=" + name + "]";
+		return "CLASS DATA: [id=" + id +"]";
 	}
 }

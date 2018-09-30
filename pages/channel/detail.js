@@ -20,7 +20,7 @@ class EditForm extends React.Component {
 
         var that = this;
         console.log("edit id:=" + this.props.query.id);
-        model.queryById(this.props.query.projectId,function(response) {
+        model.queryById(this.props.query.channelId,function(response) {
             if (response && response.data) {
                 console.log(response.data);
                 that.setState({items:response.data});
@@ -61,25 +61,19 @@ render()
                         </FormItem>
                         </Card>
                 
-
-                    <Form.Item >
-                        <XList  onEdit ={null} refer ="channel" mapField="myproject" byId={that.props.query.projectId}  title="模块" />
-                        </Form.Item>
-
-                
                         <Card type="inner">
                         <FormItem
-                            label="站点"
+                            label="所属项目"
                             >
-                            {listItems.website}
+                            {listItems.myproject}
                         </FormItem>
                         </Card>
                 
                         <Card type="inner">
                         <FormItem
-                            label="SOA地址"
+                            label="是否使用"
                             >
-                            {listItems.soaIp}
+                            {listItems.isenable}
                         </FormItem>
                         </Card>
                 

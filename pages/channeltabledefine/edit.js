@@ -30,8 +30,8 @@ class EditForm extends React.Component {
     componentWillMount(){
         // this.setState({item:this.props.location.state.item});
         var that = this;
-        console.log("edit id:=" + this.props.query.categoryid);
-        model.queryById(this.props.query.categoryId,function(response) {
+        console.log("edit id:=" + this.props.query.channeltabledefineid);
+        model.queryById(this.props.query.channeltabledefineId,function(response) {
             if (response && response.data) {
                 console.log(response.data);
                 that.setState({items:response.data});
@@ -42,7 +42,7 @@ class EditForm extends React.Component {
     handleSaveAndEdit(childModuleName,data) {
 
         let that = this;
-        let params = {...that.props.query,fromModule:'category'};
+        let params = {...that.props.query,fromModule:'channeltabledefine'};
         router.push({pathname:'/'+ childModuleName+ '/list',query:params});
     }
 
@@ -61,7 +61,7 @@ class EditForm extends React.Component {
         e.preventDefault();
         var that = this;
         let params = {...that.props.query,associationName:aName};
-        router.push({pathname:'/'+ category+ '/association',query:params});
+        router.push({pathname:'/'+ channeltabledefine+ '/association',query:params});
     }
     handleSubmitUpdate(data) {
         let that = this;
@@ -69,7 +69,7 @@ class EditForm extends React.Component {
             if (response && response.data) {
                 console.log(data);
                 let params = {...that.props.query};
-                router.push({pathname:'/category/list',query:params});
+                router.push({pathname:'/channeltabledefine/list',query:params});
             }
         })
 
@@ -103,40 +103,6 @@ render()
             <Card>
             <Form  onSubmit={this.handleSubmit.bind(this)}>
                
-                        <Card type="inner">
-                        <FormItem
-                            label="字典类别名称"
-                            hasFeedback
-                            {...formItemLayout}
-                            >
-                            {getFieldDecorator("name", {
-                                initialValue: listItems.name,
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
-                            })(
-                                <Input type="text" />
-                            )}
-                        </FormItem>
-                        </Card>
-                
-                        <Card type="inner">
-                        <FormItem
-                            label="类别用途描述"
-                            hasFeedback
-                            {...formItemLayout}
-                            >
-                            {getFieldDecorator("description", {
-                                initialValue: listItems.description,
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
-                            })(
-                                <Input type="text" />
-                            )}
-                        </FormItem>
-                        </Card>
-                
                  <Card type="inner">
                  <FormItem className="form-item-clear" >
                     <Button type="primary" htmlType="submit" size="large">Save</Button>

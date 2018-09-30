@@ -46,23 +46,18 @@ class ListExample extends React.Component{
         var that = this;
         var fieldColumns=[];
         var fieldColumnsAssociation=[];
-    <%
-        for (var field in data.moduleDefine){
-            var fieldDisplayName = data.moduleDefine[field].dName;
-            var fieldShow = data.moduleDefine[field].show;
-            if (fieldShow=="yes"){
-            %>
+    
                 fieldColumns.push({
-                    title: "<%=fieldDisplayName%>",
-                    dataIndex: '<%=field%>',
-                    key: '<%=field%>'
+                    title: "显示名称",
+                    dataIndex: 'name',
+                    key: 'name'
                 });
                 fieldColumnsAssociation.push({
-                    title: "<%=fieldDisplayName%>",
-                    dataIndex: '<%=field%>',
-                    key: '<%=field%>'
+                    title: "显示名称",
+                    dataIndex: 'name',
+                    key: 'name'
                 });
-            <%}}%>
+            
 
 
 
@@ -97,10 +92,8 @@ onFooterBack(){
 componentWillMount() {
     var that = this;
     var associationName = this.props.query.associationName;
-    var referModuleName = this.props.query.referModule;
-    var moduleId  = this.props.query.<%=data.moduleName%>Id;
-
-    var moduleField = "<%=data.moduleName%>Id";
+    var moduleId  = this.props.query.dictionaryId;
+    var moduleField = "dictionaryId";
     this.startHeader();
 
     model.queryReferListBy(associationName,moduleField,{id:moduleId},function(response){
@@ -117,8 +110,8 @@ componentWillMount() {
     });
 
 
-    var referModulePath = referModuleName +"/queryAll";
-    model.queryRaw(referModulePath,{},function (response) {
+    var associationPath = associationName +"/queryAll";
+    model.queryRaw(associationPath,{},function (response) {
             if (response && response.data) {
                 console.log(JSON.stringify(response.data));
                 console.log(response.data);
@@ -149,7 +142,7 @@ handleLineUpdate(index, record) {
 
     this.state.currentItem = record;
     this.state.currentItem.index = index;
-    router.push({pathname:'/<%=data.moduleName%>/edit',query: {...that.props.query,<%=data.moduleName%>Id:record.id}});
+    router.push({pathname:'/dictionary/edit',query: {...that.props.query,dictionaryId:record.id}});
 
 
 
@@ -160,8 +153,8 @@ handleLineDetail(record) {
     this.state.currentItem = record;
     //this.state.currentItem.index = index;
     //console.log('record:' + record);
-    //this.context.router.push({pathname:'/<%=data.endName%>/<%=data.moduleName%>/detail',state:{item:record}});
-    router.push({pathname:'/<%=data.moduleName%>/detail',query:{...that.props.query,<%=data.moduleName%>Id:record.id}});
+    //this.context.router.push({pathname:'//dictionary/detail',state:{item:record}});
+    router.push({pathname:'/dictionary/detail',query:{...that.props.query,dictionaryId:record.id}});
 
 
 }
@@ -176,8 +169,8 @@ handleLineDetailModal(record) {
 
 handleLineAdd() {
     let that = this;
-    //this.context.router.push({pathname:'/<%=data.endName%>/<%=data.moduleName%>/add'});
-    router.push({pathname:'/<%=data.moduleName%>/add',query:{...that.props.query}});
+    //this.context.router.push({pathname:'//dictionary/add'});
+    router.push({pathname:'/dictionary/add',query:{...that.props.query}});
 }
 handleLineDelete(index, record) {
     var that = this;

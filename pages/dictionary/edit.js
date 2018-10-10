@@ -57,11 +57,11 @@ class EditForm extends React.Component {
             }
         });
     }
-    onAssociationEdit(aName,e){
+    onAssociationEdit(aName,referm,e){
         e.preventDefault();
         var that = this;
-        let params = {...that.props.query,associationName:aName};
-        router.push({pathname:'/'+ dictionary+ '/association',query:params});
+        let params = {...that.props.query,associationName:aName,referModule:referm};
+        router.push({pathname:'/dictionary/association',query:params});
     }
     handleSubmitUpdate(data) {
         let that = this;
@@ -104,16 +104,19 @@ render()
             <Form  onSubmit={this.handleSubmit.bind(this)}>
                
                         <Card type="inner">
-                        <FormItem
-                            label="显示名称"
-                            hasFeedback
-                            {...formItemLayout}
-                            >
+                        <FormItem label="显示名称" >
                             {getFieldDecorator("name", {
-                                initialValue: listItems.name,
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
+                                initialValue: listItems.name
+                            })(
+                                <Input type="text" />
+                            )}
+                        </FormItem>
+                        </Card>
+                
+                        <Card type="inner">
+                        <FormItem label="对应定义值" >
+                            {getFieldDecorator("value", {
+                                initialValue: listItems.value
                             })(
                                 <Input type="text" />
                             )}

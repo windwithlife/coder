@@ -12,7 +12,8 @@ function generateCode(templateFile, params, outFile){
     console.log("Generate source *template file*:[[" + templateFile + "]]")
     console.log("Generate source *Output   file*:[["+outFile +"]]");
     console.log("The PARAMS transfered to template:***");
-    console.log(params);
+    //console.log(params);
+    console.log(JSON.stringify(params));
 
     var temple = fs.readFileSync(templateFile, 'utf-8');
     var strResult = ejsTool.render(temple, {data: params});

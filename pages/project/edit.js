@@ -57,11 +57,11 @@ class EditForm extends React.Component {
             }
         });
     }
-    onAssociationEdit(aName,e){
+    onAssociationEdit(aName,referm,e){
         e.preventDefault();
         var that = this;
-        let params = {...that.props.query,associationName:aName};
-        router.push({pathname:'/'+ project+ '/association',query:params});
+        let params = {...that.props.query,associationName:aName,referModule:referm};
+        router.push({pathname:'/project/association',query:params});
     }
     handleSubmitUpdate(data) {
         let that = this;
@@ -104,16 +104,9 @@ render()
             <Form  onSubmit={this.handleSubmit.bind(this)}>
                
                         <Card type="inner">
-                        <FormItem
-                            label="名称"
-                            hasFeedback
-                            {...formItemLayout}
-                            >
+                        <FormItem label="名称" >
                             {getFieldDecorator("name", {
-                                initialValue: listItems.name,
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
+                                initialValue: listItems.name
                             })(
                                 <Input type="text" />
                             )}
@@ -121,16 +114,9 @@ render()
                         </Card>
                 
                         <Card type="inner">
-                        <FormItem
-                            label="说明"
-                            hasFeedback
-                            {...formItemLayout}
-                            >
+                        <FormItem label="说明" >
                             {getFieldDecorator("description", {
-                                initialValue: listItems.description,
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
+                                initialValue: listItems.description
                             })(
                                 <Input type="text" />
                             )}
@@ -143,16 +129,9 @@ render()
                         </Form.Item>
                 
                         <Card type="inner">
-                        <FormItem
-                            label="站点"
-                            hasFeedback
-                            {...formItemLayout}
-                            >
+                        <FormItem label="站点" >
                             {getFieldDecorator("website", {
-                                initialValue: listItems.website,
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
+                                initialValue: listItems.website
                             })(
                                 <Input type="text" />
                             )}
@@ -160,16 +139,9 @@ render()
                         </Card>
                 
                         <Card type="inner">
-                        <FormItem
-                            label="SOA地址"
-                            hasFeedback
-                            {...formItemLayout}
-                            >
+                        <FormItem label="SOA地址" >
                             {getFieldDecorator("soaIp", {
-                                initialValue: listItems.soaIp,
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
+                                initialValue: listItems.soaIp
                             })(
                                 <Input type="text" />
                             )}

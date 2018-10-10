@@ -8,7 +8,7 @@ import XList from '../common/components/form/referlist';
 import router from 'next/router';
 import Layout from '../common/pages/layout';
 
-
+const { TextArea } = Input;
 const FormItem = Form.Item;
 
 
@@ -72,14 +72,14 @@ class EditForm extends React.Component {
         });
     }
 
-    onAssociationEdit(aName,referm,e){
+    onAssociationEdit(aName,referModule,e){
         e.preventDefault();
         var that = this;
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
                 const data = {...values};
                 console.log('Received values of form: ', values);
-                that.handleAssociationEdit(aName,referm,data);
+                that.handleAssociationEdit(aName,referModule,data);
             }
         });
 
@@ -112,9 +112,6 @@ render()
                 <FormItem label="名称" >
                             {getFieldDecorator("name", {
                                 initialValue: '',
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
                             })(
                                 <Input type="text" />
                             )}
@@ -125,9 +122,6 @@ render()
                 <FormItem label="说明" >
                             {getFieldDecorator("description", {
                                 initialValue: '',
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
                             })(
                                 <Input type="text" />
                             )}
@@ -146,7 +140,7 @@ render()
                     </Card>
                 
                 <Form.Item >
-                    <XList  onEdit ={that.onAssociationEdit.bind(that,'channeltabledefine','tabledefine')} refer ="channeltabledefine" mapField="channelId" byId='-1'  title="所用表" />
+                    <XList  onEdit ={that.onAssociationEdit.bind(that,'channeltabledefine','project')} refer ="channeltabledefine" mapField="channelId" byId='-1'  title="所用表" />
                 </Form.Item>
                 
                     <Card type="inner">

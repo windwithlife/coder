@@ -60,8 +60,8 @@ class ListExample extends React.Component{
                 
                 fieldColumns.push({
                   title: "是否使用",
-                  dataIndex: 'isenable',
-                  key: 'isenable'
+                  dataIndex: 'status',
+                  key: 'status'
                 });
                 
 

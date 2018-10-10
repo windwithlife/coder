@@ -53,14 +53,6 @@ render()
                         </FormItem>
                         </Card>
                 
-                        <Card type="inner">
-                        <FormItem
-                            label="表说明"
-                            >
-                            {listItems.description}
-                        </FormItem>
-                        </Card>
-                
 
                     <Form.Item >
                         <XList  onEdit ={null} refer ="tablecolumn" mapField="mytable" byId={that.props.query.tabledefineId}  title="表字段" />
@@ -69,9 +61,25 @@ render()
                 
                         <Card type="inner">
                         <FormItem
+                            label="表说明"
+                            >
+                            {listItems.description}
+                        </FormItem>
+                        </Card>
+                
+                        <Card type="inner">
+                        <FormItem
+                            label="表结构定义"
+                            >
+                            {listItems.defineText}
+                        </FormItem>
+                        </Card>
+                
+                        <Card type="inner">
+                        <FormItem
                             label="是否使用"
                             >
-                            {listItems.isenable}
+                            {listItems.status}
                         </FormItem>
                         </Card>
                 

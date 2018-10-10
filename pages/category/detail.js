@@ -55,7 +55,7 @@ render()
                 
                         <Card type="inner">
                         <FormItem
-                            label="类别用途描述"
+                            label="字典类别描述"
                             >
                             {listItems.description}
                         </FormItem>

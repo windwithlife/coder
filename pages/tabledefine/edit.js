@@ -9,7 +9,7 @@ import XSelect from '../common/components/form/select';
 import XList from '../common/components/form/referlist';
 import model from './models/model.js';
 //import '../common/styles/App.less';
-
+const { TextArea } = Input;
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
@@ -57,11 +57,11 @@ class EditForm extends React.Component {
             }
         });
     }
-    onAssociationEdit(aName,e){
+    onAssociationEdit(aName,referm,e){
         e.preventDefault();
         var that = this;
-        let params = {...that.props.query,associationName:aName};
-        router.push({pathname:'/'+ tabledefine+ '/association',query:params});
+        let params = {...that.props.query,associationName:aName,referModule:referm};
+        router.push({pathname:'/tabledefine/association',query:params});
     }
     handleSubmitUpdate(data) {
         let that = this;
@@ -104,33 +104,9 @@ render()
             <Form  onSubmit={this.handleSubmit.bind(this)}>
                
                         <Card type="inner">
-                        <FormItem
-                            label="名称"
-                            hasFeedback
-                            {...formItemLayout}
-                            >
+                        <FormItem label="名称" >
                             {getFieldDecorator("name", {
-                                initialValue: listItems.name,
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
-                            })(
-                                <Input type="text" />
-                            )}
-                        </FormItem>
-                        </Card>
-                
-                        <Card type="inner">
-                        <FormItem
-                            label="表说明"
-                            hasFeedback
-                            {...formItemLayout}
-                            >
-                            {getFieldDecorator("description", {
-                                initialValue: listItems.description,
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
+                                initialValue: listItems.name
                             })(
                                 <Input type="text" />
                             )}
@@ -142,11 +118,27 @@ render()
                         <XList  onEdit ={that.onSaveAndEdit.bind(that,"tablecolumn")} refer ="tablecolumn" mapField="mytable" byId={that.props.query.tabledefineId}  title="表字段" />
                         </Form.Item>
                 
+                        <Card type="inner">
+                        <FormItem label="表说明" >
+                            {getFieldDecorator("description", {
+                                initialValue: listItems.description
+                            })(
+                                <Input type="text" />
+                            )}
+                        </FormItem>
+                        </Card>
+                
+                    <Card type="inner">
+                        <Form.Item label="表结构定义">
+                            {getFieldDecorator("defineText", { initialValue: listItems.defineText})(<TextArea rows={5} />)}
+                        </Form.Item>
+                    </Card>
+                
                     <Card type="inner">
                 <Form.Item label="是否使用"
                             hasFeedback {...formItemLayout}> {
-                    getFieldDecorator("isenable", {
-                        initialValue: listItems.isenable,
+                    getFieldDecorator("status", {
+                        initialValue: listItems.status,
                     })(
                         < XSelect  category="tablestatus" refer ="" display= {this.props.query.fromModule =='' ? 'no':'yes'} />
                     )}

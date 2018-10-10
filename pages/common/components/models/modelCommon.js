@@ -23,6 +23,9 @@ function ModelClass(moduleName) {
 ModelClass.prototype.queryRaw = function (path, params,cb) {
     model.get(serverPath + "/" + path, params, cb);
 };
+ModelClass.prototype.postRaw = function (path, params,cb) {
+    model.post(serverPath + "/" + path, params, cb);
+};
 ModelClass.prototype.query = function (path, params,cb) {
     model.get(this.apiServerPath + "/" + path , params, cb);
 };
@@ -76,6 +79,9 @@ ModelClass.prototype.queryDictionaryByCategory = function (params, cb) {
 
 ModelClass.queryRaw = function (path, params,cb) {
     model.get(serverPath + "/" + path, params, cb);
+};
+ModelClass.postRaw = function (path, params,cb) {
+    model.post(serverPath + "/" + path, params, cb);
 };
 ModelClass.queryReferListByName = function (refer, cb) {
     model.get(serverPath + "/" + refer + "/queryAll", {}, cb);

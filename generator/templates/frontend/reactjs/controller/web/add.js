@@ -8,7 +8,7 @@ import XList from '../common/components/form/referlist';
 import router from 'next/router';
 import Layout from '../common/pages/layout';
 
-
+const { TextArea } = Input;
 const FormItem = Form.Item;
 
 
@@ -162,14 +162,17 @@ render()
                 <Form.Item >
                     <XList  onEdit ={that.onAssociationEdit.bind(that,'<%=fieldRefer.associationTable%>','<%=referm%>')} refer ="<%=fieldRefer.associationTable%>" mapField="<%=data.moduleName%>Id" byId='-1'  title="<%=fieldDisplayName%>" />
                 </Form.Item>
+                <%}else if(fieldShow=="text"){%>
+                <Card type="inner">
+                <Form.Item label="<%=fieldDisplayName%>">
+                    {getFieldDecorator("<%=field%>", { initialValue: ''})(<TextArea rows={5} />)}
+                </Form.Item>
+                </Card>
                 <%}else if(fieldShow=="yes"){%>
                 <Card type="inner">
                 <FormItem label="<%=fieldDisplayName%>" >
                             {getFieldDecorator("<%=field%>", {
                                 initialValue: '',
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
                             })(
                                 <Input type="text" />
                             )}

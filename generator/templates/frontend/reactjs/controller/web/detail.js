@@ -67,7 +67,7 @@ render()
                         <XList  onEdit ={null} refer ="<%=fieldRefer.module%>" mapField="<%=referMapfield%>" byId={that.props.query.<%=data.moduleName%>Id}  title="<%=fieldDisplayName%>" />
                         </Form.Item>
 
-                <%}else if((fieldShow=="yes")||(fieldShow=='select')){%>
+                <%}else if((fieldShow=="yes")||(fieldShow=='select')||(fieldShow=='text')){%>
                         <Card type="inner">
                         <FormItem
                             label="<%=fieldDisplayName%>"

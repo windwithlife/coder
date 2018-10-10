@@ -11,7 +11,7 @@ public interface <%=data.moduleNameCLS%>Repository extends JpaRepository<<%=data
     public  <%=data.moduleNameCLS%> findOneByName(String name);
 
     <% for (var field in data.moduleDefine){
-                    if ((field == 'id')||(field == 'name')){break;}
+                    if ((field == 'id')||(field == 'name')){continue;}
                     var fieldDef  = data.moduleDefine[field];
                     var fieldName = fieldDef.dName;
                     var keyName = field;

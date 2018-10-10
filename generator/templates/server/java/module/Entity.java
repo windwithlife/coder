@@ -40,6 +40,10 @@ public class <%=data.moduleNameCLS%> implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private <%=type%> <%=keyName%>;
+           <%} else if (fieldDef.show =='text'){%>
+
+    @Column(columnDefinition="text")
+    private String <%=field%>;
           <% } else if (refer){
             var referModule = refer.moduleCLS;
             var relation = refer.map;

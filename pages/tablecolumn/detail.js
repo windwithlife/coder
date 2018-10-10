@@ -47,7 +47,7 @@ render()
                
                         <Card type="inner">
                         <FormItem
-                            label="名称"
+                            label="列名称"
                             >
                             {listItems.name}
                         </FormItem>
@@ -79,9 +79,25 @@ render()
                 
                         <Card type="inner">
                         <FormItem
-                            label="是否使用"
+                            label="关联表"
                             >
-                            {listItems.isenable}
+                            {listItems.refer}
+                        </FormItem>
+                        </Card>
+                
+                        <Card type="inner">
+                        <FormItem
+                            label="关联关系"
+                            >
+                            {listItems.map}
+                        </FormItem>
+                        </Card>
+                
+                        <Card type="inner">
+                        <FormItem
+                            label="关联字段"
+                            >
+                            {listItems.mapField}
                         </FormItem>
                         </Card>
                 

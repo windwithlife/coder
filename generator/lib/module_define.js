@@ -105,7 +105,9 @@ ModuleDefines.prototype.adjustFields = function (module) {
                 newMapModule.fields["id"] = {type: 'Long'};
                 newMapModule.fields["name"] = {type: 'String'};
                 newMapModule.fields[module.name +"Id"] = {type: 'Long'};
+                newMapModule.fields[module.name +"Name"] = {type: 'String'};
                 newMapModule.fields[fieldDef.refer.module +"Id"] = {type: 'Long'};
+                newMapModule.fields[fieldDef.refer.module +"Name"] = {type: 'String'};
 
                 this.modules[mapName] = newMapModule;
                 this.projectSetting.enables.push(mapName);

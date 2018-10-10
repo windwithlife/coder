@@ -36,6 +36,7 @@ class ListExample extends React.Component{
 
 
     state = {
+        listOrigin:[],
         list: [],
         count:0,
         searchText:'',
@@ -50,23 +51,23 @@ class ListExample extends React.Component{
                 fieldColumns.push({
                     title: "名称",
                     dataIndex: 'name',
-                    key: 'name'
+
                 });
                 fieldColumnsAssociation.push({
                     title: "名称",
                     dataIndex: 'name',
-                    key: 'name'
+
                 });
             
                 fieldColumns.push({
-                    title: "表说明",
+                    title: "说明",
                     dataIndex: 'description',
-                    key: 'description'
+
                 });
                 fieldColumnsAssociation.push({
-                    title: "表说明",
+                    title: "说明",
                     dataIndex: 'description',
-                    key: 'description'
+
                 });
             
 
@@ -76,16 +77,16 @@ class ListExample extends React.Component{
             title: 'Action',
             key: 'action',
             render: (text, record, index) => (
-        <a href = "#" onClick = {that.handleLineRemove.bind(that,index,record)} > 删除此项关联 </a>
+        <a href = "#" onClick = {that.handleLineRemove.bind(that,index, record)} > 删除此项关联 </a>
 )
 }];
 
 this.columnsAssociation = [ ...fieldColumnsAssociation, {
     title: 'Action',
-    key: 'action',
+    key: 'action2',
     render: (text, record, index) => (
 <span >
-<a href = "#" onClick = {that.handleLineAdd.bind(that,index,record)} > 添加此项关联 </a>
+<a href = "#" onClick = {that.handleLineAdd.bind(that,index, record)} > 添加此项关联 </a>
 <span className = "ant-divider" />
     <a href = "#" onClick = {that.handleLineDetail.bind(that,record)} > 详细数据 </a>
 </span>
@@ -96,7 +97,37 @@ this.columnsAssociation = [ ...fieldColumnsAssociation, {
 }
 
 onFooterBack(){
+
     console.log('onback');
+    /*let listAddNew = [];
+    let listRemove =[];
+
+    this.state.listOrigin.map(function(item, i){
+        let realRemove = true;
+        this.state.list.forEach(function(a){
+            if (a.id== item.id){
+                realOperation = false;
+                return;
+            }
+        });
+        if (realOperation){listRemove.push(item)}
+    });
+    this.state.list.map(function(item,i){
+        let realAddNew = true;
+        this.state.listOrigin.forEach(function(x){
+           if (x.id == item.id){realAddNew = false;return;};
+        });
+        if(realAddNew){listAddNew.push(item)};
+    });
+    var associationName = this.props.query.associationName;
+    var associationPath = associationName +"/addNewByList";
+    console.log('associationPath ------' + associationPath);
+    model.queryRaw(associationPath,{},function (response) {
+        if (response && response.data) {
+
+        }});
+
+    */
     router.back();
 }
 
@@ -105,9 +136,8 @@ componentWillMount() {
     var that = this;
     var associationName = this.props.query.associationName;
     var referModuleName = this.props.query.referModule;
-    var moduleId  = this.props.query.tabledefineId;
-
-    var moduleField = "tabledefineId";
+    var moduleId  = this.props.query.channelId;
+    var moduleField = "channelId";
     this.startHeader();
 
     model.queryReferListBy(associationName,moduleField,{id:moduleId},function(response){
@@ -116,16 +146,19 @@ componentWillMount() {
             response.data.map(function(item, i) {
                 item.key = item.id
             });
+
             that.setState({
-                list: response.data
+                list: response.data,
+                listOrigin:response.data
             });
 
         }
     });
 
 
-    var referModulePath = referModuleName +"/queryAll";
-    model.queryRaw(referModulePath,{},function (response) {
+    var associationPath = referModuleName +"/queryAll";
+    console.log('associationPath ------' + associationPath);
+    model.queryRaw(associationPath,{},function (response) {
             if (response && response.data) {
                 console.log(JSON.stringify(response.data));
                 console.log(response.data);
@@ -151,12 +184,24 @@ onChange: (current) => {
 },
 };
 }
+handleLineUpdate(index, record) {
+    let that = this;
 
+    this.state.currentItem = record;
+    this.state.currentItem.index = index;
+    router.push({pathname:'/channel/edit',query: {...that.props.query,channelId:record.id}});
+
+
+
+}
 handleLineDetail(record) {
     let that = this;
 
     this.state.currentItem = record;
-    router.push({pathname:'/tabledefine/detail',query:{...that.props.query,tabledefineId:record.id}});
+    //this.state.currentItem.index = index;
+    //console.log('record:' + record);
+    //this.context.router.push({pathname:'//channel/detail',state:{item:record}});
+    router.push({pathname:'/tabledefine/detail',query:{...that.props.query,channelId:record.id}});
 
 
 }
@@ -174,9 +219,8 @@ handleLineAdd(index, record) {
     var realNew = true;
     var associationName = this.props.query.associationName;
     var referModuleName = this.props.query.referModule;
-    var moduleId  = this.props.query.tabledefineId;
-    var moduleField = "tabledefineId";
-
+    var moduleId  = this.props.query.channelId;
+    var moduleField = "channelId";
     var associationPath = associationName +"/save";
 
     const dataSource = [...that.state.list];
@@ -209,13 +253,13 @@ handleLineAdd(index, record) {
     });
 
 
-
 }
 handleLineRemove(index, record) {
     var that = this;
     var associationName = this.props.query.associationName;
     var referModuleName = this.props.query.referModule;
-
+    //var moduleId  = this.props.query.channelId;
+    //var moduleField = "channelId";
 
     var associationPath = associationName +"/remove/"+record.id;
 
@@ -291,6 +335,7 @@ render() {
         <div>
             <Table  rowSelection = {rowSelection} columns= {this.columns} dataSource = {this.state.list}
                 pagination = {this.pagination()} bordered title = {() => (<div>主表</div>)}
+
             />
         </div>
         <div>

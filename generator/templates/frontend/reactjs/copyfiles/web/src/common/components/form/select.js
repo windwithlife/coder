@@ -56,6 +56,10 @@ export default class XList extends React.Component {
 
     render() {
         var that = this;
+        console.log("current display property:" + this.props.display);
+        if (that.props.display == 'no'){
+            return(<div></div>);
+        }
         if (!that.state.options){
             return(<Select ref ="selectEL" value={this.state.value} onChange={this.handleChange}>
                         <Select.Option value={"-1"}></Select.Option>

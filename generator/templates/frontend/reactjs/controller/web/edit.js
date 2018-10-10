@@ -10,6 +10,7 @@ import XList from '../common/components/form/referlist';
 import model from './models/model.js';
 //import '../common/styles/App.less';
 
+const { TextArea } = Input;
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
@@ -157,18 +158,18 @@ render()
                     <Form.Item >
                         <XList  onEdit ={that.onAssociationEdit.bind(that,'<%=fieldRefer.associationTable%>','<%=referm%>')} refer ="<%=fieldRefer.associationTable%>" mapField="<%=data.moduleName%>Id" byId={that.props.query.<%=data.moduleName%>Id}  title="<%=fieldDisplayName%>" />
                     </Form.Item>
+
+                <%}else if(fieldShow=="text"){%>
+                    <Card type="inner">
+                        <Form.Item label="<%=fieldDisplayName%>">
+                            {getFieldDecorator("<%=field%>", { initialValue: listItems.<%=field%>})(<TextArea rows={5} />)}
+                        </Form.Item>
+                    </Card>
                 <%}else if(fieldShow=="yes"){%>
                         <Card type="inner">
-                        <FormItem
-                            label="<%=fieldDisplayName%>"
-                            hasFeedback
-                            {...formItemLayout}
-                            >
+                        <FormItem label="<%=fieldDisplayName%>" >
                             {getFieldDecorator("<%=field%>", {
-                                initialValue: listItems.<%=field%>,
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
+                                initialValue: listItems.<%=field%>
                             })(
                                 <Input type="text" />
                             )}

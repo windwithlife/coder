@@ -8,7 +8,7 @@ import XList from '../common/components/form/referlist';
 import router from 'next/router';
 import Layout from '../common/pages/layout';
 
-
+const { TextArea } = Input;
 const FormItem = Form.Item;
 
 
@@ -68,27 +68,27 @@ class EditForm extends React.Component {
         });
     }
 
-    onAssociationEdit(aName,e){
+    onAssociationEdit(aName,referModule,e){
         e.preventDefault();
         var that = this;
         this.props.form.validateFieldsAndScroll((err, values) => {
             if (!err) {
                 const data = {...values};
                 console.log('Received values of form: ', values);
-                that.handleAssociationEdit(aName,data);
+                that.handleAssociationEdit(aName,referModule,data);
             }
         });
 
 
     }
 
-    handleAssociationEdit(associationModule,data) {
+    handleAssociationEdit(associationModule,referm,data) {
         let that = this;
         model.add(data, function(response) {
             if (response && response.data) {
                 console.log(response.data);
-                let params = {...that.props.query,associationName:associationModule};
-                router.push({pathname:'/'+ channeltabledefine+ '/association',query:params});
+                let params = {...that.props.query,channeltabledefineId:response.data.id,associationName:associationModule,referModule:referm};
+                router.push({pathname:'/channeltabledefine/association',query:params});
             }
         });
     }

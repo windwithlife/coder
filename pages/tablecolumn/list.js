@@ -47,7 +47,7 @@ class ListExample extends React.Component{
         var fieldColumns=[];
         
                 fieldColumns.push({
-                  title: "名称",
+                  title: "列名称",
                   dataIndex: 'name',
                   key: 'name'
                 });
@@ -71,9 +71,21 @@ class ListExample extends React.Component{
                 });
                 
                 fieldColumns.push({
-                  title: "是否使用",
-                  dataIndex: 'isenable',
-                  key: 'isenable'
+                  title: "关联表",
+                  dataIndex: 'refer',
+                  key: 'refer'
+                });
+                
+                fieldColumns.push({
+                  title: "关联关系",
+                  dataIndex: 'map',
+                  key: 'map'
+                });
+                
+                fieldColumns.push({
+                  title: "关联字段",
+                  dataIndex: 'mapField',
+                  key: 'mapField'
                 });
                 
 
@@ -124,6 +136,19 @@ componentWillMount() {
                     list: response.data
                 });
 
+            }
+        });
+    }else{
+        model.queryAll(function (response) {
+            if (response && response.data) {
+                console.log(JSON.stringify(response.data));
+                console.log(response.data);
+                response.data.map(function(item, i) {
+                    item.key = item.id
+                });
+                that.setState({
+                    list: response.data
+                });
             }
         });
     }

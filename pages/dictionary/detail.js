@@ -55,6 +55,14 @@ render()
                 
                         <Card type="inner">
                         <FormItem
+                            label="对应定义值"
+                            >
+                            {listItems.value}
+                        </FormItem>
+                        </Card>
+                
+                        <Card type="inner">
+                        <FormItem
                             label="字典类别"
                             >
                             {listItems.category}

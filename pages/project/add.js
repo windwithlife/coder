@@ -8,7 +8,7 @@ import XList from '../common/components/form/referlist';
 import router from 'next/router';
 import Layout from '../common/pages/layout';
 
-
+const { TextArea } = Input;
 const FormItem = Form.Item;
 
 
@@ -68,6 +68,30 @@ class EditForm extends React.Component {
         });
     }
 
+    onAssociationEdit(aName,referModule,e){
+        e.preventDefault();
+        var that = this;
+        this.props.form.validateFieldsAndScroll((err, values) => {
+            if (!err) {
+                const data = {...values};
+                console.log('Received values of form: ', values);
+                that.handleAssociationEdit(aName,referModule,data);
+            }
+        });
+
+
+    }
+
+    handleAssociationEdit(associationModule,referm,data) {
+        let that = this;
+        model.add(data, function(response) {
+            if (response && response.data) {
+                console.log(response.data);
+                let params = {...that.props.query,projectId:response.data.id,associationName:associationModule,referModule:referm};
+                router.push({pathname:'/project/association',query:params});
+            }
+        });
+    }
 
 render()
 {
@@ -84,9 +108,6 @@ render()
                 <FormItem label="名称" >
                             {getFieldDecorator("name", {
                                 initialValue: '',
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
                             })(
                                 <Input type="text" />
                             )}
@@ -97,9 +118,6 @@ render()
                 <FormItem label="说明" >
                             {getFieldDecorator("description", {
                                 initialValue: '',
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
                             })(
                                 <Input type="text" />
                             )}
@@ -114,9 +132,6 @@ render()
                 <FormItem label="站点" >
                             {getFieldDecorator("website", {
                                 initialValue: '',
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
                             })(
                                 <Input type="text" />
                             )}
@@ -127,9 +142,6 @@ render()
                 <FormItem label="SOA地址" >
                             {getFieldDecorator("soaIp", {
                                 initialValue: '',
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
                             })(
                                 <Input type="text" />
                             )}

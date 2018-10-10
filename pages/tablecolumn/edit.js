@@ -57,11 +57,11 @@ class EditForm extends React.Component {
             }
         });
     }
-    onAssociationEdit(aName,e){
+    onAssociationEdit(aName,referm,e){
         e.preventDefault();
         var that = this;
-        let params = {...that.props.query,associationName:aName};
-        router.push({pathname:'/'+ tablecolumn+ '/association',query:params});
+        let params = {...that.props.query,associationName:aName,referModule:referm};
+        router.push({pathname:'/tablecolumn/association',query:params});
     }
     handleSubmitUpdate(data) {
         let that = this;
@@ -104,16 +104,9 @@ render()
             <Form  onSubmit={this.handleSubmit.bind(this)}>
                
                         <Card type="inner">
-                        <FormItem
-                            label="名称"
-                            hasFeedback
-                            {...formItemLayout}
-                            >
+                        <FormItem label="列名称" >
                             {getFieldDecorator("name", {
-                                initialValue: listItems.name,
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
+                                initialValue: listItems.name
                             })(
                                 <Input type="text" />
                             )}
@@ -121,16 +114,9 @@ render()
                         </Card>
                 
                         <Card type="inner">
-                        <FormItem
-                            label="表说明"
-                            hasFeedback
-                            {...formItemLayout}
-                            >
+                        <FormItem label="表说明" >
                             {getFieldDecorator("description", {
-                                initialValue: listItems.description,
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
+                                initialValue: listItems.description
                             })(
                                 <Input type="text" />
                             )}
@@ -159,17 +145,37 @@ render()
                     < /Form.Item>
                         </Card>
                         
+                        <Card type="inner">
+                        <FormItem label="关联表" >
+                            {getFieldDecorator("refer", {
+                                initialValue: listItems.refer
+                            })(
+                                <Input type="text" />
+                            )}
+                        </FormItem>
+                        </Card>
+                
                     <Card type="inner">
-                <Form.Item label="是否使用"
+                <Form.Item label="关联关系"
                             hasFeedback {...formItemLayout}> {
-                    getFieldDecorator("isenable", {
-                        initialValue: listItems.isenable,
+                    getFieldDecorator("map", {
+                        initialValue: listItems.map,
                     })(
-                        < XSelect  category="tablestatus" refer ="" display= {this.props.query.fromModule =='' ? 'no':'yes'} />
+                        < XSelect  category="mapRelation" refer ="" display= {this.props.query.fromModule =='' ? 'no':'yes'} />
                     )}
                     < /Form.Item>
                         </Card>
                         
+                        <Card type="inner">
+                        <FormItem label="关联字段" >
+                            {getFieldDecorator("mapField", {
+                                initialValue: listItems.mapField
+                            })(
+                                <Input type="text" />
+                            )}
+                        </FormItem>
+                        </Card>
+                
                  <Card type="inner">
                  <FormItem className="form-item-clear" >
                     <Button type="primary" htmlType="submit" size="large">Save</Button>

@@ -70,7 +70,7 @@ class ListExample extends React.Component{
             title: 'Action',
             key: 'action',
             render: (text, record, index) => (
-        <a href = "#" onClick = {that.handleLineAdd.bind(that)} > 去除项 </a>
+        <a href = "#" onClick = {that.handleLineRemove.bind(that,index,record)} > 删除此项关联 </a>
 )
 }];
 
@@ -79,9 +79,9 @@ this.columnsAssociation = [ ...fieldColumnsAssociation, {
     key: 'action',
     render: (text, record, index) => (
 <span >
-<a href = "#" onClick = {that.handleLineAdd.bind(that)} > 添加项 </a>
+<a href = "#" onClick = {that.handleLineAdd.bind(that,index,record)} > 添加此项关联 </a>
 <span className = "ant-divider" />
-    <a href = "#" onClick = {that.handleLineDetail.bind(that,record)} > Detail </a>
+    <a href = "#" onClick = {that.handleLineDetail.bind(that,record)} > 详细数据 </a>
 </span>
 )
 }];
@@ -90,6 +90,7 @@ this.columnsAssociation = [ ...fieldColumnsAssociation, {
 }
 
 onFooterBack(){
+    console.log('onback');
     router.back();
 }
 
@@ -110,7 +111,7 @@ componentWillMount() {
                 item.key = item.id
             });
             that.setState({
-                listAssociation: response.data
+                list: response.data
             });
 
         }
@@ -126,7 +127,7 @@ componentWillMount() {
                 item.key = item.id
             });
             that.setState({
-                list: response.data
+                listAssociation: response.data
             });
     }});
 
@@ -144,23 +145,11 @@ onChange: (current) => {
 },
 };
 }
-handleLineUpdate(index, record) {
-    let that = this;
 
-    this.state.currentItem = record;
-    this.state.currentItem.index = index;
-    router.push({pathname:'/<%=data.moduleName%>/edit',query: {...that.props.query,<%=data.moduleName%>Id:record.id}});
-
-
-
-}
 handleLineDetail(record) {
     let that = this;
 
     this.state.currentItem = record;
-    //this.state.currentItem.index = index;
-    //console.log('record:' + record);
-    //this.context.router.push({pathname:'/<%=data.endName%>/<%=data.moduleName%>/detail',state:{item:record}});
     router.push({pathname:'/<%=data.moduleName%>/detail',query:{...that.props.query,<%=data.moduleName%>Id:record.id}});
 
 
@@ -174,21 +163,81 @@ handleLineDetailModal(record) {
 
 }
 
-handleLineAdd() {
-    let that = this;
-    //this.context.router.push({pathname:'/<%=data.endName%>/<%=data.moduleName%>/add'});
-    router.push({pathname:'/<%=data.moduleName%>/add',query:{...that.props.query}});
-}
-handleLineDelete(index, record) {
+handleLineAdd(index, record) {
     var that = this;
-    model.removeById(record.id, function() {
+    var realNew = true;
+    var associationName = this.props.query.associationName;
+    var referModuleName = this.props.query.referModule;
+    var moduleId  = this.props.query.<%=data.moduleName%>Id;
+    var moduleField = "<%=data.moduleName%>Id";
+
+    var associationPath = associationName +"/save";
+
+    const dataSource = [...that.state.list];
+    var dataSourceA = [...that.state.listAssociation];
+    dataSource.map(function(item,i){
+        if (record.id == item.id){
+            realNew = false;
+        }
+    })
+    if (realNew == false){return};
+
+    var params = {id:0};
+    params[moduleField] = moduleId;
+    params[referModuleName+"Id"] = record.id;
+    params["name"] = record.name;
+    model.postRaw(associationPath,params, function(response) {
+        if (response && response.data) {
+            console.log('sucessful to add one new recod');
+            let r = response.data;
+            r.name = record.name;
+            r.key  = response.id;
+            dataSource.push(r);
+            dataSourceA.splice(index, 1);
+
+            that.setState({
+                list: dataSource,
+                listAssociation:dataSourceA
+            });
+        }
+    });
+
+
+
+}
+handleLineRemove(index, record) {
+    var that = this;
+    var associationName = this.props.query.associationName;
+    var referModuleName = this.props.query.referModule;
+
+
+    var associationPath = associationName +"/remove/"+record.id;
+
+    model.postRaw(associationPath,record, function() {
         console.log('successful to remove: ID:' + record.id);
         const dataSource = [...that.state.list];
         dataSource.splice(index, 1);
+
+        var dataSourceA = [...that.state.listAssociation];
+        var existedItem = false;
+        dataSourceA.map(function(item,i){
+            if (record[referModuleName+"Id"]== item.id){
+                existedItem = true;
+            }
+        })
+        if (existedItem == false){
+            var newRecord = {id:record[referModuleName +"Id"]};
+            newRecord.name = record.name;
+            newRecord.key  =  referModuleName +newRecord.id;
+            dataSourceA.push(newRecord);
+        }
         that.setState({
-            list: dataSource
+            list: dataSource,
+            listAssociation:dataSourceA
         });
     });
+
+
 
 }
 
@@ -235,8 +284,7 @@ render() {
         <div >
         <div>
             <Table  rowSelection = {rowSelection} columns= {this.columns} dataSource = {this.state.list}
-                pagination = {this.pagination()} bordered title = {this.title}
-                footer = {() => (<Button onClick={that.onFooterBack.bind(that)}>确认删除</Button>)}
+                pagination = {this.pagination()} bordered title = {() => (<div>主表</div>)}
             />
         </div>
         <div>
@@ -251,8 +299,8 @@ render() {
                 < /Form>
             </div>
             <Table  bordered rowSelection = {rowSelection} columns = {this.columnsAssociation} dataSource = {this.state.listAssociation}
-                pagination = {this.pagination()} title = { this.title}
-                footer = {() => (<Button onClick={that.onFooterBack.bind(that)}>加关联</Button>)}
+                pagination = {this.pagination()} title = {() => (<div>关联表</div>)}
+                footer = {() => (<Button onClick={that.onFooterBack.bind(that)}>确定</Button>)}
             />
 
         </div>

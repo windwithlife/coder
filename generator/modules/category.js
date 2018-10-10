@@ -9,7 +9,7 @@ module.exports  =
     fields: {
         id: {type: 'Long', dName: "编号"},
         name: {type: 'String', dName: "字典类别名称",show:'yes'},
-        description: {type: 'String', dName: "类别用途描述", show:'yes'},
+        description: {type: 'String', dName: "字典类别描述", show:'yes'},
            
     }
 }

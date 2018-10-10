@@ -37,7 +37,9 @@ export default class XList extends React.Component {
             model.queryReferListByName(this.props.refer,function (response) {
                 if (response && response.status===200) {
                     console.log(response.data);
-
+                    response.data.map(function (item, i){
+                        item.value = item.id;
+                    })
                     that.setState({options: response.data});
                 }
             });
@@ -70,7 +72,7 @@ export default class XList extends React.Component {
             <Select ref ="selectEL" value={this.state.value} onChange={this.handleChange}>
                 <Select.Option value={"-1"}></Select.Option>
                 {that.state.options.map(function (item, i) {
-                    return (<Select.Option value={item.id}>{item.name}</Select.Option>);
+                    return (<Select.Option value={item.value}>{item.name}</Select.Option>);
                 })}
             </Select >
         );

@@ -53,6 +53,12 @@ class ListExample extends React.Component{
                 });
                 
                 fieldColumns.push({
+                  title: "对应定义值",
+                  dataIndex: 'value',
+                  key: 'value'
+                });
+                
+                fieldColumns.push({
                   title: "字典类别",
                   dataIndex: 'category',
                   key: 'category'

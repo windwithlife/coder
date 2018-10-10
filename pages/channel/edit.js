@@ -104,16 +104,9 @@ render()
             <Form  onSubmit={this.handleSubmit.bind(this)}>
                
                         <Card type="inner">
-                        <FormItem
-                            label="名称"
-                            hasFeedback
-                            {...formItemLayout}
-                            >
+                        <FormItem label="名称" >
                             {getFieldDecorator("name", {
-                                initialValue: listItems.name,
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
+                                initialValue: listItems.name
                             })(
                                 <Input type="text" />
                             )}
@@ -121,16 +114,9 @@ render()
                         </Card>
                 
                         <Card type="inner">
-                        <FormItem
-                            label="说明"
-                            hasFeedback
-                            {...formItemLayout}
-                            >
+                        <FormItem label="说明" >
                             {getFieldDecorator("description", {
-                                initialValue: listItems.description,
-                                rules: [
-                                    {required: true, message: '名称未填写'},
-                                ],
+                                initialValue: listItems.description
                             })(
                                 <Input type="text" />
                             )}
@@ -149,8 +135,9 @@ render()
                         </Card>
                         
                     <Form.Item >
-                        <XList  onEdit ={that.onAssociationEdit.bind(that,'channeltabledefine','tabledefine')} refer ="channeltabledefine" mapField="channelId" byId={that.props.query.channelId}  title="所用表" />
+                        <XList  onEdit ={that.onAssociationEdit.bind(that,'channeltabledefine','project')} refer ="channeltabledefine" mapField="channelId" byId={that.props.query.channelId}  title="所用表" />
                     </Form.Item>
+
                 
                     <Card type="inner">
                 <Form.Item label="是否使用"

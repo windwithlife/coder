@@ -15,4 +15,4 @@ RUN cd /tmp/build && mvn -q -DskipTests=true  package \
 VOLUME /tmp
 RUN mkdir -p /usr/local/share/upload
 EXPOSE 8080
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar","--spring.profiles.active=docker"]
+ENTRYPOINT ["java","-jar","/app.jar","--spring.profiles.active=docker"]

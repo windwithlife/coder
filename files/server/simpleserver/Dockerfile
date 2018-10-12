@@ -15,4 +15,4 @@ RUN cd /tmp/build && mvn -q -DskipTests=true  package \
 
 RUN mkdir -p /usr/local/share/upload
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","/runDIR/app.jar","--spring.profiles.active=docker"]
+ENTRYPOINT ["sh"]

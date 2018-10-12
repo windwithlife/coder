@@ -5,14 +5,15 @@ ADD pom.xml /tmp/build/
 RUN cd /tmp/build && mvn -q dependency:resolve
 
 ADD src /tmp/build/src
+RUN mkdir -p /runDIR/
       
 RUN cd /tmp/build && mvn -q -DskipTests=true  package \
        
-        && mv target/*.jar /app.jar \
+        && mv target/*.jar /runDIR/app.jar \
       
-        && cd / && rm -rf /tmp/build
+        && cd /runDIR/ && rm -rf /tmp/build
 
-VOLUME /tmp
+VOLUME /runDIR/
 RUN mkdir -p /usr/local/share/upload
 EXPOSE 8080
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar","--spring.profiles.active=docker"]

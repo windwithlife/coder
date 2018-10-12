@@ -36,7 +36,7 @@ public class Channel implements Serializable {
     private String description;
        
 
-    private Long myproject;
+    private Long projectId;
         
 
     private Long mytables;
@@ -73,11 +73,11 @@ public class Channel implements Serializable {
      
 
 
-    public Long getMyproject(){
-         return this.myproject;
+    public Long getProjectId(){
+         return this.projectId;
     };
-    public void setMyproject(Long myproject){
-         this.myproject = myproject;
+    public void setProjectId(Long projectId){
+         this.projectId = projectId;
     }
 
 

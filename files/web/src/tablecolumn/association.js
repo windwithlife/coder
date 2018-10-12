@@ -71,13 +71,13 @@ class ListExample extends React.Component{
             
                 fieldColumns.push({
                     title: "关联表",
-                    dataIndex: 'refer',
-                    key: 'refer'
+                    dataIndex: 'referModule',
+                    key: 'referModule'
                 });
                 fieldColumnsAssociation.push({
                     title: "关联表",
-                    dataIndex: 'refer',
-                    key: 'refer'
+                    dataIndex: 'referModule',
+                    key: 'referModule'
                 });
             
                 fieldColumns.push({

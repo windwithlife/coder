@@ -10,6 +10,7 @@ import XList from '../common/components/form/referlist';
 import model from './models/model.js';
 //import '../common/styles/App.less';
 
+const { TextArea } = Input;
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
@@ -126,8 +127,8 @@ render()
                     <Card type="inner">
                 <Form.Item label="所属表"
                             hasFeedback {...formItemLayout}> {
-                    getFieldDecorator("mytable", {
-                        initialValue: listItems.mytable,
+                    getFieldDecorator("tableId", {
+                        initialValue: listItems.tableId,
                     })(
                         < XSelect  category="" refer ="tabledefine" display= {this.props.query.fromModule =='tabledefine' ? 'no':'yes'} />
                     )}
@@ -137,18 +138,29 @@ render()
                     <Card type="inner">
                 <Form.Item label="表字段类型"
                             hasFeedback {...formItemLayout}> {
-                    getFieldDecorator("fieldtype", {
-                        initialValue: listItems.fieldtype,
+                    getFieldDecorator("fieldType", {
+                        initialValue: listItems.fieldType,
                     })(
-                        < XSelect  category="fieldtype" refer ="" display= {this.props.query.fromModule =='' ? 'no':'yes'} />
+                        < XSelect  category="field_type" refer ="" display= {this.props.query.fromModule =='' ? 'no':'yes'} />
+                    )}
+                    < /Form.Item>
+                        </Card>
+                        
+                    <Card type="inner">
+                <Form.Item label="界面显示方式"
+                            hasFeedback {...formItemLayout}> {
+                    getFieldDecorator("showType", {
+                        initialValue: listItems.showType,
+                    })(
+                        < XSelect  category="show_type" refer ="" display= {this.props.query.fromModule =='' ? 'no':'yes'} />
                     )}
                     < /Form.Item>
                         </Card>
                         
                         <Card type="inner">
                         <FormItem label="关联表" >
-                            {getFieldDecorator("refer", {
-                                initialValue: listItems.refer
+                            {getFieldDecorator("referModule", {
+                                initialValue: listItems.referModule
                             })(
                                 <Input type="text" />
                             )}
@@ -161,7 +173,7 @@ render()
                     getFieldDecorator("map", {
                         initialValue: listItems.map,
                     })(
-                        < XSelect  category="mapRelation" refer ="" display= {this.props.query.fromModule =='' ? 'no':'yes'} />
+                        < XSelect  category="map_relation" refer ="" display= {this.props.query.fromModule =='' ? 'no':'yes'} />
                     )}
                     < /Form.Item>
                         </Card>

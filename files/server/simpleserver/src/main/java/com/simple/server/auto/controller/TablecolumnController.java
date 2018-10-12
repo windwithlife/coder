@@ -41,17 +41,25 @@ public class TablecolumnController {
 
    
    @ResponseBody
-   @RequestMapping(value = "/queryByMytable", method = RequestMethod.GET)
-   public List<Tablecolumn> queryByMytable(@RequestParam("id") Long id) {
-       List<Tablecolumn> result = service.findByMytable(id);
+   @RequestMapping(value = "/queryByTableId", method = RequestMethod.GET)
+   public List<Tablecolumn> queryByTableId(@RequestParam("id") Long id) {
+       List<Tablecolumn> result = service.findByTableId(id);
        return result;
    }
 
    
    @ResponseBody
-   @RequestMapping(value = "/queryByFieldtype", method = RequestMethod.GET)
-   public List<Tablecolumn> queryByFieldtype(@RequestParam("id") Long id) {
-       List<Tablecolumn> result = service.findByFieldtype(id);
+   @RequestMapping(value = "/queryByFieldType", method = RequestMethod.GET)
+   public List<Tablecolumn> queryByFieldType(@RequestParam("id") Long id) {
+       List<Tablecolumn> result = service.findByFieldType(id);
+       return result;
+   }
+
+   
+   @ResponseBody
+   @RequestMapping(value = "/queryByShowType", method = RequestMethod.GET)
+   public List<Tablecolumn> queryByShowType(@RequestParam("id") Long id) {
+       List<Tablecolumn> result = service.findByShowType(id);
        return result;
    }
 

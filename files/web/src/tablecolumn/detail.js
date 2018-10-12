@@ -65,7 +65,7 @@ render()
                         <FormItem
                             label="所属表"
                             >
-                            {listItems.mytable}
+                            {listItems.tableId}
                         </FormItem>
                         </Card>
                 
@@ -73,7 +73,15 @@ render()
                         <FormItem
                             label="表字段类型"
                             >
-                            {listItems.fieldtype}
+                            {listItems.fieldType}
+                        </FormItem>
+                        </Card>
+                
+                        <Card type="inner">
+                        <FormItem
+                            label="界面显示方式"
+                            >
+                            {listItems.showType}
                         </FormItem>
                         </Card>
                 
@@ -81,7 +89,7 @@ render()
                         <FormItem
                             label="关联表"
                             >
-                            {listItems.refer}
+                            {listItems.referModule}
                         </FormItem>
                         </Card>
                 

@@ -25,7 +25,7 @@ class EditForm extends React.Component {
     handleSubmitUpdate(data) {
         
         if (this.props.query.tabledefineId) {
-            data. mytable = this.props.query. tabledefineId;
+            data. tableId = this.props.query. tabledefineId;
         }
         
         let that = this;
@@ -131,7 +131,7 @@ render()
                     <Card type="inner">
                 <Form.Item label="所属表" >
                             {
-                    getFieldDecorator("mytable", {
+                    getFieldDecorator("tableId", {
                         initialValue: "-1",
                     })(
                         < XSelect  category="" refer ="tabledefine" display= {(this.props.query.fromModule =='tabledefine') ? 'no':'yes' } />
@@ -142,17 +142,28 @@ render()
                     <Card type="inner">
                 <Form.Item label="表字段类型" >
                             {
-                    getFieldDecorator("fieldtype", {
+                    getFieldDecorator("fieldType", {
                         initialValue: "-1",
                     })(
-                        < XSelect  category="fieldtype" refer ="" display= {(this.props.query.fromModule =='') ? 'no':'yes' } />
+                        < XSelect  category="field_type" refer ="" display= {(this.props.query.fromModule =='') ? 'no':'yes' } />
+                    )}
+                < /Form.Item>
+                    </Card>
+                
+                    <Card type="inner">
+                <Form.Item label="界面显示方式" >
+                            {
+                    getFieldDecorator("showType", {
+                        initialValue: "-1",
+                    })(
+                        < XSelect  category="show_type" refer ="" display= {(this.props.query.fromModule =='') ? 'no':'yes' } />
                     )}
                 < /Form.Item>
                     </Card>
                 
                 <Card type="inner">
                 <FormItem label="关联表" >
-                            {getFieldDecorator("refer", {
+                            {getFieldDecorator("referModule", {
                                 initialValue: '',
                             })(
                                 <Input type="text" />
@@ -166,7 +177,7 @@ render()
                     getFieldDecorator("map", {
                         initialValue: "-1",
                     })(
-                        < XSelect  category="mapRelation" refer ="" display= {(this.props.query.fromModule =='') ? 'no':'yes' } />
+                        < XSelect  category="map_relation" refer ="" display= {(this.props.query.fromModule =='') ? 'no':'yes' } />
                     )}
                 < /Form.Item>
                     </Card>

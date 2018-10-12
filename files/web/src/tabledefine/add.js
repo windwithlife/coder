@@ -114,12 +114,8 @@ render()
                 </FormItem>
                 </Card>
                 
-                <Form.Item >
-                    <XList  onEdit ={that.onSaveAndEdit.bind(that,'tablecolumn')} refer ="tablecolumn" mapField="mytable" byId='-1'  title="表字段" />
-                </Form.Item>
-                
                 <Card type="inner">
-                <FormItem label="表说明" >
+                <FormItem label="说明" >
                             {getFieldDecorator("description", {
                                 initialValue: '',
                             })(
@@ -128,9 +124,13 @@ render()
                 </FormItem>
                 </Card>
                 
+                <Form.Item >
+                    <XList  onEdit ={that.onSaveAndEdit.bind(that,'tablecolumn')} refer ="tablecolumn" mapField="tableId" byId='-1'  title="表字段" />
+                </Form.Item>
+                
                 <Card type="inner">
                 <Form.Item label="表结构定义">
-                    {getFieldDecorator("defineText", { initialValue: ''})(<TextArea row={5} />)}
+                    {getFieldDecorator("defineText", { initialValue: ''})(<TextArea rows={5} />)}
                 </Form.Item>
                 </Card>
                 
@@ -140,7 +140,7 @@ render()
                     getFieldDecorator("status", {
                         initialValue: "-1",
                     })(
-                        < XSelect  category="tablestatus" refer ="" display= {(this.props.query.fromModule =='') ? 'no':'yes' } />
+                        < XSelect  category="data_status" refer ="" display= {(this.props.query.fromModule =='') ? 'no':'yes' } />
                     )}
                 < /Form.Item>
                     </Card>

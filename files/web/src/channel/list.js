@@ -60,8 +60,8 @@ class ListExample extends React.Component{
                 
                 fieldColumns.push({
                   title: "所属项目",
-                  dataIndex: 'myproject',
-                  key: 'myproject'
+                  dataIndex: 'projectId',
+                  key: 'projectId'
                 });
                 
                 fieldColumns.push({
@@ -108,7 +108,7 @@ componentWillMount() {
     this.startHeader();
     
     if(this.props.query.projectId){
-        model.queryReferListBy("channel","myproject",{id:this.props.query.projectId},function(response){
+        model.queryReferListBy("channel","projectId",{id:this.props.query.projectId},function(response){
             if (response && response.data) {
                 console.log(response.data);
                 response.data.map(function(item, i) {

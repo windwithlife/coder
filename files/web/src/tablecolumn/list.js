@@ -60,20 +60,26 @@ class ListExample extends React.Component{
                 
                 fieldColumns.push({
                   title: "所属表",
-                  dataIndex: 'mytable',
-                  key: 'mytable'
+                  dataIndex: 'tableId',
+                  key: 'tableId'
                 });
                 
                 fieldColumns.push({
                   title: "表字段类型",
-                  dataIndex: 'fieldtype',
-                  key: 'fieldtype'
+                  dataIndex: 'fieldType',
+                  key: 'fieldType'
+                });
+                
+                fieldColumns.push({
+                  title: "界面显示方式",
+                  dataIndex: 'showType',
+                  key: 'showType'
                 });
                 
                 fieldColumns.push({
                   title: "关联表",
-                  dataIndex: 'refer',
-                  key: 'refer'
+                  dataIndex: 'referModule',
+                  key: 'referModule'
                 });
                 
                 fieldColumns.push({
@@ -126,7 +132,7 @@ componentWillMount() {
     this.startHeader();
     
     if(this.props.query.tabledefineId){
-        model.queryReferListBy("tablecolumn","mytable",{id:this.props.query.tabledefineId},function(response){
+        model.queryReferListBy("tablecolumn","tableId",{id:this.props.query.tabledefineId},function(response){
             if (response && response.data) {
                 console.log(response.data);
                 response.data.map(function(item, i) {

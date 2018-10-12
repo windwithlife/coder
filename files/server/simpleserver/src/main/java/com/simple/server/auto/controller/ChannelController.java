@@ -44,9 +44,9 @@ public class ChannelController {
 
    
    @ResponseBody
-   @RequestMapping(value = "/queryByMyproject", method = RequestMethod.GET)
-   public List<Channel> queryByMyproject(@RequestParam("id") Long id) {
-       List<Channel> result = service.findByMyproject(id);
+   @RequestMapping(value = "/queryByProjectId", method = RequestMethod.GET)
+   public List<Channel> queryByProjectId(@RequestParam("id") Long id) {
+       List<Channel> result = service.findByProjectId(id);
        return result;
    }
 

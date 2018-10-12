@@ -10,6 +10,7 @@ import XList from '../common/components/form/referlist';
 import model from './models/model.js';
 //import '../common/styles/App.less';
 
+const { TextArea } = Input;
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {

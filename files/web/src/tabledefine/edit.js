@@ -10,6 +10,7 @@ import XList from '../common/components/form/referlist';
 import model from './models/model.js';
 //import '../common/styles/App.less';
 
+const { TextArea } = Input;
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
@@ -113,13 +114,8 @@ render()
                         </FormItem>
                         </Card>
                 
-
-                    <Form.Item >
-                        <XList  onEdit ={that.onSaveAndEdit.bind(that,"tablecolumn")} refer ="tablecolumn" mapField="mytable" byId={that.props.query.tabledefineId}  title="表字段" />
-                        </Form.Item>
-                
                         <Card type="inner">
-                        <FormItem label="表说明" >
+                        <FormItem label="说明" >
                             {getFieldDecorator("description", {
                                 initialValue: listItems.description
                             })(
@@ -128,9 +124,14 @@ render()
                         </FormItem>
                         </Card>
                 
+
+                    <Form.Item >
+                        <XList  onEdit ={that.onSaveAndEdit.bind(that,"tablecolumn")} refer ="tablecolumn" mapField="tableId" byId={that.props.query.tabledefineId}  title="表字段" />
+                        </Form.Item>
+                
                     <Card type="inner">
                         <Form.Item label="表结构定义">
-                            {getFieldDecorator("defineText", { initialValue: listItems.defineText})(<TextArea row={5} />)}
+                            {getFieldDecorator("defineText", { initialValue: listItems.defineText})(<TextArea rows={5} />)}
                         </Form.Item>
                     </Card>
                 
@@ -140,7 +141,7 @@ render()
                     getFieldDecorator("status", {
                         initialValue: listItems.status,
                     })(
-                        < XSelect  category="tablestatus" refer ="" display= {this.props.query.fromModule =='' ? 'no':'yes'} />
+                        < XSelect  category="data_status" refer ="" display= {this.props.query.fromModule =='' ? 'no':'yes'} />
                     )}
                     < /Form.Item>
                         </Card>

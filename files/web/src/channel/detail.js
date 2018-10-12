@@ -65,7 +65,7 @@ render()
                         <FormItem
                             label="所属项目"
                             >
-                            {listItems.myproject}
+                            {listItems.projectId}
                         </FormItem>
                         </Card>
                 

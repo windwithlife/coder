@@ -11,7 +11,7 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
     public  Channel findOneByName(String name);
 
     
-       public List<Channel> findByMyproject(Long id);
+       public List<Channel> findByProjectId(Long id);
 
                    
        public List<Channel> findByIsenable(Long id);

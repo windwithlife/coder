@@ -32,12 +32,12 @@ public class Tabledefine implements Serializable {
     //名称
     private String name;
        
+    //说明
+    private String description;
+       
 
     private Long tcolumn;
         
-    //表说明
-    private String description;
-       
 
     @Column(columnDefinition="text")
     private String defineText;
@@ -64,6 +64,14 @@ public class Tabledefine implements Serializable {
          this.name = name;
      }
      
+     //说明
+     public String getDescription(){
+         return this.description;
+     };
+     public void setDescription(String description){
+         this.description = description;
+     }
+     
 
 
     public Long getTcolumn(){
@@ -75,14 +83,6 @@ public class Tabledefine implements Serializable {
 
 
           
-     //表说明
-     public String getDescription(){
-         return this.description;
-     };
-     public void setDescription(String description){
-         this.description = description;
-     }
-     
      //表结构定义
      public String getDefineText(){
          return this.defineText;

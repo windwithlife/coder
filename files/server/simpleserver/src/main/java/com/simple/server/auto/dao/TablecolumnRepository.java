@@ -11,10 +11,13 @@ public interface TablecolumnRepository extends JpaRepository<Tablecolumn, Long> 
     public  Tablecolumn findOneByName(String name);
 
     
-       public List<Tablecolumn> findByMytable(Long id);
+       public List<Tablecolumn> findByTableId(Long id);
 
                    
-       public List<Tablecolumn> findByFieldtype(Long id);
+       public List<Tablecolumn> findByFieldType(Long id);
+
+                   
+       public List<Tablecolumn> findByShowType(Long id);
 
                    
        public List<Tablecolumn> findByMap(Long id);

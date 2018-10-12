@@ -40,14 +40,20 @@ public class TablecolumnService {
 
 	
 
-    public  List<Tablecolumn> findByMytable(Long id){
-        return dao.findByMytable(id);
+    public  List<Tablecolumn> findByTableId(Long id){
+        return dao.findByTableId(id);
     }
 
                              
 
-    public  List<Tablecolumn> findByFieldtype(Long id){
-        return dao.findByFieldtype(id);
+    public  List<Tablecolumn> findByFieldType(Long id){
+        return dao.findByFieldType(id);
+    }
+
+                             
+
+    public  List<Tablecolumn> findByShowType(Long id){
+        return dao.findByShowType(id);
     }
 
                              

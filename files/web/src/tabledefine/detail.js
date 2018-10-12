@@ -53,19 +53,19 @@ render()
                         </FormItem>
                         </Card>
                 
-
-                    <Form.Item >
-                        <XList  onEdit ={null} refer ="tablecolumn" mapField="mytable" byId={that.props.query.tabledefineId}  title="表字段" />
-                        </Form.Item>
-
-                
                         <Card type="inner">
                         <FormItem
-                            label="表说明"
+                            label="说明"
                             >
                             {listItems.description}
                         </FormItem>
                         </Card>
+                
+
+                    <Form.Item >
+                        <XList  onEdit ={null} refer ="tablecolumn" mapField="tableId" byId={that.props.query.tabledefineId}  title="表字段" />
+                        </Form.Item>
+
                 
                         <Card type="inner">
                         <FormItem

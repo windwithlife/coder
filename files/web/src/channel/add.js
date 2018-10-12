@@ -25,7 +25,7 @@ class EditForm extends React.Component {
     handleSubmitUpdate(data) {
         
         if (this.props.query.projectId) {
-            data. myproject = this.props.query. projectId;
+            data. projectId = this.props.query. projectId;
         }
         
         let that = this;
@@ -131,7 +131,7 @@ render()
                     <Card type="inner">
                 <Form.Item label="所属项目" >
                             {
-                    getFieldDecorator("myproject", {
+                    getFieldDecorator("projectId", {
                         initialValue: "-1",
                     })(
                         < XSelect  category="" refer ="project" display= {(this.props.query.fromModule =='project') ? 'no':'yes' } />
@@ -149,7 +149,7 @@ render()
                     getFieldDecorator("isenable", {
                         initialValue: "-1",
                     })(
-                        < XSelect  category="tablestatus" refer ="" display= {(this.props.query.fromModule =='') ? 'no':'yes' } />
+                        < XSelect  category="data_status" refer ="" display= {(this.props.query.fromModule =='') ? 'no':'yes' } />
                     )}
                 < /Form.Item>
                     </Card>

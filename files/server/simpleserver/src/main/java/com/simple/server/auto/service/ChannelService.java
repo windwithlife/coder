@@ -40,8 +40,8 @@ public class ChannelService {
 
 	
 
-    public  List<Channel> findByMyproject(Long id){
-        return dao.findByMyproject(id);
+    public  List<Channel> findByProjectId(Long id){
+        return dao.findByProjectId(id);
     }
 
                              

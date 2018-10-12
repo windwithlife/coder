@@ -10,6 +10,7 @@ import XList from '../common/components/form/referlist';
 import model from './models/model.js';
 //import '../common/styles/App.less';
 
+const { TextArea } = Input;
 const FormItem = Form.Item;
 const formItemLayout = {
     labelCol: {
@@ -126,8 +127,8 @@ render()
                     <Card type="inner">
                 <Form.Item label="所属项目"
                             hasFeedback {...formItemLayout}> {
-                    getFieldDecorator("myproject", {
-                        initialValue: listItems.myproject,
+                    getFieldDecorator("projectId", {
+                        initialValue: listItems.projectId,
                     })(
                         < XSelect  category="" refer ="project" display= {this.props.query.fromModule =='project' ? 'no':'yes'} />
                     )}
@@ -145,7 +146,7 @@ render()
                     getFieldDecorator("isenable", {
                         initialValue: listItems.isenable,
                     })(
-                        < XSelect  category="tablestatus" refer ="" display= {this.props.query.fromModule =='' ? 'no':'yes'} />
+                        < XSelect  category="data_status" refer ="" display= {this.props.query.fromModule =='' ? 'no':'yes'} />
                     )}
                     < /Form.Item>
                         </Card>

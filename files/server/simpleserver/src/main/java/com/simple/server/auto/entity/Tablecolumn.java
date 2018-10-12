@@ -36,13 +36,16 @@ public class Tablecolumn implements Serializable {
     private String description;
        
 
-    private Long mytable;
+    private Long tableId;
         
 
-    private Long fieldtype;
+    private Long fieldType;
+        
+
+    private Long showType;
         
     //关联表
-    private String refer;
+    private String referModule;
        
 
     private Long map;
@@ -79,32 +82,43 @@ public class Tablecolumn implements Serializable {
      
 
 
-    public Long getMytable(){
-         return this.mytable;
+    public Long getTableId(){
+         return this.tableId;
     };
-    public void setMytable(Long mytable){
-         this.mytable = mytable;
+    public void setTableId(Long tableId){
+         this.tableId = tableId;
     }
 
 
           
 
 
-    public Long getFieldtype(){
-         return this.fieldtype;
+    public Long getFieldType(){
+         return this.fieldType;
     };
-    public void setFieldtype(Long fieldtype){
-         this.fieldtype = fieldtype;
+    public void setFieldType(Long fieldType){
+         this.fieldType = fieldType;
+    }
+
+
+          
+
+
+    public Long getShowType(){
+         return this.showType;
+    };
+    public void setShowType(Long showType){
+         this.showType = showType;
     }
 
 
           
      //关联表
-     public String getRefer(){
-         return this.refer;
+     public String getReferModule(){
+         return this.referModule;
      };
-     public void setRefer(String refer){
-         this.refer = refer;
+     public void setReferModule(String referModule){
+         this.referModule = referModule;
      }
      
 

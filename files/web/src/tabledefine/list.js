@@ -53,7 +53,7 @@ class ListExample extends React.Component{
                 });
                 
                 fieldColumns.push({
-                  title: "表说明",
+                  title: "说明",
                   dataIndex: 'description',
                   key: 'description'
                 });

@@ -61,7 +61,8 @@ class EditForm extends React.Component {
     onAssociationEdit(aName,referm,e){
         e.preventDefault();
         var that = this;
-        let params = {...that.props.query,associationName:aName,referModule:referm};
+        var mId = this.props.query.<%=data.moduleName%>Id;
+        let params = {...that.props.query,moduleName:"<%=data.moduleName%>",moduleId:mId,associationName:aName,referModule:referm};
         router.push({pathname:'/<%=data.moduleName%>/association',query:params});
     }
     handleSubmitUpdate(data) {
@@ -105,11 +106,13 @@ render()
             <Form  onSubmit={this.handleSubmit.bind(this)}>
                <%
                 for (var field in data.moduleDefine){
+                    var referModule;
                     var fieldDisplayName = data.moduleDefine[field].dName;
                     var fieldShow = data.moduleDefine[field].show;
                     var fieldRefer =  data.moduleDefine[field].refer;
                     if (fieldRefer){
                         referMapfield =fieldRefer.mapField;
+                        referModule = fieldRefer.module;
                     }
 
                     if (fieldShow=="image"){
@@ -156,7 +159,7 @@ render()
                         </Form.Item>
                 <%}else if(fieldShow=="M2MList"){%>
                     <Form.Item >
-                        <XList  onEdit ={that.onAssociationEdit.bind(that,'<%=fieldRefer.associationTable%>','<%=referm%>')} refer ="<%=fieldRefer.associationTable%>" mapField="<%=data.moduleName%>Id" byId={that.props.query.<%=data.moduleName%>Id}  title="<%=fieldDisplayName%>" />
+                        <XList  onEdit ={that.onAssociationEdit.bind(that,'<%=fieldRefer.associationTable%>','<%=referModule%>')} refer ="<%=fieldRefer.associationTable%>" mapField="<%=data.moduleName%>Id" byId={that.props.query.<%=data.moduleName%>Id}  title="<%=fieldDisplayName%>" />
                     </Form.Item>
 
                 <%}else if(fieldShow=="text"){%>
@@ -193,10 +196,10 @@ const MyForm = Form.create()(EditForm);
 export default class Page extends React.Component{
 
     render(){
-        return (<Layout><MyForm query={this.props.query}/></Layout>)
+        return (<Layout  path={this.props.path}><MyForm query={this.props.query}/></Layout>)
 }
 }
 Page.getInitialProps = async function(context){
-    return {query:context.query};
+    return {query:context.query,path:context.pathname};
 }
 

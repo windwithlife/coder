@@ -32,7 +32,7 @@ public class ProjectController {
 
     
     @Autowired
-       private  ChannelService channelService;
+       private  PxchannelService pxchannelService;
     
 
 

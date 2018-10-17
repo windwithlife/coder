@@ -2,9 +2,25 @@ import Head from 'next/head'
 import { Layout, Menu, Breadcrumb, Icon } from 'antd';
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
+import router from 'next/router';
 import '../../../asserts/styles.less'
 
-export default ({ children }) =>
+export default class MyLayout extends React.Component{
+
+    state = {
+        current:this.props.path
+    }
+
+    handleClick = (e) => {
+    console.log('click ', e);
+    var path = e.key;
+    router.push({pathname:path});
+
+}
+
+
+    render(){
+        return(
   <div>
     <Head>
       <meta name='viewport' content='width=device-width, initial-scale=1' />
@@ -32,6 +48,7 @@ export default ({ children }) =>
             mode="horizontal"
             defaultSelectedKeys={['2']}
             style={{ lineHeight: '64px' }}
+            onClick={this.handleClick}
             >
           <Menu.Item key="1">具体项目功能</Menu.Item>
           <Menu.Item key="2">用户与权限管理</Menu.Item>
@@ -47,21 +64,23 @@ export default ({ children }) =>
               defaultSelectedKeys={['1']}
               defaultOpenKeys={['sub1']}
               style={{ height: '100%' }}
+              onClick={this.handleClick}
               >
             <SubMenu key="sub1" title={<span><Icon type="user" />项目</span>}>
               <Menu.Item key="1">项目管理</Menu.Item>
-              <Menu.Item key="2">项目模块管理</Menu.Item>
-              <Menu.Item key="3">菜单管理</Menu.Item>
+              <Menu.Item key="/channel/list">频道管理</Menu.Item>
+              <Menu.Item key="/menu/list">菜单管理</Menu.Item>
+              <Menu.Item key="/tag/list">标签管理</Menu.Item>
             </SubMenu>
             <SubMenu key="sub2" title={<span><Icon type="laptop" />数据与表</span>}>
-              <Menu.Item key="5">表管理</Menu.Item>
-              <Menu.Item key="6">字典表</Menu.Item>
-              <Menu.Item key="7">分类管理</Menu.Item>
-              <Menu.Item key="8">标签管理</Menu.Item>
+              <Menu.Item key="/tabledefine/list">表管理</Menu.Item>
+              <Menu.Item key="/dictionary/list">字典表</Menu.Item>
+              <Menu.Item key="/category/list">字典表分类</Menu.Item>
+
             </SubMenu>
             <SubMenu key="sub3" title={<span><Icon type="notification" />页面管理</span>}>
-              <Menu.Item key="9">组件模板</Menu.Item>
-              <Menu.Item key="10">页面模板</Menu.Item>
+              <Menu.Item key="9">组件</Menu.Item>
+              <Menu.Item key="10">页面</Menu.Item>
               <Menu.Item key="11">接口</Menu.Item>
 
             </SubMenu>
@@ -79,10 +98,11 @@ export default ({ children }) =>
             <Breadcrumb.Item>App</Breadcrumb.Item>
           </Breadcrumb>
           <Content style={{ background: '#fff', padding: 24, margin: 0, minHeight: 280 }}>
-            {children}
+            {this.props.children}
           </Content>
         </Layout>
       </Layout>
     </Layout>
   </div>
-
+)}
+}

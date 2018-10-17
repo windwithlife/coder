@@ -87,7 +87,7 @@ class EditForm extends React.Component {
         model.add(data, function(response) {
             if (response && response.data) {
                 console.log(response.data);
-                let params = {...that.props.query,projectId:response.data.id,associationName:associationModule,referModule:referm};
+                let params = {...that.props.query,moduleName:"project",moduleId:response.data.id,associationName:associationModule,referModule:referm};
                 router.push({pathname:'/project/association',query:params});
             }
         });
@@ -166,11 +166,11 @@ const MyForm = Form.create()(EditForm);
 export default class Page extends React.Component{
 
     render(){
-        return (<Layout><MyForm query={this.props.query}/></Layout>)
+        return (<Layout path={this.props.path}><MyForm query={this.props.query}/></Layout>)
     }
 }
 Page.getInitialProps = async function(context){
-    return {query:context.query};
+    return {query:context.query,path:context.pathname};
 }
 
 //export default()=>(<Layout> <MyForm/></Layout>)

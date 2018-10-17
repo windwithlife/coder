@@ -120,6 +120,7 @@ function generateModuleByName(moduleName,defines,platformName){
     //var mdefine = defines[moduleName];
     var mdefine = defines;
     if (!mdefine){return;}
+    if (defines.properties.isAssociation){return;};
     //console.log('module defines:' + JSON.stringify(mdefine));
     config.platform= platformName;
     generateClientModule(mdefine.name,mdefine);

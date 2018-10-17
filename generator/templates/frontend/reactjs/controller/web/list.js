@@ -287,10 +287,10 @@ componentWillMount() {
 export default class Page extends React.Component{
 
     render(){
-        return (<Layout><ListExample query={this.props.query}/></Layout>)
+        return (<Layout  path={this.props.path}><ListExample query={this.props.query}/></Layout>)
     }
 }
 Page.getInitialProps = async function(context){
-    return {query:context.query};
+    return {query:context.query,path:context.pathname};
 }
 //export default()=>(<Layout> <ListExample/></Layout>)

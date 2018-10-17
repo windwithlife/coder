@@ -50,8 +50,8 @@ export default class MyLayout extends React.Component{
             style={{ lineHeight: '64px' }}
             onClick={this.handleClick}
             >
-          <Menu.Item key="1">具体项目功能</Menu.Item>
-          <Menu.Item key="/channel/list">公共模块管理</Menu.Item>
+
+          <Menu.Item key="/xmodule/list">公共模块管理</Menu.Item>
           <Menu.Item key="/project/list">项目管理</Menu.Item>
           <Menu.Item key="3">配置</Menu.Item>
         </Menu>
@@ -66,9 +66,8 @@ export default class MyLayout extends React.Component{
               onClick={this.handleClick}
               >
             <SubMenu key="sub1" title={<span><Icon type="user" />公共组件</span>}>
-              <Menu.Item key="1">项目管理</Menu.Item>
-              <Menu.Item key="/xmodule/list">频道管理</Menu.Item>
 
+              <Menu.Item key="/xmodule/list">模块管理</Menu.Item>
               <Menu.Item key="/xtable/list">表管理</Menu.Item>
             </SubMenu>
             <SubMenu key="sub3" title={<span><Icon type="notification" />公共页面管理</span>}>

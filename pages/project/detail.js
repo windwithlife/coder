@@ -63,7 +63,7 @@ render()
                 
 
                     <Form.Item >
-                        <XList  onEdit ={null} refer ="channel" mapField="myproject" byId={that.props.query.projectId}  title="模块" />
+                        <XList  onEdit ={null} refer ="pxchannel" mapField="myproject" byId={that.props.query.projectId}  title="模块" />
                         </Form.Item>
 
                 

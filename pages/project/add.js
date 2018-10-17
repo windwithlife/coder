@@ -125,7 +125,7 @@ render()
                 </Card>
                 
                 <Form.Item >
-                    <XList  onEdit ={that.onSaveAndEdit.bind(that,'channel')} refer ="channel" mapField="myproject" byId='-1'  title="模块" />
+                    <XList  onEdit ={that.onSaveAndEdit.bind(that,'pxchannel')} refer ="pxchannel" mapField="myproject" byId='-1'  title="模块" />
                 </Form.Item>
                 
                 <Card type="inner">

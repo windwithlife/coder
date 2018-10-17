@@ -50,7 +50,7 @@ export default class MyLayout extends React.Component{
             style={{ lineHeight: '64px' }}
             onClick={this.handleClick}
             >
-          <Menu.Item key="/channel/list">公共模块管理</Menu.Item>
+          <Menu.Item key="/xmodule/list">公共模块管理</Menu.Item>
           <Menu.Item key="/project/list">项目管理</Menu.Item>
           <Menu.Item key="3">配置</Menu.Item>
         </Menu>

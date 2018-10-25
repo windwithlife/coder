@@ -71,7 +71,7 @@ ModuleDefines.prototype.adjustData = function () {
     for (var moduleName in this.modules){
         var module  = this.modules[moduleName];
         this.adjustFields(module);
-        //this.adjustRelation();
+
     }
 }
 
@@ -113,10 +113,12 @@ ModuleDefines.prototype.adjustFields = function (module) {
                 this.projectSetting.enables.push(mapName);
                 this.adjustFields(newMapModule);
             }
-            if (fieldDef.refer.mapField=='yes'){
+            if (fieldDef.refer.associationField=='yes'){
                 module.properties.isChildModule = true;
                 module.properties.parentModule = fieldDef.refer.module;
                 module.properties.parentMapField = field;
+                var referModule= this.modules[fieldDef.refer.module];
+                referModule.fields["v" + module.name] =  {type: 'Long', dName:module.remark , show:'list', refer: {module:module.name,map:"OneToMany",mapField:field}};
             }
         }
     }

@@ -126,12 +126,12 @@ render()
                         </Card>
                 
                     <Form.Item >
-                        <XList  onEdit ={that.onAssociationEdit.bind(that,'','xpage')} refer ="" mapField="xmoduleId" byId={that.props.query.xmoduleId}  title="表字段" />
+                        <XList  onEdit ={that.onAssociationEdit.bind(that,'','xpage')} refer ="" mapField="xmoduleId" byId={that.props.query.xmoduleId}  title="所含页面集" />
                     </Form.Item>
 
                 
                     <Form.Item >
-                        <XList  onEdit ={that.onAssociationEdit.bind(that,'xmodulextable','xtable')} refer ="xmodulextable" mapField="xmoduleId" byId={that.props.query.xmoduleId}  title="所用表" />
+                        <XList  onEdit ={that.onAssociationEdit.bind(that,'xmodulextable','xtable')} refer ="xmodulextable" mapField="xmoduleId" byId={that.props.query.xmoduleId}  title="所用到表" />
                     </Form.Item>
 
                 

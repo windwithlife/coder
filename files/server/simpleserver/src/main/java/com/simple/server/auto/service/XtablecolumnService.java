@@ -40,8 +40,8 @@ public class XtablecolumnService {
 
 	
 
-    public  List<Xtablecolumn> findByTableId(Long id){
-        return dao.findByTableId(id);
+    public  List<Xtablecolumn> findByXtableId(Long id){
+        return dao.findByXtableId(id);
     }
 
                              

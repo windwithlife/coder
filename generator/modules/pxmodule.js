@@ -2,8 +2,8 @@
 
 module.exports  =
 {
-    name: "xmodule",
-    channel:"公共模块",
+    name: "pxmodule",
+    remark:"公共模块",
     fields: {
         id: {type: 'Long', dName: "编号"},
         name: {type: 'String', dName: "名称",show:'yes'},

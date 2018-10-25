@@ -124,10 +124,6 @@ render()
                 </FormItem>
                 </Card>
                 
-                <Form.Item >
-                    <XList  onEdit ={that.onSaveAndEdit.bind(that,'xtablecolumn')} refer ="xtablecolumn" mapField="xtableId" byId='-1'  title="表字段" />
-                </Form.Item>
-                
                 <Card type="inner">
                 <Form.Item label="表结构定义">
                     {getFieldDecorator("defineText", { initialValue: ''})(<TextArea rows={5} />)}
@@ -144,6 +140,10 @@ render()
                     )}
                 < /Form.Item>
                     </Card>
+                
+                <Form.Item >
+                    <XList  onEdit ={that.onSaveAndEdit.bind(that,'xtablecolumn')} refer ="xtablecolumn" mapField="xtableId" byId='-1'  title="表字段定义" />
+                </Form.Item>
                 
 
                  <Card type="inner">

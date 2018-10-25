@@ -25,7 +25,7 @@ class EditForm extends React.Component {
     handleSubmitUpdate(data) {
         
         if (this.props.query.xtableId) {
-            data. tableId = this.props.query. xtableId;
+            data. xtableId = this.props.query. xtableId;
         }
         
         let that = this;
@@ -131,7 +131,7 @@ render()
                     <Card type="inner">
                 <Form.Item label="所属表" >
                             {
-                    getFieldDecorator("tableId", {
+                    getFieldDecorator("xtableId", {
                         initialValue: "-1",
                     })(
                         < XSelect  category="" refer ="xtable" display= {(this.props.query.fromModule =='xtable') ? 'no':'yes' } />

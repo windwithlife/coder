@@ -67,7 +67,7 @@ export default class MyLayout extends React.Component{
             <SubMenu key="sub1" title={<span><Icon type="user" />项目</span>}>
               <Menu.Item key="/project/list">项目管理</Menu.Item>
               <Menu.Item key="/pxchannel/list">频道管理</Menu.Item>
-              <Menu.Item key="/pxmodule/list">接口管理</Menu.Item>
+              <Menu.Item key="/pxmodule/list">模块管理</Menu.Item>
               <Menu.Item key="/pxtable/list">表管理</Menu.Item>
               <Menu.Item key="/pxpage/list">页面管理</Menu.Item>
               <Menu.Item key="/pxinterface/list">接口管理</Menu.Item>

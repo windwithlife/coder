@@ -128,8 +128,8 @@ render()
                     <Card type="inner">
                 <Form.Item label="所属表"
                             hasFeedback {...formItemLayout}> {
-                    getFieldDecorator("tableId", {
-                        initialValue: listItems.tableId,
+                    getFieldDecorator("xtableId", {
+                        initialValue: listItems.xtableId,
                     })(
                         < XSelect  category="" refer ="xtable" display= {this.props.query.fromModule =='xtable' ? 'no':'yes'} />
                     )}

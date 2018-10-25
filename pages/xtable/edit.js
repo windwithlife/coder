@@ -125,11 +125,6 @@ render()
                         </FormItem>
                         </Card>
                 
-
-                    <Form.Item >
-                        <XList  onEdit ={that.onSaveAndEdit.bind(that,"xtablecolumn")} refer ="xtablecolumn" mapField="xtableId" byId={that.props.query.xtableId}  title="表字段" />
-                        </Form.Item>
-                
                     <Card type="inner">
                         <Form.Item label="表结构定义">
                             {getFieldDecorator("defineText", { initialValue: listItems.defineText})(<TextArea rows={5} />)}
@@ -147,6 +142,11 @@ render()
                     < /Form.Item>
                         </Card>
                         
+
+                    <Form.Item >
+                        <XList  onEdit ={that.onSaveAndEdit.bind(that,"xtablecolumn")} refer ="xtablecolumn" mapField="xtableId" byId={that.props.query.xtableId}  title="表字段定义" />
+                        </Form.Item>
+                
                  <Card type="inner">
                  <FormItem className="form-item-clear" >
                     <Button type="primary" htmlType="submit" size="large">Save</Button>

@@ -32,10 +32,10 @@ public class PxtableController {
 
     
     @Autowired
-       private  PxtablecolumnService pxtablecolumnService;
+       private  DictionaryService dictionaryService;
     
     @Autowired
-       private  DictionaryService dictionaryService;
+       private  PxtablecolumnService pxtablecolumnService;
     
 
 

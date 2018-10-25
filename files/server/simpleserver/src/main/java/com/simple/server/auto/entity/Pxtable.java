@@ -36,14 +36,14 @@ public class Pxtable implements Serializable {
     private String description;
        
 
-    private Long tcolumn;
-        
-
     @Column(columnDefinition="text")
     private String defineText;
           
 
     private Long status;
+        
+
+    private Long vpxtablecolumn;
         
     public Pxtable() {
 	}
@@ -72,17 +72,6 @@ public class Pxtable implements Serializable {
          this.description = description;
      }
      
-
-
-    public Long getTcolumn(){
-         return this.tcolumn;
-    };
-    public void setTcolumn(Long tcolumn){
-         this.tcolumn = tcolumn;
-    }
-
-
-          
      //表结构定义
      public String getDefineText(){
          return this.defineText;
@@ -98,6 +87,17 @@ public class Pxtable implements Serializable {
     };
     public void setStatus(Long status){
          this.status = status;
+    }
+
+
+          
+
+
+    public Long get(){
+         return this.vpxtablecolumn;
+    };
+    public void set(Long vpxtablecolumn){
+         this.vpxtablecolumn = vpxtablecolumn;
     }
 
 

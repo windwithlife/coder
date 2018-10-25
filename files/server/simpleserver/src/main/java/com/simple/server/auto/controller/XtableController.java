@@ -32,10 +32,10 @@ public class XtableController {
 
     
     @Autowired
-       private  XtablecolumnService xtablecolumnService;
+       private  DictionaryService dictionaryService;
     
     @Autowired
-       private  DictionaryService dictionaryService;
+       private  XtablecolumnService xtablecolumnService;
     
 
 

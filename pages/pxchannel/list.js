@@ -98,7 +98,7 @@ class ListExample extends React.Component{
     onFooterBack(){
 
         
-        router.replace({pathname:"/project/edit" ,query:this.props.query});
+        router.back();
         
     }
 
@@ -107,20 +107,7 @@ componentWillMount() {
     var that = this;
     this.startHeader();
     
-    if(this.props.query.projectId){
-        model.queryReferListBy("pxchannel","projectId",{id:this.props.query.projectId},function(response){
-            if (response && response.data) {
-                console.log(response.data);
-                response.data.map(function(item, i) {
-                    item.key = item.id
-                });
-                that.setState({
-                    list: response.data
-                });
 
-            }
-        });
-    }else{
         model.queryAll(function (response) {
             if (response && response.data) {
                 console.log(JSON.stringify(response.data));
@@ -133,7 +120,6 @@ componentWillMount() {
                 });
             }
         });
-    }
     
 }
 

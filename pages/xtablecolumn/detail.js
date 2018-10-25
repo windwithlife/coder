@@ -65,7 +65,7 @@ render()
                         <FormItem
                             label="所属表"
                             >
-                            {listItems.tableId}
+                            {listItems.xtableId}
                         </FormItem>
                         </Card>
                 

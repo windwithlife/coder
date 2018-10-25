@@ -125,11 +125,11 @@ render()
                 </Card>
                 
                 <Form.Item >
-                    <XList  onEdit ={that.onAssociationEdit.bind(that,'','')} refer ="" mapField="xmoduleId" byId='-1'  title="表字段" />
+                    <XList  onEdit ={that.onAssociationEdit.bind(that,'','')} refer ="" mapField="xmoduleId" byId='-1'  title="所含页面集" />
                 </Form.Item>
                 
                 <Form.Item >
-                    <XList  onEdit ={that.onAssociationEdit.bind(that,'xmodulextable','')} refer ="xmodulextable" mapField="xmoduleId" byId='-1'  title="所用表" />
+                    <XList  onEdit ={that.onAssociationEdit.bind(that,'xmodulextable','')} refer ="xmodulextable" mapField="xmoduleId" byId='-1'  title="所用到表" />
                 </Form.Item>
                 
                     <Card type="inner">

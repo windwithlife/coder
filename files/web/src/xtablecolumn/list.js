@@ -60,8 +60,8 @@ class ListExample extends React.Component{
                 
                 fieldColumns.push({
                   title: "所属表",
-                  dataIndex: 'tableId',
-                  key: 'tableId'
+                  dataIndex: 'xtableId',
+                  key: 'xtableId'
                 });
                 
                 fieldColumns.push({
@@ -132,7 +132,7 @@ componentWillMount() {
     this.startHeader();
     
     if(this.props.query.xtableId){
-        model.queryReferListBy("xtablecolumn","tableId",{id:this.props.query.xtableId},function(response){
+        model.queryReferListBy("xtablecolumn","xtableId",{id:this.props.query.xtableId},function(response){
             if (response && response.data) {
                 console.log(response.data);
                 response.data.map(function(item, i) {

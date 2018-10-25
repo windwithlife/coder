@@ -61,12 +61,6 @@ render()
                         </FormItem>
                         </Card>
                 
-
-                    <Form.Item >
-                        <XList  onEdit ={null} refer ="xtablecolumn" mapField="xtableId" byId={that.props.query.xtableId}  title="表字段" />
-                        </Form.Item>
-
-                
                         <Card type="inner">
                         <FormItem
                             label="表结构定义"
@@ -82,6 +76,12 @@ render()
                             {listItems.status}
                         </FormItem>
                         </Card>
+                
+
+                    <Form.Item >
+                        <XList  onEdit ={null} refer ="xtablecolumn" mapField="xtableId" byId={that.props.query.xtableId}  title="表字段定义" />
+                        </Form.Item>
+
                 
                  <Card type="inner">
                  <FormItem className="form-item-clear" >

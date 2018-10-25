@@ -3,7 +3,7 @@
 module.exports  =
 {
     name: "xpage",
-    channel:"页面",
+    remark:"页面",
     fields: {
         id: {type: 'Long', dName: "编号"},
         name: {type: 'String', dName: "名称",show:'yes'},

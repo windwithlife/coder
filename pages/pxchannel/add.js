@@ -24,10 +24,6 @@ class EditForm extends React.Component {
 
     handleSubmitUpdate(data) {
         
-        if (this.props.query.projectId) {
-            data. projectId = this.props.query. projectId;
-        }
-        
         let that = this;
         model.add(data, function(response) {
             if (response && response.data) {

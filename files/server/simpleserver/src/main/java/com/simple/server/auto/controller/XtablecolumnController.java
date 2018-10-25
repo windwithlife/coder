@@ -41,9 +41,9 @@ public class XtablecolumnController {
 
    
    @ResponseBody
-   @RequestMapping(value = "/queryByTableId", method = RequestMethod.GET)
-   public List<Xtablecolumn> queryByTableId(@RequestParam("id") Long id) {
-       List<Xtablecolumn> result = service.findByTableId(id);
+   @RequestMapping(value = "/queryByXtableId", method = RequestMethod.GET)
+   public List<Xtablecolumn> queryByXtableId(@RequestParam("id") Long id) {
+       List<Xtablecolumn> result = service.findByXtableId(id);
        return result;
    }
 

@@ -36,7 +36,7 @@ public class Xtablecolumn implements Serializable {
     private String description;
        
 
-    private Long tableId;
+    private Long xtableId;
         
 
     private Long fieldType;
@@ -82,11 +82,11 @@ public class Xtablecolumn implements Serializable {
      
 
 
-    public Long getTableId(){
-         return this.tableId;
+    public Long getXtableId(){
+         return this.xtableId;
     };
-    public void setTableId(Long tableId){
-         this.tableId = tableId;
+    public void setXtableId(Long xtableId){
+         this.xtableId = xtableId;
     }
 
 

@@ -3,7 +3,7 @@
 module.exports  =
 {
     name: "pxinterface",
-    channel:"页面接口",
+    remark:"页面接口",
     fields: {
         id: {type: 'Long', dName: "编号"},
         name: {type: 'String', dName: "名称",show:'yes'},

@@ -5,7 +5,7 @@
 module.exports  =
 {
     name: "dictionary",
-    channel:"字典表-各种简单类型",
+    remark:"字典表-各种简单类型",
     fields: {
         id: {type: 'Long', dName: "编号"},
         name: {type: 'String', dName: "显示名称",show:'yes'},

@@ -3,7 +3,7 @@
 module.exports  =
 {
     name: "project",
-    channel:"项目",
+    remark:"项目",
     fields: {
         id: {type: 'Long', dName: "编号"},
         name: {type: 'String', dName: "名称",show:'yes'},

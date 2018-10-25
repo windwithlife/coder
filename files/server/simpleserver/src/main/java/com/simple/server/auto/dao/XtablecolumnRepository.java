@@ -11,7 +11,7 @@ public interface XtablecolumnRepository extends JpaRepository<Xtablecolumn, Long
     public  Xtablecolumn findOneByName(String name);
 
     
-       public List<Xtablecolumn> findByTableId(Long id);
+       public List<Xtablecolumn> findByXtableId(Long id);
 
                    
        public List<Xtablecolumn> findByFieldType(Long id);

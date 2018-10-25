@@ -3,7 +3,7 @@
 module.exports  =
 {
     name: "pxchannel",
-    channel:"channel",
+    remark:"channel",
     fields: {
         id: {type: 'Long', dName: "编号"},
         name: {type: 'String', dName: "名称",show:'yes'},

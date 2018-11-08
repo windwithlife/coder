@@ -33,7 +33,9 @@ public class DefaultWebControllerHandler {
 
     @ExceptionHandler(Exception.class)
     public Object handleBaseException(HttpServletRequest request, Exception e) {
+
         if(isJson(request)) {
+            e.printStackTrace();
         	HttpHeaders headers = new HttpHeaders();  
             headers.setContentType(MediaType.APPLICATION_JSON); 
         	return new ResponseEntity<String>("{status:-1,msg:'failed to handle your post request'}",  

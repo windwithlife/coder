@@ -11,9 +11,11 @@ RUN cd /tmp/build && mvn -q -DskipTests=true  package \
        
         && mv target/*.jar /runDIR/app.jar \
       
-        && cd /runDIR/ && rm -rf /tmp/build
+        && cd /
 
-VOLUME /runDIR/
 RUN mkdir -p /usr/local/share/upload
 EXPOSE 8080
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar","--spring.profiles.active=docker"]
+EXPOSE 443
+EXPOSE 8443
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/runDIR/app.jar","--spring.profiles.active=docker"]
+

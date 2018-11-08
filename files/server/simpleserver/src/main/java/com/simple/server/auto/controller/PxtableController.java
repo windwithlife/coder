@@ -34,9 +34,6 @@ public class PxtableController {
     @Autowired
        private  DictionaryService dictionaryService;
     
-    @Autowired
-       private  PxtablecolumnService pxtablecolumnService;
-    
 
 
    

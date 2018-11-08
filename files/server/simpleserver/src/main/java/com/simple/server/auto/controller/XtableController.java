@@ -34,9 +34,6 @@ public class XtableController {
     @Autowired
        private  DictionaryService dictionaryService;
     
-    @Autowired
-       private  XtablecolumnService xtablecolumnService;
-    
 
 
    

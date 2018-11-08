@@ -26,7 +26,7 @@ public class InvestingSearcher {
     public void executeIndexFuturesSearcher() {
 
         indexfuturesCrawler.start();
-        logger.info("进入Indices Futures Searcher");
+        logger.info("Indices Futures Searcher");
 
 
 
@@ -36,7 +36,7 @@ public class InvestingSearcher {
 
 
         commodityfuturesCrawler.start();
-        logger.info("进入Indices Futures Searcher");
+        logger.info("Commodity Futures Searcher");
 
 
 

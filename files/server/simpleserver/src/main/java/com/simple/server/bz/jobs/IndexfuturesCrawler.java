@@ -5,6 +5,8 @@ import com.simple.server.auto.entity.Indexfutures;
 import com.simple.server.auto.service.IndexfuturesService;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +20,7 @@ public class IndexfuturesCrawler extends SoupCrawler{
     //public static IndexfuturesCrawler getInstance() {
        // return ourInstance;
     //}
+    Logger logger = LoggerFactory.getLogger(this.getClass());
     protected String myUrl="https://cn.investing.com/indices/indices-futures";
 
     @Autowired
@@ -45,6 +48,7 @@ public class IndexfuturesCrawler extends SoupCrawler{
 
                 System.out.println(name + vmonth + vlast + vlow + vhigh + vchange + vchangep + vtime);
                 //System.out.println(name )
+                logger.info("crawler get data:" +name + vmonth + vlast + vlow + vhigh + vchange + vchangep + vtime);
 
 
                 Indexfutures item = new Indexfutures();
@@ -64,9 +68,13 @@ public class IndexfuturesCrawler extends SoupCrawler{
                     item.setId(one.getId());
                     indexfuturesService.save(item);
                     System.out.println("udpate index futures:" + item.getName());
+                    logger.info("udpate index futures:" + item.getName());
+
+
                 }else{
                     indexfuturesService.save(item);
                     System.out.println("add new index futures:" + item.getName());
+                    logger.info("add new index futures:" + item.getName());
                 }
 
             }

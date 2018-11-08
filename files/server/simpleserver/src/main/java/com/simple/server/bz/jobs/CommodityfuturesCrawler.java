@@ -5,6 +5,8 @@ import com.simple.server.auto.entity.Indexfutures;
 import com.simple.server.auto.service.IndexfuturesService;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +19,7 @@ public class CommodityfuturesCrawler extends SoupCrawler{
     //public static IndexfuturesCrawler getInstance() {
        // return ourInstance;
     //}
+    Logger logger = LoggerFactory.getLogger(this.getClass());
     protected String myUrl="https://cn.investing.com/commodities/real-time-futures";
 
     @Autowired
@@ -43,7 +46,9 @@ public class CommodityfuturesCrawler extends SoupCrawler{
                 String vtime    = element.getElementsByTag("td").get(8).text();
 
                 System.out.println(name + vmonth + vlast + vlow + vhigh + vchange + vchangep + vtime);
+                logger.info(name + vmonth + vlast + vlow + vhigh + vchange + vchangep + vtime);
                 //System.out.println(name )
+
 
 
                 Indexfutures item = new Indexfutures();
@@ -63,9 +68,12 @@ public class CommodityfuturesCrawler extends SoupCrawler{
                     item.setId(one.getId());
                     indexfuturesService.save(item);
                     System.out.println("udpate index futures:" + item.getName());
+                    logger.info("udpate index futures:" + item.getName());
+
                 }else{
                     indexfuturesService.save(item);
                     System.out.println("add new index futures:" + item.getName());
+                    logger.info("udpate index futures:" + item.getName());
                 }
 
             }

@@ -3,6 +3,8 @@ package com.simple.core.components.crawler;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 
 
@@ -12,7 +14,7 @@ import java.util.Map;
 
 public abstract class SoupCrawler {
     //Logger logger = LoggerFactory.getLogger(this.getClass());
-
+    Logger logger = LoggerFactory.getLogger(this.getClass());
 
     protected String url="https://cn.investing.com/commodities/real-time-futures";
     public void setUrl(String url){
@@ -32,6 +34,7 @@ public abstract class SoupCrawler {
             }
         }catch (IOException e){
             e.printStackTrace();
+            logger.info("failed to get joup url data");
         }
     }
     public static Document getDocument(String url){
@@ -46,10 +49,12 @@ public abstract class SoupCrawler {
             if (doc !=null){
                 return doc;
             }else{
+                //logger.info("failed to get joup url data");
                 return null;
             }
         }catch (IOException e){
             e.printStackTrace();
+            //logger.info("failed to get joup url data");
             return null;
         }
     }

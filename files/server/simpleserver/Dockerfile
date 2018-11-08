@@ -15,7 +15,5 @@ RUN cd /tmp/build && mvn -q -DskipTests=true  package \
 
 RUN mkdir -p /usr/local/share/upload
 EXPOSE 8080
-EXPOSE 443
-EXPOSE 8443
 ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/runDIR/app.jar","--spring.profiles.active=docker"]
 

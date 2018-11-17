@@ -5,12 +5,13 @@ const port = parseInt(process.env.PORT, 10) || 3000
 const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
+var bodyParser=require('body-parser');
 
 
 app.prepare()
   .then(() => {
     const server = express()
-
+    server.use(bodyParser.urlencoded({extended:true}));
     server.get('/a', (req, res) => {
       return app.render(req, res, '/b', req.query)
     })
@@ -29,6 +30,13 @@ app.prepare()
         generator.generate(req.query.lan,req.query.platform,req.query.withFramework);
         res.sendStatus(200)
     });
+
+    server.post('/gitPushHook', (req, res) => {
+        console.log(req.body);
+        res.sendStatus(200)
+    });
+;
+
     server.get('/posts/:id', (req, res) => {
       return app.render(req, res, '/posts', { id: req.params.id })
     })

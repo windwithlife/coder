@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 //@EnableJpaAuditing
 
 @SpringBootApplication(scanBasePackages="com.simple")
-@EnableScheduling
+//@EnableScheduling
 @EnableJpaRepositories("com.simple")
 @EnableMongoRepositories("com.simple")
 @EntityScan("com.simple.*") 

@@ -17,28 +17,19 @@ import java.io.IOException;
 public class InvestingSearcher {
     Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    IndexfuturesCrawler indexfuturesCrawler;
-    @Autowired
-    CommodityfuturesCrawler commodityfuturesCrawler;
 
-    @Scheduled(cron = "0 0/1 * * * *")
+    @Autowired
+    XFuturesCrawler futuresCrawler;
+
+    //@Scheduled(cron = "0 0/2 * * * *")
     public void executeIndexFuturesSearcher() {
 
-        indexfuturesCrawler.start();
-        logger.info("Indices Futures Searcher");
+        logger.info("--------------Begin for Futures Searcher");
+        futuresCrawler.start();
+        logger.info("--------------The End for Futures Searcher");
 
 
 
     }
-    @Scheduled(cron = "3 0/5 * * * *")
-    public void executeCommodityFuturesSearcher() {
 
-
-        commodityfuturesCrawler.start();
-        logger.info("Commodity Futures Searcher");
-
-
-
-    }
 }

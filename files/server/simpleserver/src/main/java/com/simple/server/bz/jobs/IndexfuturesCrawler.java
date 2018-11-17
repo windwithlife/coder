@@ -67,13 +67,13 @@ public class IndexfuturesCrawler extends SoupCrawler{
                 if (one != null){
                     item.setId(one.getId());
                     indexfuturesService.save(item);
-                    System.out.println("udpate index futures:" + item.getName());
+                    //System.out.println("udpate index futures:" + item.getName());
                     logger.info("udpate index futures:" + item.getName());
 
 
                 }else{
                     indexfuturesService.save(item);
-                    System.out.println("add new index futures:" + item.getName());
+                    //System.out.println("add new index futures:" + item.getName());
                     logger.info("add new index futures:" + item.getName());
                 }
 

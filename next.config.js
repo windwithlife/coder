@@ -11,7 +11,6 @@ const themeVariables = lessToJS(
     'utf8'
   )
 )
-
 // fix: prevents error when .less files are required by node
 if (typeof require !== 'undefined') {
   require.extensions['.less'] = (file) => {}

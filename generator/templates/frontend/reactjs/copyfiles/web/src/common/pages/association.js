@@ -177,6 +177,7 @@ handleLineAdd(index, record) {
     var referModuleName = this.props.query.referModule;
     var modudleName = this.props.query.moduleName;
     var moduleField = modudleName + "Id";
+    var referModuleField = referModuleName + "Id";
     var moduleId  = this.props.query.moduleId;
 
     var associationPath = associationName +"/save";
@@ -194,6 +195,7 @@ handleLineAdd(index, record) {
     params[moduleField] = moduleId;
     params[referModuleName+"Id"] = record.id;
     params["name"] = record.name;
+    params[referModuleName + "Name"] = record.name;
     model.postRaw(associationPath,params, function(response) {
         if (response && response.data) {
             console.log('sucessful to add one new recod');

@@ -5,9 +5,8 @@ MAINTAINER Joe
 ADD web /runDIR/web
 
 
-
-WORKDIR /runDIR/web
 VOLUME  /runDIR
+WORKDIR /runDIR/web
 
 RUN cd /runDIR/web && npm install
 

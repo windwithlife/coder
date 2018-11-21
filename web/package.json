@@ -1,6 +1,6 @@
 {
-  "name": "with-ant-design-less",
-  "version": "1.0.0",
+  "name": "coder",
+  "version": "1.0.1",
   "scripts": {
     "dev": "next",
     "devx": "node server.js",

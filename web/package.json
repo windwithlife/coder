@@ -23,7 +23,5 @@
     "express": "^4.16.4"
   },
   "license": "ISC",
-  "devDependencies": {
-
-  }
+  "devDependencies": {}
 }

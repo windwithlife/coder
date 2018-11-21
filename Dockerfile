@@ -2,17 +2,17 @@
 FROM node:8.0.0
 MAINTAINER Joe
 
+RUN mkdir -p /runDIR
+
 ADD web /runDIR/web
 
 
-VOLUME  /runDIR
-WORKDIR /runDIR/web
+RUN cd /runDIR/web && pwd && npm install
 
-RUN cd /runDIR/web && npm install
 
 RUN mkdir -p /usr/local/share/upload
 
-
+WORKDIR /runDIR/web
 
 ENV HOST 0.0.0.0
 ENV PORT 3000

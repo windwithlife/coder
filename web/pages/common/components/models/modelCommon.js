@@ -1,8 +1,12 @@
 
 var model = require('./modelBase');
+var config = require('../../../config');
 
+//var serverPath = 'http://127.0.0.1:8080/';
+//var envCurrent = process.env.NODE_ENV;
+var serverPath = config['current'].SOA_GATE;
+console.log(" current env:========" + serverPath);
 
-var serverPath = 'http://127.0.0.1:8080/';
 function firstUpperCase(str) {
     //return str.toLowerCase().replace(/^\S/g,function(s){return s.toUpperCase();});
     if(!str){return ''}

@@ -1,4 +1,4 @@
-import Layout from '../layout.js'
+import Layout from './common/pages/layout.js'
 import { Form, Select, InputNumber, DatePicker, Switch, Slider, Button } from 'antd'
 
 const FormItem = Form.Item

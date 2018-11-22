@@ -7,7 +7,7 @@ RUN mkdir -p /runDIR
 ADD web /runDIR/web
 
 
-RUN cd /runDIR/web && pwd && npm install && npm build
+RUN cd /runDIR/web && pwd && npm install && npm run build
 
 
 RUN mkdir -p /usr/local/share/upload

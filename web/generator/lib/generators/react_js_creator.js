@@ -105,7 +105,7 @@ function generateClientModule(moduleName,moduleDefine){
     config.module = moduleName;
     createModuleBaseDirectories(moduleName);
     createModel(moduleName,moduleDefine);
-    createConfigRouter(moduleName,moduleDefine);
+    //createConfigRouter(moduleName,moduleDefine);
     createFunctionViewAndController("add",moduleName,moduleDefine);
     createFunctionViewAndController("edit",moduleName,moduleDefine);
     createFunctionViewAndController("list",moduleName,moduleDefine);

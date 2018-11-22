@@ -7,7 +7,7 @@ RUN mkdir -p /runDIR
 ADD web /runDIR/web
 
 
-RUN cd /runDIR/web && pwd && npm install
+RUN cd /runDIR/web && pwd && npm install && npm build
 
 
 RUN mkdir -p /usr/local/share/upload
@@ -19,4 +19,3 @@ ENV PORT 3000
 
 EXPOSE 3000
 ENTRYPOINT ["npm","start"]
-

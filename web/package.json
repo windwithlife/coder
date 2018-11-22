@@ -5,7 +5,7 @@
     "dev": "next",
     "devx": "node server.js",
     "build": "next build",
-    "start": "node server.js"
+    "start": "export NODE_ENV=production node ./server.js"
   },
   "dependencies": {
     "@zeit/next-less": "^1.0.1",

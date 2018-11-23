@@ -100,7 +100,7 @@ const MyForm = Form.create()(EditForm);
 export default class Page extends React.Component{
 
     render(){
-        return (<Layout  path={this.props.path}><MyForm query={this.props.query}/></Layout>)
+        return (<MyForm query={this.props.query}/>)
     }
 }
 Page.getInitialProps = async function(context){

@@ -315,7 +315,7 @@ render() {
 export default class Page extends React.Component{
 
     render(){
-        return (<Layout  path={this.props.path}><ListExample query={this.props.query}/></Layout>)
+        return (<ListExample query={this.props.query}/>)
 }
 }
 Page.getInitialProps = async function(context){

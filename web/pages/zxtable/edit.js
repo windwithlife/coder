@@ -12,19 +12,42 @@ import { inject, observer} from 'mobx-react'
 const { TextArea } = Input;
 const FormItem = Form.Item;
 
-const form = Form.create({onFieldsChange(props,fields){
-    console.log('onFieldChange',fields)
-    console.log('props',props)
-    props.tablesStore.onFieldsChange(fields)
-}});
+const form = Form.create({
+    onFieldsChange(props,fields){
+        console.log('onFieldChange',fields)
+        console.log('props',props)
+        props.tablesStore.onFieldsChange(fields)
+    }/*,
+    mapPropsToFields(props) {
 
-@observer @inject('tablesStore') @form
+        //将store中的值绑定到视图中
+        let values = props.tablesStore.item;
+        console.log("store values:" , values);
+        let target = {}
+        for(let [key,value] of Object.entries(values)){
+            target[key] = Form.createFormField({value})
+            console.log('now new value:',value)
+        }
+        return target;
+    }*/
+});
+
+@inject('tablesStore') @form @observer
 export default class Page extends React.Component{
 
     componentDidMount () {
         var tableId = this.props.query.pxtableId;
         console.log("edit id:=" + tableId);
         this.props.tablesStore.getItemById(tableId);
+    }
+    componentWillReceiveProps(){
+        console.log("will receive props")
+    }
+    componentWillReact(){
+
+        //this.componentWillReceiveProps(this.props);
+        console.log("fire componetwillreat")
+
     }
     onSaveAndEdit(childModuleName,e){
         e.preventDefault();
@@ -49,15 +72,20 @@ export default class Page extends React.Component{
     }
     render(){
         var that = this;
+        console.log('time for form:', Date.now());
+        console.log('data for form show', that.props.tablesStore.item.name);
+        //console.log('testnamevalue', that.props.tablesStore.name)
         const { getFieldDecorator } = this.props.form;
+
         return (
+
             <Card>
             <Form  onSubmit={that.onSubmit.bind(that)}>
 
             <Card type="inner">
             <FormItem label="名称" >
             {getFieldDecorator("name", {
-                initialValue: this.props.tablesStore.item.name
+                initialValue: that.props.tablesStore.item.name
             })(
                 <Input type="text" />
             )}
@@ -67,7 +95,7 @@ export default class Page extends React.Component{
         <Card type="inner">
         <FormItem label="说明" >
         {getFieldDecorator("description", {
-        initialValue: this.props.tablesStore.item.description
+        initialValue: that.props.tablesStore.item.description
         })(
             <Input type="text" />
         )}

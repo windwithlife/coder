@@ -1,14 +1,12 @@
 import { observable, action, computed,toJS,runInAction } from "mobx";
 import model from './model.js';
 
-class PostsStore {
-
-    @observable name='tempnamex';
-    @observable item={id:0,name:'name',description:'desc',defineText:'',status:''};
+class BaseStore {
+    @observable item={};
     @observable items = [];  // 数组的元素是PostModel的实例
 
-  constructor(appStore) {
-      this.appStore = appStore;
+  constructor() {
+      //this.appStore = appStore;
   }
 
    @computed get
@@ -99,4 +97,4 @@ class PostsStore {
 
 }
 
-export default PostsStore;
+export default BaseStore;

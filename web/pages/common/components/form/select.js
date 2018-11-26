@@ -58,7 +58,7 @@ export default class XList extends React.Component {
 
     render() {
         var that = this;
-        console.log("current display property:" + this.props.display);
+        //console.log("current display property:" + this.props.display);
         if (that.props.display == 'no'){
             return(<div></div>);
         }

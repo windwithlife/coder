@@ -15,7 +15,7 @@ var get = function(path, params, cb){
     });
 }
 var post = function(path,params,cb){
-    console.log("params in axios:"+JSON.stringify(params));
+    //console.log("params in axios:"+JSON.stringify(params));
     axios.post(path, params).then(function (response) {
            cb(response);
         })

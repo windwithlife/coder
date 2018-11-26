@@ -1,55 +1,39 @@
-import React from 'react';
-import router from 'next/router';
-import Link from 'next/link'
-import { inject, observer } from 'mobx-react'
-import Clock from './Clock'
+import React from 'react'
+//import { inject, observer } from 'mobx-react'
 import { Form, Input,Button} from 'antd';
 
-//import '../common/styles/App.less';
-
-//const FormItem = Form.Item;
-
-@inject('tablesStore') @observer
-class EditForm extends React.Component {
+/*
+class XXXForm extends React.Component {
 
     componentDidMount () {
-        this.props.tablesStore.fetchAllTables();
+        //this.props.tablesStore.fetchAllTables();
+        console.log("did mount");
     }
-
-    componentWillUnmount () {
-        //this.props.s.stop()
-    }
-
     render () {
+        console.log("record render coutn");
         return (
             <div>
-
-
-            <nav>
-                <h1> 总记录条数:{this.props.tablesStore.items.length}</h1>
-            {this.props.tablesStore.items.map(function (item, i) {
-                //item.key = item.id
-                return(<Link>{item.name}</Link>)
-            })}
-            <Link ><a>Navigate</a></Link>
-            </nav>
+                <h1> 总记录条数:</h1>
             </div>
             )
     }
 }
 
-
-
-
-const MyForm = Form.create()(EditForm);
+const MyForm = Form.create()(XXXForm);
+*/
 
 export default class Page extends React.Component{
+    componentDidMount () {
+        //this.props.tablesStore.fetchAllTables();
+        console.log("did mount");
+    }
 
     render(){
-        return (<MyForm query={this.props.query}/>)
+        console.log("record render coutn");
+        return (<div>test   </div>)
     }
 }
-Page.getInitialProps = async function(context){
-    return {query:context.query,path:context.pathname};
-}
+/*Page.getInitialProps = async function(context){
+    //return {query:context.query,path:context.pathname};
+}*/
 

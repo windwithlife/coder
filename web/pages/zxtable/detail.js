@@ -17,7 +17,7 @@ class EditForm extends React.Component {
     componentDidMount () {
         var tableId = this.props.query.pxtableId;
         console.log("edit id:=" + tableId);
-        this.props.tablesStore.getItemById(tableId);
+        //this.props.tablesStore.getItemById(tableId);
     }
     handleSubmit(e) {
         e.preventDefault();
@@ -27,6 +27,8 @@ class EditForm extends React.Component {
 render()
 {
     var that = this;
+    //console.log('render',that.props.tablesStore.item.name);
+    console.log("rendertime",Date.now())
     const { getFieldDecorator } = this.props.form;
     return (
             <Card >

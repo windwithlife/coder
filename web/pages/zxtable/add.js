@@ -7,46 +7,35 @@ import XSelect from '../common/components/form/select';
 import XList from '../common/components/form/referlist';
 import router from 'next/router';
 import { inject, observer } from 'mobx-react'
+import formHelper from '../common/components/form/formhelper.js'
 
 
 const { TextArea } = Input;
 const FormItem = Form.Item;
+var form = formHelper.form_decorator;
 
-
-@inject('tablesStore') @observer
-class EditForm extends React.Component {
-
+@inject('tablesStore') @form('tablesStore') @observer
+export default class AddNewForm extends React.Component {
+    constructor(props){
+        super(props);
+        this.itemStore = props.tablesStore;
+    }
     handleSubmit(e) {
         e.preventDefault();
-
         var that = this;
-        this.props.form.validateFieldsAndScroll((err, values) => {
-            if (!err) {
-                const data = {...values};
-                console.log('Received values of form: ', values);
-                that.props.tablesStore.addItem(data,function(){
-                    let params = {...that.props.query};
-                    router.push({pathname:'/pxtable/list',query:params});
-                });
-            }
-        });
-    }
-    handleSaveAndEdit(childModuleName,data) {
-        let that = this;
-        that.props.tablesStore.addItem(data,function(){
-            let params = {...that.props.query,pxtableId:response.data.id,fromModule:'pxtable'};
-            router.push({pathname:'/'+ childModuleName+ '/list',query:params});
-        });
+        that.itemStore.addItem(function(){
+            let params = {...that.props.query};
+            router.push({pathname:'/pxtable/list',query:params});
+        })
+
     }
 
     onSaveAndEdit(childModuleName,e){
         e.preventDefault();
-        var that = this;
-        this.props.form.validateFieldsAndScroll((err, values) => {
-            if (!err) {
-                const data = {...values};
-                console.log('Received values of form: ', values);
-                that.handleSaveAndEdit(childModuleName,data);
+        this.itemStore.addItem(function(result){
+            if (result) {
+                let params = {...that.props.query,pxtableId:result.id,fromModule:'pxtable'};
+                router.push({pathname:'/'+ childModuleName+ '/list',query:params});
             }
         });
     }
@@ -54,23 +43,10 @@ class EditForm extends React.Component {
     onAssociationEdit(aName,referModule,e){
         e.preventDefault();
         var that = this;
-        this.props.form.validateFieldsAndScroll((err, values) => {
-            if (!err) {
-                const data = {...values};
-                console.log('Received values of form: ', values);
-                that.handleAssociationEdit(aName,referModule,data);
-            }
-        });
-
-
-    }
-
-    handleAssociationEdit(associationModule,referm,data) {
-        let that = this;
-        model.add(data, function(response) {
-            if (response && response.data) {
+        this.itemStore.addItem(function(result) {
+            if (result) {
                 console.log(response.data);
-                let params = {...that.props.query,moduleName:"pxtable",moduleId:response.data.id,associationName:associationModule,referModule:referm};
+                let params = {...that.props.query,moduleName:"pxtable",moduleId:result.id,associationName:associationModule,referModule:referm};
                 router.push({pathname:'/pxtable/association',query:params});
             }
         });
@@ -81,8 +57,6 @@ render()
 
     var that = this;
     const { getFieldDecorator } = this.props.form;
-
-
     return (
             <Card>
             <Form  onSubmit={this.handleSubmit.bind(this)}>
@@ -140,16 +114,8 @@ render()
 }
 }
 
-const MyForm = Form.create()(EditForm);
 
-
-export default class Page extends React.Component{
-
-    render(){
-        return (<MyForm query={this.props.query}/>)
-    }
-}
-Page.getInitialProps = async function(context){
+AddNewForm.getInitialProps = async function(context){
     return {query:context.query,path:context.pathname};
 }
 

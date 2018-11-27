@@ -1,6 +1,7 @@
 import { useStaticRendering } from 'mobx-react';
 import Store from './Store';
 import TableStore from '../zxtable/models/TablesStore.js'
+import TestStore from '../zxtable/models/TestStore.js'
 /*import AppStore from "./AppStore";
 import AuthStore from "./AuthStore";
 import PostsStore from "./PostsStore";
@@ -16,6 +17,7 @@ useStaticRendering(isServer)
 function composeStores(initialData){
     const store = new Store(isServer, initialData)
     const tablesStore = new TableStore();
+    const testStore  = new TestStore();
     /*const appStore = new AppStore();
     const authStore = new AuthStore(authApi, appStore);
     const postsStore = new PostsStore(postApi, appStore, authStore);
@@ -24,7 +26,8 @@ function composeStores(initialData){
 
     const stores = {
         store,
-        tablesStore
+        tablesStore,
+        testStore
        /* appStore,
         authStore,
         postsStore,

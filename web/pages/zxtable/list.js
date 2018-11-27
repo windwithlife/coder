@@ -12,8 +12,6 @@ import {
 //import EditableCell from '../common/components/form/editablecell.js';
 //import NewModal from './components/modal.js';
 import router from 'next/router';
-
-import '../common/styles/TableSearch.less';
 import { inject, observer } from 'mobx-react'
 
 
@@ -21,16 +19,8 @@ const rowSelection = {
 };
 
 @inject('tablesStore') @observer
-class ListExample extends React.Component{
+export default class ListExample extends React.Component{
 
-
-    state = {
-        list: [],
-        count:0,
-        searchText:'',
-        parentId:this.props.query.parentId,
-
-    }
     startHeader() {
         var that = this;
         let store = this.props.tablesStore;
@@ -62,7 +52,7 @@ class ListExample extends React.Component{
                     <a href = "#" onClick = {that.handleLineAdd.bind(that)} > Add </a>
                     <span className = "ant-divider" />
                     <Popconfirm title = "Sure to delete?" onConfirm = {that.handleLineDelete.bind(that,index, record)} >
-                        < a href = "#" > Delete </a>
+                        <a href = "#" > Delete </a>
                     </Popconfirm>
                     <span className = "ant-divider" />
                     <a href = "#" onClick = {that.handleLineUpdate.bind(that,index, record)} > Update </a>
@@ -78,16 +68,13 @@ class ListExample extends React.Component{
     onFooterBack(){
         router.back();
     }
-
-
-componentDidMount () {
-    this.props.tablesStore.fetchAllTables();
-}
-  componentWillMount() {
-    var that = this;
-    this.startHeader();
- }
-
+    componentDidMount () {
+        this.props.tablesStore.fetchAll();
+    }
+    componentWillMount() {
+        var that = this;
+        this.startHeader();
+    }
     pagination() {
         return {
             total: this.props.tablesStore.dataLength,
@@ -95,61 +82,26 @@ componentDidMount () {
         }
     }
     handleLineUpdate(index, record) {
-        let that = this;
 
-        this.state.currentItem = record;
-        this.state.currentItem.index = index;
         router.push({pathname:'/zxtable/edit',query: {...that.props.query,pxtableId:record.id}});
-        
-      
-
     }
     handleLineDetail(record) {
-        let that = this;
-
-        this.state.currentItem = record;
         router.push({pathname:'/zxtable/detail',query:{...that.props.query,pxtableId:record.id}});
-
-
     }
-
     handleLineAdd() {
-        let that = this;
         router.push({pathname:'/zxtable/add',query:{...that.props.query}});
     }
     handleLineDelete(index, record) {
-        this.props.tablesStore.removeById(index,record);
+        this.props.tablesStore.removeItemById(index,record);
     }
 
-
-
     handleSearchChange(e){
-        console.log("search text;" + e.target.value);
         this.setState({searchText: e.target.value,name: e.target.value});
     }
     handleSearch(e) {
         e.preventDefault();
-        console.log("begin to send search2...");
-        var that = this;
-
-        const data = {keywork: this.state.searchText};
-        console.log(JSON.stringify(data));
-        that.executeSearch(data);
-
-    }
-    executeSearch(param) {
-        var that = this;
-       model.queryByNameLike(param.keyword,function(response){
-            if (response&& response.data) {
-                console.log(JSON.stringify(response.data));
-                response.data.map(function(item, i) {
-                    item.key = item.id;
-                });
-                that.setState({
-                    list: response.data
-                });
-            }
-       });
+        let keywork = this.state.searchText
+        this.props.tablesStore.fetchByNameLike(param.keyword);
 
     }
     render() {
@@ -168,10 +120,9 @@ componentDidMount () {
                 < Form.Item  >
                     <Button onClick = {this.handleLineAdd.bind(this)} > 添加 </Button>
                 < /Form.Item>
-
             < /Form>
             < /div>
-< Table rowSelection = {
+            < Table rowSelection = {
                 rowSelection
             }
             columns = {
@@ -196,16 +147,7 @@ componentDidMount () {
     }
 }
 
-
-
-export default class Page extends React.Component{
-
-    render(){
-        return (<ListExample query={this.props.query}/>
-)
-    }
-}
-Page.getInitialProps = async function(context){
+ListExample.getInitialProps = async function(context){
     return {query:context.query,path:context.pathname};
 }
 //export default()=>(<Layout> <ListExample/></Layout>)

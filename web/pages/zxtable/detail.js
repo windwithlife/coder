@@ -7,13 +7,19 @@ import XSelect from '../common/components/form/select';
 import XList from '../common/components/form/referlist';
 import model from './models/model.js';
 import { inject, observer } from 'mobx-react'
+//import formHelper from '../common/components/form/formhelper.js'
 
+
+const { TextArea } = Input;
 const FormItem = Form.Item;
+//var form = formHelper.form_decorator;
 
-
-@inject('tablesStore') @observer
-class EditForm extends React.Component {
-
+@inject('tablesStore')  @observer
+export default class DetailForm extends React.Component {
+    constructor(props){
+        super(props)
+        this.itemStore = props.tablesStore;
+    }
     componentDidMount () {
         var tableId = this.props.query.pxtableId;
         console.log("edit id:=" + tableId);
@@ -27,8 +33,6 @@ class EditForm extends React.Component {
 render()
 {
     var that = this;
-    //console.log('render',that.props.tablesStore.item.name);
-    console.log("rendertime",Date.now())
     const { getFieldDecorator } = this.props.form;
     return (
             <Card >
@@ -38,7 +42,7 @@ render()
                         <FormItem
                             label="名称"
                             >
-                            {this.props.tablesStore.item.name}
+                            {that.itemStore.name}
                         </FormItem>
                         </Card>
                 
@@ -46,7 +50,7 @@ render()
                         <FormItem
                             label="说明"
                             >
-                            {this.props.tablesStore.item.description}
+                            {that.itemStore.description}
                         </FormItem>
                         </Card>
                 
@@ -54,7 +58,7 @@ render()
                         <FormItem
                             label="表结构定义"
                             >
-                            {this.props.tablesStore.item.defineText}
+                            {that.itemStore.defineText}
                         </FormItem>
                         </Card>
                 
@@ -62,7 +66,7 @@ render()
                         <FormItem
                             label="是否使用"
                             >
-                            {this.props.tablesStore.item.status}
+                            {that.itemStore.status}
                         </FormItem>
                         </Card>
                 
@@ -84,15 +88,7 @@ render()
 }
 
 
-const MyForm = Form.create()(EditForm);
-
-export default class Page extends React.Component{
-
-    render(){
-        return (<MyForm query={this.props.query}/>)
-    }
-}
-Page.getInitialProps = async function(context){
+DetailForm.getInitialProps = async function(context){
     return {query:context.query,path:context.pathname};
 }
 

@@ -1,26 +1,22 @@
 import React from 'react'
 //import { inject, observer } from 'mobx-react'
 import { Form, Input,Button} from 'antd';
-
-/*
-class XXXForm extends React.Component {
-
-    componentDidMount () {
-        //this.props.tablesStore.fetchAllTables();
-        console.log("did mount");
-    }
-    render () {
-        console.log("record render coutn");
-        return (
-            <div>
-                <h1> 总记录条数:</h1>
-            </div>
-            )
+class test {
+    x = 3;
+    constructor(){
+        this.y =5;
     }
 }
 
-const MyForm = Form.create()(XXXForm);
-*/
+class Child extends test{
+    constructor(){
+        super();
+    }
+    print(){
+        console.log(this.x);
+        console.log(this.y);
+    }
+}
 
 export default class Page extends React.Component{
     componentDidMount () {
@@ -33,7 +29,9 @@ export default class Page extends React.Component{
         return (<div>test   </div>)
     }
 }
-/*Page.getInitialProps = async function(context){
-    //return {query:context.query,path:context.pathname};
-}*/
+Page.getInitialProps = async function(context){
+    var x = new Child();
+    x.print();
+    return {query:context.query,path:context.pathname};
+}
 

@@ -274,6 +274,6 @@ exports.generateModuleByName = generateModuleByName;
 exports.generateCommon = generateCommon;
 exports.initEnv = initPathEnv;
 
-exports.coderDefine = {name:"website",desc:"create a web-based coder"};
+exports.coderDefine = {name:"java-web",desc:"create a web-based coder"};
 
 

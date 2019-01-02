@@ -12,26 +12,41 @@ import <%=data.packageName%>.entity.*;
 public class <%=data.moduleNameCLS%>Service {
 	@Autowired
 	<%=data.moduleNameCLS%>Repository dao;
-	public List<<%=data.moduleNameCLS%>> findAll(){
-		return  dao.findAll();
-		//return items;
+
+    public List<<%=data.moduleNameCLS%>Response> transformEntityListToDto(List<<%=data.moduleNameCLS%>> list){
+         List<<%=data.moduleNameCLS%>Response> result = new List<<%=data.moduleNameCLS%>Response>()
+         for(<%=data.moduleNameCLS%> item:list){
+              <%=data.moduleNameCLS%>Response response =   <%=data.moduleNameCLS%>Response.createByEntity(item);
+              result.add(response);
+         }
+         return result;
+    }
+	public List<<%=data.moduleNameCLS%>Response> findAll(){
+
+		return transformEntityListToDto(dao.findAll());
+
+
 	}
-	public  List<<%=data.moduleNameCLS%>> findByName(String name){
-		return dao.findByName(name);
+	public  List<<%=data.moduleNameCLS%>Response> findByName(String name){
+		return transformEntityListToDto(dao.findByName(name));
 	}
-	public  List<<%=data.moduleNameCLS%>> findByNameLike(String name){
-    		return dao.findByNameLike(name);
+	public  List<<%=data.moduleNameCLS%>Response> findByNameLike(String name){
+
+        return transformEntityListToDto(dao.findByNameLike(name));
+
     }
 
-	public  <%=data.moduleNameCLS%> findOneByName(String name){
-    		return dao.findOneByName(name);
+	public  <%=data.moduleNameCLS%>Response findOneByName(String name){
+    		return <%=data.moduleNameCLS%>Response.createByEntity(dao.findOneByName(name));
     	}
 
-	public <%=data.moduleNameCLS%> findById(Long id){
-		return dao.findOne(id);
+	public <%=data.moduleNameCLS%>Response findById(Long id){
+		return <%=data.moduleNameCLS%>Response.createByEntity(dao.findOne(id));
 	}
-	public <%=data.moduleNameCLS%> save(<%=data.moduleNameCLS%> item){
-		return this.dao.save(item);
+	public <%=data.moduleNameCLS%>Response save(<%=data.moduleNameCLS%>Request item){
+
+		 <%=data.moduleNameCLS%> result = this.dao.save(item.getEntity());
+		 return <%=data.moduleNameCLS%>Response.createByEntity(result);
 	}
 	public void remove(Long id){
 		this.dao.delete(id);
@@ -49,8 +64,8 @@ public class <%=data.moduleNameCLS%>Service {
 
                              %>
 
-    public  List<<%=data.moduleNameCLS%>> findBy<%=fieldNameUpper%>(Long id){
-        return dao.findBy<%=fieldNameUpper%>(id);
+    public  List<<%=data.moduleNameCLS%>Response> findBy<%=fieldNameUpper%>(Long id){
+        return transformEntityListToDto(dao.findBy<%=fieldNameUpper%>(id));
     }
 
                              <%}

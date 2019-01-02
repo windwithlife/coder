@@ -69,19 +69,19 @@ public class <%=data.moduleNameCLS%>Controller {
     }
 	@RequestMapping(value = "/queryAll", method = RequestMethod.GET)
 	@ResponseBody
-	public List<<%=data.moduleNameCLS%>Response> findAll() {
+	public List<<%=data.moduleNameCLS%>> findAll() {
 		return service.findAll();
 	}
 	@ResponseBody
     @RequestMapping(value = "/query/{id}", method = RequestMethod.GET)
-    public <%=data.moduleNameCLS%>Response findByKeyId(@PathVariable Long id) {
+    public <%=data.moduleNameCLS%> findByKeyId(@PathVariable Long id) {
        	System.out.println("input param Id:" + id);
        	<%=data.moduleNameCLS%> result = service.findById(id);
     	return result;
     }
     @ResponseBody
     @RequestMapping(value = "/queryByNameLike/", method = RequestMethod.GET)
-    public List<<%=data.moduleNameCLS%>Response> findByNameLike(@RequestParam("name") String name ) {
+    public List<<%=data.moduleNameCLS%>> findByNameLike(@RequestParam("name") String name ) {
            	System.out.println("input param Name:" + name);
             return service.findByNameLike(name);
 
@@ -90,7 +90,7 @@ public class <%=data.moduleNameCLS%>Controller {
 
     @ResponseBody
     @RequestMapping(value = "/queryByName", method = RequestMethod.GET)
-    public List<<%=data.moduleNameCLS%>Response> findByName(@RequestParam("name") String name ) {
+    public List<<%=data.moduleNameCLS%>> findByName(@RequestParam("name") String name ) {
            	System.out.println("input param Name:" + name);
             return queryDao.findByName(name);
 
@@ -98,7 +98,7 @@ public class <%=data.moduleNameCLS%>Controller {
 
     @ResponseBody
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public <%=data.moduleNameCLS%>Response save2(@RequestBody <%=data.moduleNameCLS%>Request item) {
+	public <%=data.moduleNameCLS%> save2(@RequestBody <%=data.moduleNameCLS%> item) {
 
 		System.out.println("input device params:" + item.toString());
 		<%=data.moduleNameCLS%> result = service.save(item);
@@ -110,7 +110,7 @@ public class <%=data.moduleNameCLS%>Controller {
 
  	@ResponseBody
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
-    public <%=data.moduleNameCLS%>Response updateSave(@RequestBody <%=data.moduleNameCLS%>Request item,@PathVariable Long id) {
+    public <%=data.moduleNameCLS%> updateSave(@RequestBody <%=data.moduleNameCLS%> item,@PathVariable Long id) {
 
      	 System.out.println("input device params:" + item.toString());
      	 <%=data.moduleNameCLS%> result = service.save(item);

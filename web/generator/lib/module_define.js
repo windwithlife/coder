@@ -20,6 +20,7 @@ var ModuleDefines = function () {
     this.pSetting.apiServer = "127.0.0.1:8080";
     this.pSetting.enables = [];
     this.modules = {};
+    this.contracts={};
     console.log('initialize the ModuleDefines!');
 }
 
@@ -31,6 +32,9 @@ ModuleDefines.prototype.getProjectSetting = function () {
 }
 ModuleDefines.prototype.getModuleDefineByName = function (moduleName) {
     return this.modules[moduleName];
+}
+ModuleDefines.prototype.getServiceContractDefineByName = function (contractName) {
+    return this.contracts[contractName];
 }
 
 ModuleDefines.prototype.loadDefinesFromParams = function (pSetting, pModules) {
@@ -66,6 +70,65 @@ ModuleDefines.prototype.loadDefinesFromFiles = function (moduleDefinePath) {
     this.adjustData();
 
 }
+ModuleDefines.prototype.loadContractsFromFiles = function (moduleDefinePath) {
+
+    var that = this;
+    var mPath = moduleDefinePath;
+    var files = fs.readdirSync(mPath);
+    files.forEach(function (file) {
+        var filePath = mPath + file;
+        var stats = fs.statSync(filePath);
+        if (!stats.isDirectory()) {
+            var mdefine = require(filePath);
+            if (!mdefine.name) {
+                return;
+            }
+            console.log(filePath);
+            var service_name = mdefine.namespace + mdefine.service_name;
+            that.contracts[service_name] = mdefine;
+        }
+    });
+
+    //var setting = require(mPath + "config");
+    //this.projectSetting = setting;
+    this.adjustContractsData();
+
+}
+ModuleDefines.prototype.adjustContractsData = function () {
+    for (var contractName in this.contracts){
+        var contract  = this.contracts[contractName];
+        this.adjustContract(contract);
+
+    }
+}
+ModuleDefines.prototype.adjustContract = function (contract) {
+    contract.serviceCLS = firstUpperCase(contract.service_name);
+    contract.operations.forEach(function (operation) {
+        operation.requestCLS = firstUpperCase(contract.module) + firstUpperCase(operation.name) + "Request";
+        operation.responseCLS = firstUpperCase(contract.module) + firstUpperCase(operation.name) + "Response";
+        for (var field in operation.requestType){
+            var fieldDef ={'type': operation.requestType[field]};
+            fieldDef.nameCLS = firstUpperCase(field);
+            operation.requestType[field] = fieldDef;
+        }
+        for (var field in operation.responseType){
+            var fieldResDef = {'type':operation.responseType[field]};
+            fieldResDef.nameCLS = firstUpperCase(field);
+            operation.responseType[field] =fieldResDef;
+        }
+    })
+
+    var properties = {};
+
+    properties.define = contract;
+    properties.moduleName = contract.module;
+    properties.moduleNameCLS = firstUpperCase(properties.moduleName);
+
+    properties.serviceName = contract.service_name;
+    properties.serviceCLS = contract.serviceCLS;
+    properties.packageName  = this.projectSetting.basePackage;
+}
+
 
 ModuleDefines.prototype.adjustData = function () {
     for (var moduleName in this.modules){

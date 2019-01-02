@@ -10,6 +10,7 @@ var generatorList = [];
 var config = {
     workRootPath: process.cwd(),
     workModulesPath: function () {return path.join(this.workRootPath, "generator/modules/")},
+    workContractsPath: function () {return path.join(this.workRootPath, "generator/contracts/")},
     rootGeneratorsPath: function () {return path.join(this.workRootPath,"generator/lib/generators/");},
 };
 
@@ -69,17 +70,24 @@ function initProject(byFiles, setting) {
     initGenerators();
     if (byFiles==true){
         moduleDefines.loadDefinesFromFiles(config.workModulesPath());
+        moduleDefines.loadContractsFromFiles(config.workContractsPath());
     }else{
         moduleDefines.loadDefinesFromParams(setting.projectSetting, setting.modules);
     }
     console.log("finished init project ! new project!");
 }
-function generateCode(language, platformName, withFramework,withCommonModules) {
+function generateCode(language, type,subtype, withFramework,withCommonModules) {
     console.log('getplatformName:' + platformName + "withframework:"  + withFramework);
 
     initGenerators();
+    var generatorSelector = 'java-web';
+    if(subtype){
+        generatorSelector = language + '-' + type + '-' +subtype;
+    }else{
+        generatorSelector = language + '-' + type;
+    }
 
-    var generator = findGeneratorByName(language);
+    var generator = findGeneratorByName(generatorSelector);
     if (!generator) {
         console.log("Generator named:[" + language + "] not found!");
         return;
@@ -99,6 +107,9 @@ function generateCode(language, platformName, withFramework,withCommonModules) {
         generator.generateModuleByName(moduleName, moduleDefines.getModuleDefineByName(moduleName),platformName);
     });
 
+    moduleDefines.contracts.forEach(function (contractName) {
+        generator.generateContractByName(contractName, moduleDefines.getServiceContractDefineByName(contractName),platformName);
+    });
 
     console.log("generated code by define file in modules directory\n");
 

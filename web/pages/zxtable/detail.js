@@ -7,7 +7,6 @@ import XSelect from '../common/components/form/select';
 import XList from '../common/components/form/referlist';
 import model from './models/model.js';
 import { inject, observer } from 'mobx-react'
-//import formHelper from '../common/components/form/formhelper.js'
 
 
 const { TextArea } = Input;
@@ -23,7 +22,7 @@ export default class DetailForm extends React.Component {
     componentDidMount () {
         var tableId = this.props.query.pxtableId;
         console.log("edit id:=" + tableId);
-        //this.props.tablesStore.getItemById(tableId);
+        this.props.tablesStore.getItemById(tableId);
     }
     handleSubmit(e) {
         e.preventDefault();
@@ -86,7 +85,6 @@ render()
     );
 }
 }
-
 
 DetailForm.getInitialProps = async function(context){
     return {query:context.query,path:context.pathname};

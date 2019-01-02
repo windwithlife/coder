@@ -120,6 +120,27 @@ function createServerBZModules(moduleName, moduleDefine) {
     codeTools.generateCode(templateFile, params, targetFile);
 };
 
+
+function createContract(contractName, contractDefine){
+
+    var params = buildParams(moduleDefine);
+    params.firstUpper = codeTools.firstUpper;
+    var mName = params.moduleNameCLS;
+
+    var templateFile = config.workServerTemplatePath() + "ContractServiceController.java";
+    var targetFile = config.targetServerCodePath() + "controller/" + contractDefine.serviceCLS + "ServiceController.java";
+    codeTools.generateCode(templateFile, params, targetFile);
+    contract.operations.forEach(function (operation) {
+        params.operation= operation;
+        var templateFile = config.workServerTemplatePath() + "ContractRequestDto.java";
+        var targetFile = config.targetServerCodePath() + "dto/" + contractDefine.requestCLS + ".java";
+        codeTools.generateCode(templateFile, params, targetFile);
+        var templateFile = config.workServerTemplatePath() + "ContractResponseDto.java";
+        var targetFile = config.targetServerCodePath() + "dto/" + contractDefine.responseCLS + ".java";
+        codeTools.generateCode(templateFile, params, targetFile);
+    })
+}
+
 function generateFrameworkDirectories() {
 
 
@@ -186,6 +207,12 @@ function generateServerAPIModule(moduleName, moduleDefine) {
     createServerBZModules(moduleName, moduleDefine);
 }
 
+function generateContractByName(contractName, contractDefine){
+    config.module = contractDefine.module;
+    createModuleBaseDirectories(config.module);
+    createContract(contractName, contractDefine);
+}
+
 function generateModuleByName(moduleName, defines, param) {
 
     //var mdefine = defines[moduleName];
@@ -198,9 +225,11 @@ function generateModuleByName(moduleName, defines, param) {
 }
 exports.generateFramework = generateFramework;
 exports.generateModuleByName = generateModuleByName;
+exports.generateContractByName = generateContractByName;
+
 exports.generateCommon = generateCommon;
 exports.initEnv = initPathEnv;
 
-exports.coderDefine = {name: "server-java", desc: "create a server based java and related project code"};
+exports.coderDefine = {name: "java-server", desc: "create a server based java and related project code"};
 
 

@@ -19,7 +19,7 @@ app.prepare()
     server.get('/generateCode', (req, res) => {
         console.log(req.query);
         generator.init(true);
-        generator.generate(req.query.lan,req.query.platform,req.query.withFramework);
+        generator.generate(req.query.lan,req.query.type,req.query.subtype,req.query.withFramework);
         res.sendStatus(200)
         //return app.render(req, res, '/a', req.query)
     })
@@ -27,7 +27,7 @@ app.prepare()
     server.post('/generateCodeByDefine', (req, res) => {
         console.log(req.body);
         generator.init(false,req.body);
-        generator.generate(req.query.lan,req.query.platform,req.query.withFramework);
+        generator.generate(req.query.lan,req.query.type,req.query.subtype,req.query.withFramework);
         res.sendStatus(200)
     });
 

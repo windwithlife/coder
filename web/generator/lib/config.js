@@ -16,7 +16,6 @@ var config = {
     basePackage:"com.simple.base.bz",
     apiServer:"",
     defines:null,
-
     //当前工作目录下的模块定义目录
     workModulesPath: function(){return path.join(this.workRootPath , "modules/")},
     //当前工作目录下的模板目录

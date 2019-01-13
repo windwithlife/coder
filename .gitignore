@@ -1,6 +1,9 @@
 node_modules/
 .idea/
 dist/
+.DS_Store
+target/
+*.iml
 
 package-lock.json
 .git.swp

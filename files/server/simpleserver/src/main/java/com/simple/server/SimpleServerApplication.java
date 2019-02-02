@@ -33,6 +33,7 @@ public class SimpleServerApplication implements ApplicationListener<ContextRefre
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         System.out.println(test.getAnother());
+        System.out.println("Have startup the application*****************************************************");
     }
 }
 

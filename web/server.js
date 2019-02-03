@@ -6,12 +6,14 @@ const dev = process.env.NODE_ENV !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
 var bodyParser=require('body-parser');
+const rewrite = require('express-urlrewrite');
 
 
 app.prepare()
   .then(() => {
     const server = express()
     server.use(bodyParser.urlencoded({extended:true}));
+    //server.use(rewrite(/^\/coder\/?(.*)/,'/$1'));
     server.get('/a', (req, res) => {
       return app.render(req, res, '/b', req.query)
     })

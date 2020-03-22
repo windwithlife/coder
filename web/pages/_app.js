@@ -16,36 +16,43 @@ class MyMobxApp extends App {
 
         return {
             ...appProps,
-            initialMobxState: mobxStore
+            //initialMobxState: appProps
         };
     }
 
     constructor(props) {
         super(props)
-        this.mobxStore = initializeStore(props.initialMobxState)
+        if (props._STORENAME){
+           this.mobxStore = initializeStore(props._STORENAME,_STOREVALUE);
+        }else{
+            this.mobxStore = initializeStore();
+        }
+        //this.mobxStore = initializeStore(props.initialMobxState)
         //this.context = this.props.con
     }
 
     render() {
 
-        const { Component, pageProps } = this.props
+        const { Component, pageProps } = this.props;
+        
+        let pathName = this.props.router.pathname;
 
-        let  layoutName = "originNamePage";
-        if (Component.getLayoutName){
-            layoutName = Component.getLayoutName();
-        }
-        console.log("current PATH:" + pageProps.path)
-        console.log(layoutName + Component.name)
-        console.log(pageProps);
+        // let  layoutName = "originNamePage";
+        // if (Component.getLayoutName){
+        //     layoutName = Component.getLayoutName();
+        // }
+        //console.log(layoutName + Component.name)
+        console.log(this.props.router.pathname);
+        //console.log(this.props);
 
 
-        return (<Container>
+        return (
             <Provider {...this.mobxStore}>
-                <Layout path={pageProps.path}>
+                <Layout path={pathName}>
                     <Component {...pageProps} />
                 </Layout>
             </Provider>
-        </Container>)
+        )
 
 
     }

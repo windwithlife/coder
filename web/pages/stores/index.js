@@ -1,9 +1,13 @@
 import { useStaticRendering } from 'mobx-react';
 import Store from './Store';
-import TableStore from '../zxtable/models/TablesStore.js'
+import AuthStore from "./AuthStore";
+import TableStore from '../xtable/models/TablesStore.js';
+import ColumnStore from '../xtable/models/ColumnStore.js';
+import ModuleStore from '../xmodule/models/ModuleStore';
+import ProjectStore from '../xproject/models/ProjectStore';
 //import TestStore from '../zxtable/models/TestStore.js'
 /*import AppStore from "./AppStore";
-import AuthStore from "./AuthStore";
+
 import PostsStore from "./PostsStore";
 import CommentsStore from "./CommentsStore";
 import UIStore from "./UIStore";
@@ -14,40 +18,44 @@ import commentApi from "../api/commentApi";*/
 const isServer = typeof window === 'undefined'
 useStaticRendering(isServer)
 
-function composeStores(initialData){
-    const store = new Store(isServer, initialData)
-    const tablesStore = new TableStore();
-    //const testStore  = new TestStore();
-    /*const appStore = new AppStore();
-    const authStore = new AuthStore(authApi, appStore);
-    const postsStore = new PostsStore(postApi, appStore, authStore);
-    const commentsStore = new CommentsStore(commentApi, appStore, authStore);
-    const uiStore = new UIStore();*/
+let stores = {
+    network:new Store(),
+    tablesStore:new TableStore(),
+    columnsStore: new ColumnStore(),
+    modulesStore: new ModuleStore(),
+    projectsStore: new ProjectStore(),
 
-    const stores = {
-        store,
-        tablesStore
-        //testStore
-       /* appStore,
-        authStore,
-        postsStore,
-        commentsStore,
-        uiStore*/
-    };
+}   
+
+
+function retainStore(storeName){
+    return stores[storeName];
+}
+function composeStores(storeName,initialData){
+    if (storeName && initialData){
+        store = retainStore(storeName);
+        if(initialData){
+            store.initialize(initialData);
+        }
+        stores[storeName] = store;
+    }    
     return stores;
 }
 
 
-let stores = null;
-export function initializeStore (initialData) {
+
+export function initializeStore (name,initialData) {
     // Always make a new store if server, otherwise state is shared between requests
     if (isServer) {
-        return composeStores(initialData);
+        return composeStores();
     }else{
-        if (stores === null) {
-           stores = composeStores(initialData)
+        if(name &&  initialData){
+            return  composeStores(name, initialData)
+        }else{
+            return  composeStores();
         }
-        return stores;
+        
+      
     }
 }
 

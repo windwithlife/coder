@@ -7,7 +7,7 @@ const { TextArea } = Input;
 const FormItem = Form.Item;
 
 
-@inject('modulesStore') @observer
+@inject('projectsStore') @inject('modulesStore')  @observer
 export default  class AddPage extends React.Component {
     formRef = React.createRef();
 
@@ -18,7 +18,7 @@ export default  class AddPage extends React.Component {
 
     onFinish = values => {
         var that = this;
-        this.props.modulesStore.add(values,()=>{console.log('finished add row'); router.back();});
+        this.props.projectsStore.add(values,()=>{console.log('finished add row'); router.back();});
     }
    
 render(){
@@ -35,7 +35,12 @@ render(){
                 <Form.Item name="description" label="描述">
                     <Input />
                 </Form.Item>
-                
+                <Form.Item name="soaIp" label="服务地址">
+                    <Input />
+                </Form.Item>
+                <Form.Item name="website" label="站点">
+                    <Input />
+                </Form.Item>
                 <Form.Item name="status" label="状态">
                    < XSelect  category="data_status" refer ="" display= {(this.props.query.fromModule =='') ? 'no':'yes' } />
                 </Form.Item>

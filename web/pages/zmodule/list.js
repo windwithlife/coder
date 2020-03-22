@@ -1,5 +1,4 @@
 import React from 'react';
-import model from './models/model.js';
 import Table from 'antd/lib/table';
 import Icon from 'antd/lib/icon';
 import Button from 'antd/lib/button';
@@ -9,9 +8,9 @@ import {
     Select,
     Input
 } from 'antd';
-//import EditableCell from '../common/components/form/editablecell.js';
-//import NewModal from './components/modal.js';
+
 import router from 'next/router';
+import { inject, observer } from 'mobx-react';
 import Layout from '../common/pages/layout';
 import '../common/styles/TableSearch.less';
 
@@ -23,39 +22,41 @@ const rowSelection = {
     onChange: (selectedRowKeys, selectedRows) => {
         console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
     },
-    onSelect: (record, selected, selectedRows) => {
-        console.log(record, selected, selectedRows);
-    },
-    onSelectAll: (selected, selectedRows, changeRows) => {
-        console.log(selected, selectedRows, changeRows);
-    },
 };
 
-
-class ListExample extends React.Component{
-
-
-    state = {
-        list: [],
-        count:0,
-        searchText:'',
-        parentId:this.props.query.parentId,
-
+@inject('modulesStore') @observer
+export default class ModuleList extends React.Component{
+    constructor(){
+        super();
+        this.startHeader();
+        //this.store = this.props.modulesStore;
+        
     }
     startHeader() {
         var that = this;
         var fieldColumns=[];
         
                 fieldColumns.push({
-                  title: "字典类别名称",
+                  title: "模块名称",
                   dataIndex: 'name',
                   key: 'name'
                 });
                 
                 fieldColumns.push({
-                  title: "字典类别描述",
+                  title: "模块描述",
                   dataIndex: 'description',
                   key: 'description'
+                });
+                fieldColumns.push({
+                    title: "所属项目",
+                    dataIndex: 'project',
+                    key: 'project'
+                  });
+                
+                fieldColumns.push({
+                  title: "状态",
+                  dataIndex: 'status',
+                  key: 'status'
                 });
                 
 
@@ -67,13 +68,13 @@ class ListExample extends React.Component{
             key: 'action',
             render: (text, record, index) => (
                 <span >
-                    <a href = "#" onClick = {that.handleLineAdd.bind(that)} > Add </a>
+                   
                     <span className = "ant-divider" />
                     <Popconfirm title = "Sure to delete?" onConfirm = {that.handleLineDelete.bind(that,index, record)} >
                         < a href = "#" > Delete </a>
                     </Popconfirm>
                     <span className = "ant-divider" />
-                    <a href = "#" onClick = {that.handleLineUpdate.bind(that,index, record)} > Update </a>
+                    <a href = "#" onClick = {that.handleLineUpdate.bind(that,index, record)} > Edit </a>
                     <span className = "ant-divider" />
                     <a href = "#" onClick = {that.handleLineDetail.bind(that,record)} > Detail </a>
                 </span>
@@ -90,92 +91,38 @@ class ListExample extends React.Component{
         
     }
 
-
-componentWillMount() {
-    var that = this;
-    this.startHeader();
-    
-
-        model.queryAll(function (response) {
-            if (response && response.data) {
-                console.log(JSON.stringify(response.data));
-                console.log(response.data);
-                response.data.map(function(item, i) {
-                    item.key = item.id
-                });
-                that.setState({
-                    list: response.data
-                });
-            }
-        });
-    
-}
+    componentDidMount() {
+        //this.props.tablesStore.queryAll();
+        
+        this.props.modulesStore.queryAll();
+    }
 
     pagination() {
         return {
-            total: this.state.list.length,
+            total: this.props.modulesStore.dataObject.list.length,
             showSizeChanger: true,
-            onShowSizeChange: (current, pageSize) => {
-                console.log('Current: ', current, '; PageSize: ', pageSize);
-            },
-            onChange: (current) => {
-                console.log('Current: ', current);
-            },
         };
     }
     handleLineUpdate(index, record) {
         let that = this;
-
-        this.state.currentItem = record;
-        this.state.currentItem.index = index;
-        router.push({pathname:'/category/edit',query: {...that.props.query,categoryId:record.id}});
-        
-      
+        router.push({pathname:'/zmodule/edit',query:{id:record.id}});
 
     }
     handleLineDetail(record) {
         let that = this;
-
-        this.state.currentItem = record;
-        //this.state.currentItem.index = index;
-        //console.log('record:' + record);
-        //this.context.router.push({pathname:'//category/detail',state:{item:record}});
-        router.push({pathname:'/category/detail',query:{...that.props.query,categoryId:record.id}});
+        router.push({pathname:'/zmodule/detail',query:{id:record.id}});
 
 
     }
-    handleLineDetailModal(record) {
-
-        this.state.currentItem = record;
-        this.setState({
-            visible: true
-        });
-
-    }
-
+   
     handleLineAdd() {
         let that = this;
-        //this.context.router.push({pathname:'//category/add'});
-        router.push({pathname:'/category/add',query:{...that.props.query}});
+        //this.context.router.push({pathname:'//xtable/add'});
+        router.push({pathname:'/zmodule/add',query:{...that.props.query}});
     }
     handleLineDelete(index, record) {
         var that = this;
-        model.removeById(record.id, function() {
-            console.log('successful to remove: ID:' + record.id);
-            const dataSource = [...that.state.list];
-            dataSource.splice(index, 1);
-            that.setState({
-                list: dataSource
-            });
-        });
-
-    }
-
-    handleCancelUpdate(e) {
-        //e.preventDefault();
-        this.setState({
-            visible: false
-        });
+        this.props.modulesStore.removeById(index,record.id);
     }
 
     handleSearchChange(e){
@@ -194,22 +141,9 @@ componentWillMount() {
     }
     executeSearch(param) {
         var that = this;
-       model.queryByNameLike(param.keyword,function(response){
-            if (response&& response.data) {
-                console.log(JSON.stringify(response.data));
-                response.data.map(function(item, i) {
-                    item.key = item.id;
-                });
-                that.setState({
-                    list: response.data
-                });
-            }
-       });
-
     }
     render() {
         var that = this;
-        
         return (
             < div >
             <div>
@@ -233,7 +167,7 @@ componentWillMount() {
                 this.columns
             }
             dataSource = {
-                this.state.list
+                this.props.modulesStore.dataObject.list.slice()
             }
             pagination = {
                 this.pagination()
@@ -246,24 +180,12 @@ componentWillMount() {
             }
             />
 
-            < /div>
+            </div>
         );
     }
 }
 
-ListExample.getInitialProps = async function(context){
+
+ModuleList.getInitialProps = async function(context){
     return {query:context.query,path:context.pathname};
 }
-export default  ListExample;
-
-
-{/* 
-export default class Page extends React.Component{
-
-    render(){
-        return (<Layout  path={this.props.path}><ListExample query={this.props.query}/></Layout>)
-    }
-}
-Page.getInitialProps = async function(context){
-    return {query:context.query,path:context.pathname};
-} */}

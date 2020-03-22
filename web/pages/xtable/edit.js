@@ -1,173 +1,200 @@
 import React from 'react';
-
-import router from 'next/router';
-import Layout from '../common/pages/layout';
-import { Form, Input,Button} from 'antd';
-import {Card} from 'antd';
-import FileUpload from '../common/components/form/upload';
-import XSelect from '../common/components/form/select';
-import XList from '../common/components/form/referlist';
-import model from './models/model.js';
-//import '../common/styles/App.less';
-
+//import model from './models/model.js';
+import Table from 'antd/lib/table';
+import Icon from 'antd/lib/icon';
+import Button from 'antd/lib/button';
+import Popconfirm from 'antd/lib/popconfirm';
+import {
+    Modal,
+    Form,
+    Input,
+    Card,
+    Select,
+} from 'antd';
 const { TextArea } = Input;
-const FormItem = Form.Item;
-const formItemLayout = {
-    labelCol: {
-        span: 6,
-    },
-    wrapperCol: {
-        span: 14,
-    },
+import router from 'next/router';
+import { inject, observer } from 'mobx-react';
+import AddorEditPage from './AddorEditColumn';
+
+const rowSelection = {
 };
-
-
-
-class EditForm extends React.Component {
-
-    state={
-        items:{id:-1},
+@inject('columnsStore') @inject('tablesStore')
+@observer
+export default class ListPage extends React.Component {
+    state = {
+        visible: false,
+        operationTitle: "新增",
+        operationType: "add"
     }
-    componentWillMount(){
-        // this.setState({item:this.props.location.state.item});
+    constructor() {
+        super();
+        //var that = this;
+        this.startHeader();
+
+    }
+    startHeader() {
         var that = this;
-        console.log("edit id:=" + this.props.query.xtableid);
-        model.queryById(this.props.query.xtableId,function(response) {
-            if (response && response.data) {
-                console.log(response.data);
-                that.setState({items:response.data});
-            }
-        })
+
+        var fieldColumns = [];
+
+        fieldColumns.push({
+            title: "表列的名称",
+            dataIndex: 'name',
+            key: 'name'
+        });
+        fieldColumns.push({
+            title: "类型",
+            dataIndex: 'fieldType',
+            key: 'fieldType'
+        });
+        fieldColumns.push({
+            title: "外联类型",
+            dataIndex: 'referModule',
+            key: 'referModule'
+        });
+        fieldColumns.push({
+            title: "关联字段",
+            dataIndex: 'mapField',
+            key: 'mapField'
+        });
+        fieldColumns.push({
+            title: "说明",
+            dataIndex: 'description',
+            key: 'description'
+        });
+
+
+
+        this.columns = [...fieldColumns, {
+            title: 'Action',
+            key: 'action',
+            render: (text, record, index) => (
+                <span >
+
+                    <Popconfirm title="Sure to delete?" onConfirm={that.handleLineDelete.bind(that, index, record)} >
+                        <a href="#" > Delete </a>
+                    </Popconfirm>
+                    <span className="ant-divider" />
+                    <a href="#" onClick={that.handleLineUpdate.bind(that, index, record)} > Edit </a>
+                    <span className="ant-divider" />
+                    <a href="#" onClick={that.handleLineDetail.bind(that, record)} > Detail </a>
+                </span>
+            )
+        }];
+
+
     }
 
-    handleSaveAndEdit(childModuleName,data) {
-
-        let that = this;
-        let params = {...that.props.query,fromModule:'xtable'};
-        router.push({pathname:'/'+ childModuleName+ '/list',query:params});
+    onFooterBack() {
+        router.back();
+    }
+    componentDidMount() {
+        //this.props.tablesStore.fetchAll();
+        console.log('DidMount');
+        let tableId = this.props.query.tableId;
+        console.log("edit id:=" + tableId);
+        this.props.columnsStore.initializeByTableId(9999);
+        this.props.tablesStore.queryById(tableId);
     }
 
-    onSaveAndEdit(childModuleName,e){
-        e.preventDefault();
-        var that = this;
-        this.props.form.validateFieldsAndScroll((err, values) => {
-            if (!err) {
-                const data = {...values};
-                console.log('Received values of form: ', values);
-                that.handleSaveAndEdit(childModuleName,data);
-            }
+    pagination() {
+        return {
+            total: this.props.tablesStore.dataLength,
+            showSizeChanger: true
+        }
+    }
+    handleLineUpdate(index, record) {
+
+        //router.push({ pathname: '/zxtable/edit', query: { ...that.props.query, pxtableId: record.id } });
+        this.setState({
+            visible: true,
+            operationTitle: "修改",
+            operationType: "edit"
         });
     }
-    onAssociationEdit(aName,referm,e){
-        e.preventDefault();
-        var that = this;
-        var mId = this.props.query.xtableId;
-        let params = {...that.props.query,moduleName:"xtable",moduleId:mId,associationName:aName,referModule:referm};
-        router.push({pathname:'/xtable/association',query:params});
+    handleLineDetail(record) {
+        //router.push({ pathname: '/zxtable/detail', query: { ...that.props.query, pxtableId: record.id } });
     }
-    handleSubmitUpdate(data) {
+    handleLineAdd() {
+        this.setState({ visible: true });
+    }
+    onModalConfirm() {
+        //router.push({pathname:'/zxtable/add',query:{...that.props.query}});
+        this.setState({ visible: false });
+    }
+    handleLineDelete(index, record) {
+        console.log(record.id);
+        this.props.columnsStore.removeById(record.id, index);
+    }
+
+    handleSearchChange(e) {
+        this.setState({ searchText: e.target.value, name: e.target.value });
+    }
+    handleSearch(e) {
+        e.preventDefault();
+        let keywork = this.state.searchText
+        this.props.tablesStore.fetchByNameLike(param.keyword);
+
+    }
+    render() {
         let that = this;
-        model.update(data, function(response) {
-            if (response && response.data) {
-                console.log(data);
-                let params = {...that.props.query};
-                router.push({pathname:'/xtable/list',query:params});
-            }
-        })
+        let itemData = that.props.tablesStore.dataObject.currentItem;
+        return (
+            < div >
+                <Modal visible={that.state.visible} title={that.state.operationTitle}
+                    onCancel={this.onModalConfirm.bind(that)}
+                    footer={[]}>
+                    <AddorEditPage operationType={this.state.operationType} onConfirm={this.onModalConfirm.bind(that)}></AddorEditPage>
+                </Modal>
 
-    }
-    
-    handleSubmit(e) {
-        e.preventDefault();
-        var that = this;
-        this.props.form.validateFieldsAndScroll((err, values) => {
-            if (!err) {
-                const data = {...values, id:this.state.items.id};
-                console.log('Received values of form: ', values);
-                that.handleSubmitUpdate(data);
-            }
-        });
-    }
-   
-
-
-render()
-{
-    var that = this;
-    var listItems = this.state.items;
-    console.log(listItems);
-   // let selectIndex = listItems.sex? listItems.sex:-1;
-
-    const { getFieldDecorator } = this.props.form;
-    console.log("modal interal" + JSON.stringify(listItems));
-    
-    return (
-            <Card>
-            <Form  onSubmit={this.handleSubmit.bind(this)}>
-               
-                        <Card type="inner">
-                        <FormItem label="名称" >
-                            {getFieldDecorator("name", {
-                                initialValue: listItems.name
-                            })(
-                                <Input type="text" />
-                            )}
-                        </FormItem>
-                        </Card>
-                
-                        <Card type="inner">
-                        <FormItem label="说明" >
-                            {getFieldDecorator("description", {
-                                initialValue: listItems.description
-                            })(
-                                <Input type="text" />
-                            )}
-                        </FormItem>
-                        </Card>
-                
-                    <Card type="inner">
-                        <Form.Item label="表结构定义">
-                            {getFieldDecorator("defineText", { initialValue: listItems.defineText})(<TextArea rows={5} />)}
+                <div>
+                    <Form  >
+                        < Form.Item name="moduleName" label="所属模块：">
+                            {itemData.module}
                         </Form.Item>
-                    </Card>
-                
-                    <Card type="inner">
-                <Form.Item label="是否使用"
-                            hasFeedback {...formItemLayout}> {
-                    getFieldDecorator("status", {
-                        initialValue: listItems.status,
-                    })(
-                        < XSelect  category="data_status" refer ="" display= {this.props.query.fromModule =='' ? 'no':'yes'} />
-                    )}
-                    < /Form.Item>
-                        </Card>
-                        
-
-                    <Form.Item >
-                        <XList  onEdit ={that.onSaveAndEdit.bind(that,"xtablecolumn")} refer ="xtablecolumn" mapField="xtableId" byId={that.props.query.xtableId}  title="表字段定义" />
+                        < Form.Item name="name" label="表名：">
+                            <Input />
                         </Form.Item>
-                
-                 <Card type="inner">
-                 <FormItem className="form-item-clear" >
-                    <Button type="primary" htmlType="submit" size="large">Save</Button>
-                </FormItem>
-                </Card>
-            </Form>
-        </Card>
-    );
-}
-}
+                        < Form.Item name="description" label="描述信息：">
+                            <Input />
+                        </Form.Item>
+                        < Form.Item name="defineText" label="表定义">
+                            <TextArea rows={5} />
+                        </Form.Item>
 
 
-const MyForm = Form.create()(EditForm);
+                    </Form>
+                </div>
 
-export default class Page extends React.Component{
+                < Table rowSelection={
+                    rowSelection
+                }
+                    columns={
+                        this.columns
+                    }
+                    dataSource={
+                        //that.props.tablesStore.items.slice()
+                        that.props.columnsStore.dataObject.list.slice()
+                    }
+                    pagination={
+                        this.pagination()
+                    }
+                    bordered title={() => (<Form layout="inline" onSubmit={this.handleSearch.bind(this)} >
 
-    render(){
-        return (<MyForm query={this.props.query}/>)
-}
-}
-Page.getInitialProps = async function(context){
-    return {query:context.query,path:context.pathname};
+                        < Form.Item label="表的列信息：">
+                            <Button onClick={this.handleLineAdd.bind(this)} > 添加 </Button>
+                        </Form.Item>
+                    </Form>)}
+                    footer={
+                        () => (<Button onClick={that.onFooterBack.bind(that)}>Back</Button>)
+                    }
+                />
+
+            </div>
+        );
+    }
 }
 
+ListPage.getInitialProps = async function (context) {
+    return { query: context.query, path: context.pathname };
+}

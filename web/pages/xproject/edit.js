@@ -42,7 +42,7 @@ export default class EditPage extends React.Component {
             dataIndex: 'name',
             key: 'name'
         });
-        
+
         fieldColumns.push({
             title: "说明",
             dataIndex: 'description',
@@ -76,8 +76,8 @@ export default class EditPage extends React.Component {
         console.log('DidMount');
         let id = this.props.query.id;
         console.log("edit id:=" + id);
-        this.props.tablesStore.queryByModuleId(id);
-        this.props.modulesStore.queryById(id);
+        this.props.modulesStore.queryByProjectId(id);
+        this.props.projectsStore.queryById(id);
     }
 
     pagination() {
@@ -86,16 +86,16 @@ export default class EditPage extends React.Component {
             showSizeChanger: true
         }
     }
-    
+
     handleLineDetail(record) {
         //router.push({ pathname: '/xtable/detail', query: { ...that.props.query, pxtableId: record.id } });
     }
     handleLineAdd() {
         let moduleId = this.props.query.id;
-        router.push({ pathname: '/xtable/list', query: { moduleId:moduleId} });
-    
+        router.push({ pathname: '/xtable/list', query: { moduleId: moduleId } });
+
     }
-   
+
     handleLineDelete(index, record) {
         console.log(record.id);
         this.props.tablesStore.removeById(record.id, index);
@@ -116,21 +116,23 @@ export default class EditPage extends React.Component {
         return (
             < div >
                 <div>
-                    <Form  initialValues= {itemData}>
+                    <Form initialValues={itemData}>
                         < Form.Item name="name" label="模块名称：">
                             <Input />
-                        
+
                         </Form.Item>
                         < Form.Item name="description" label="描述信息：">
+                            <Input />
+                        </Form.Item>
+                        <Form.Item name="soaIp" label="服务地址">
+                            <Input />
+                        </Form.Item>
+                        <Form.Item name="website" label="站点">
                             <Input />
                         </Form.Item>
                         < Form.Item name="status" label="状态">
                             <Input />
                         </Form.Item>
-                        < Form.Item name="project" label="所属项目为：">
-                            Simple项目
-                        </Form.Item>
-
                     </Form>
                 </div>
 

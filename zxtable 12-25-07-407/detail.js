@@ -1,5 +1,5 @@
 import React from 'react';
-//import model from './models/model.js';
+import model from './models/model.js';
 import Table from 'antd/lib/table';
 import Icon from 'antd/lib/icon';
 import Button from 'antd/lib/button';
@@ -7,7 +7,6 @@ import Popconfirm from 'antd/lib/popconfirm';
 import {
     Modal,
     Form,
-    Card,
     Select,
     Input
 } from 'antd';
@@ -18,30 +17,23 @@ import AddorEditPage from './AddorEditColumn';
 
 const rowSelection = {
 };
-@inject('modulesStore') @inject('tablesStore')
-@observer
-export default class DetailPage extends React.Component {
+
+@inject('tablesStore') @observer
+export default class ListPage extends React.Component {
     state = {
         visible: false,
-        operationTitle: "新增",
-        operationType: "add"
-    }
-    constructor() {
-        super();
-        //var that = this;
-        this.startHeader();
-
     }
     startHeader() {
         var that = this;
-
+        let store = this.props.tablesStore;
         var fieldColumns = [];
 
         fieldColumns.push({
-            title: "表名称",
+            title: "名称",
             dataIndex: 'name',
             key: 'name'
         });
+
         fieldColumns.push({
             title: "说明",
             dataIndex: 'description',
@@ -49,7 +41,7 @@ export default class DetailPage extends React.Component {
         });
 
         fieldColumns.push({
-            title: "当前状态",
+            title: "是否使用",
             dataIndex: 'status',
             key: 'status'
         });
@@ -59,6 +51,14 @@ export default class DetailPage extends React.Component {
             key: 'action',
             render: (text, record, index) => (
                 <span >
+                    <a href="#" onClick={that.handleLineAdd.bind(that)} > Add </a>
+                    <span className="ant-divider" />
+                    <Popconfirm title="Sure to delete?" onConfirm={that.handleLineDelete.bind(that, index, record)} >
+                        <a href="#" > Delete </a>
+                    </Popconfirm>
+                    <span className="ant-divider" />
+                    <a href="#" onClick={that.handleLineUpdate.bind(that, index, record)} > Update </a>
+                    <span className="ant-divider" />
                     <a href="#" onClick={that.handleLineDetail.bind(that, record)} > Detail </a>
                 </span>
             )
@@ -71,33 +71,27 @@ export default class DetailPage extends React.Component {
         router.back();
     }
     componentDidMount() {
-        //this.props.tablesStore.fetchAll();
-        console.log('DidMount');
-        let id = this.props.query.id;
-        console.log("edit id:=" + id);
-        this.props.tablesStore.queryByModuleId(id);
-        this.props.modulesStore.queryById(id);
+        this.props.tablesStore.fetchAll();
     }
-
+    componentWillMount() {
+        var that = this;
+        this.startHeader();
+    }
     pagination() {
         return {
-            //total: this.props.tablesStore.dataLength,
+            total: this.props.tablesStore.dataLength,
             showSizeChanger: true
         }
     }
     handleLineUpdate(index, record) {
 
-        //router.push({ pathname: '/zxtable/edit', query: { ...that.props.query, pxtableId: record.id } });
-        this.setState({
-            visible: true,
-            operationTitle: "修改",
-            operationType: "edit"
-        });
+        router.push({ pathname: '/zxtable/edit', query: { ...that.props.query, pxtableId: record.id } });
     }
     handleLineDetail(record) {
-        //router.push({ pathname: '/zxtable/detail', query: { ...that.props.query, pxtableId: record.id } });
+        router.push({ pathname: '/zxtable/detail', query: { ...that.props.query, pxtableId: record.id } });
     }
     handleLineAdd() {
+        //router.push({pathname:'/zxtable/add',query:{...that.props.query}});
         this.setState({ visible: true });
     }
     onModalConfirm() {
@@ -105,8 +99,7 @@ export default class DetailPage extends React.Component {
         this.setState({ visible: false });
     }
     handleLineDelete(index, record) {
-        console.log(record.id);
-        this.props.columnsStore.removeById(record.id, index);
+        this.props.tablesStore.removeItemById(index, record);
     }
 
     handleSearchChange(e) {
@@ -119,35 +112,27 @@ export default class DetailPage extends React.Component {
 
     }
     render() {
-        let that = this;
-        let itemData = that.props.modulesStore.dataObject.currentItem;
+        var that = this;
         return (
             < div >
-                <Modal visible={that.state.visible} title={that.state.operationTitle}
-                    onCancel={this.onModalConfirm.bind(that)}
+                <Modal visible={that.state.visible} title="新增修改" onCancel={this.onModalConfirm.bind(that)}
                     footer={[]}>
-                    <AddorEditPage operationType={this.state.operationType} onConfirm={this.onModalConfirm.bind(that)}></AddorEditPage>
+                        <AddorEditPage onConfirm={this.onModalConfirm.bind(that)}></AddorEditPage>
                 </Modal>
 
                 <div>
-                    <Form  >
-                        < Form.Item name="name" label="模块名：">
-                            {itemData.name}
+                    <Form layout="inline" onSubmit={this.handleSearch.bind(this)} >
+                        < Form.Item  >
+                            <Input type="text" onChange={this.handleSearchChange.bind(this)} />
                         </Form.Item>
-                        < Form.Item name="description" label="描述信息：">
-                            {itemData.description}
+                        < Form.Item  >
+                            < Button style={{ marginRight: '10px' }} type="primary" htmlType="submit" > 搜索 </Button>
                         </Form.Item>
-                        < Form.Item name="status" label="状态">
-                            {itemData.status}
+                        < Form.Item  >
+                            <Button onClick={this.handleLineAdd.bind(this)} > 添加 </Button>
                         </Form.Item>
-                        < Form.Item name="project" label="所属项目：">
-                            {itemData.project}
-                        </Form.Item>
-
-
                     </Form>
                 </div>
-
                 < Table rowSelection={
                     rowSelection
                 }
@@ -155,23 +140,24 @@ export default class DetailPage extends React.Component {
                         this.columns
                     }
                     dataSource={
-                        //that.props.tablesStore.items.slice()
-                        that.props.tablesStore.dataObject.list.slice()
+                        that.props.tablesStore.items.slice()
                     }
                     pagination={
                         this.pagination()
                     }
-                    bordered title={() => ("所含表：")}
+                    bordered title={
+                        this.title
+                    }
                     footer={
                         () => (<Button onClick={that.onFooterBack.bind(that)}>Back</Button>)
                     }
                 />
 
-            </div>
+                </div>
         );
     }
 }
 
-DetailPage.getInitialProps = async function (context) {
-    return { query: context.query, path: context.pathname };
+ListPage.getInitialProps = async function(context){
+    return {query:context.query,path:context.pathname};
 }

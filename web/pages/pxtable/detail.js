@@ -1,109 +1,271 @@
 import React from 'react';
+import model from './models/model.js';
+import Table from 'antd/lib/table';
+import Icon from 'antd/lib/icon';
+import Button from 'antd/lib/button';
+import Popconfirm from 'antd/lib/popconfirm';
+import {
+    Form,
+    Select,
+    Input
+} from 'antd';
+//import EditableCell from '../common/components/form/editablecell.js';
+//import NewModal from './components/modal.js';
 import router from 'next/router';
 import Layout from '../common/pages/layout';
-import { Form, Input,Button} from 'antd';
-import {Card} from 'antd';
-import FileUpload from '../common/components/form/upload';
-import XSelect from '../common/components/form/select';
-import XList from '../common/components/form/referlist';
-import model from './models/model.js';
-//import '../common/styles/App.less';
+import '../common/styles/TableSearch.less';
 
-const FormItem = Form.Item;
 
-class EditForm extends React.Component {
 
-    state={
-        items:{id:-1},
+
+
+const rowSelection = {
+    onChange: (selectedRowKeys, selectedRows) => {
+        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    },
+    onSelect: (record, selected, selectedRows) => {
+        console.log(record, selected, selectedRows);
+    },
+    onSelectAll: (selected, selectedRows, changeRows) => {
+        console.log(selected, selectedRows, changeRows);
+    },
+};
+
+
+class ListExample extends React.Component{
+
+
+    state = {
+        list: [],
+        count:0,
+        searchText:'',
+        parentId:this.props.query.parentId,
+
     }
-    componentWillMount(){
-
+    startHeader() {
         var that = this;
-        console.log("edit id:=" + this.props.query.id);
-        model.queryById(this.props.query.pxtableId,function(response) {
-            if (response && response.data) {
-                console.log(response.data);
-                that.setState({items:response.data});
-            }
-        })
+        var fieldColumns=[];
+        
+                fieldColumns.push({
+                  title: "名称",
+                  dataIndex: 'name',
+                  key: 'name'
+                });
+                
+                fieldColumns.push({
+                  title: "说明",
+                  dataIndex: 'description',
+                  key: 'description'
+                });
+                
+                fieldColumns.push({
+                  title: "是否使用",
+                  dataIndex: 'status',
+                  key: 'status'
+                });
+                
+
+
+
+
+        this.columns = [ ...fieldColumns, {
+            title: 'Action',
+            key: 'action',
+            render: (text, record, index) => (
+                <span >
+                    <a href = "#" onClick = {that.handleLineAdd.bind(that)} > Add </a>
+                    <span className = "ant-divider" />
+                    <Popconfirm title = "Sure to delete?" onConfirm = {that.handleLineDelete.bind(that,index, record)} >
+                        < a href = "#" > Delete </a>
+                    </Popconfirm>
+                    <span className = "ant-divider" />
+                    <a href = "#" onClick = {that.handleLineUpdate.bind(that,index, record)} > Update </a>
+                    <span className = "ant-divider" />
+                    <a href = "#" onClick = {that.handleLineDetail.bind(that,record)} > Detail </a>
+                </span>
+            )
+        }];
+
+
     }
 
-    handleSubmit(e) {
-        e.preventDefault();
+    onFooterBack(){
+
+        
         router.back();
+        
     }
 
-render()
-{
+
+componentWillMount() {
     var that = this;
-    var listItems = this.state.items;
-    console.log(listItems);
-    const { getFieldDecorator } = this.props.form;
-    console.log("detail render data:" + JSON.stringify(listItems));
+    this.startHeader();
     
-    return (
-            <Card >
-            <Form  onSubmit={this.handleSubmit.bind(this)}>
-               
-                        <Card type="inner">
-                        <FormItem
-                            label="名称"
-                            >
-                            {listItems.name}
-                        </FormItem>
-                        </Card>
-                
-                        <Card type="inner">
-                        <FormItem
-                            label="说明"
-                            >
-                            {listItems.description}
-                        </FormItem>
-                        </Card>
-                
-                        <Card type="inner">
-                        <FormItem
-                            label="表结构定义"
-                            >
-                            {listItems.defineText}
-                        </FormItem>
-                        </Card>
-                
-                        <Card type="inner">
-                        <FormItem
-                            label="是否使用"
-                            >
-                            {listItems.status}
-                        </FormItem>
-                        </Card>
-                
 
-                    <Form.Item >
-                        <XList  onEdit ={null} refer ="pxtablecolumn" mapField="tableId" byId={that.props.query.pxtableId}  title="表字段定义" />
-                        </Form.Item>
-
-                
-                 <Card type="inner">
-                 <FormItem className="form-item-clear" >
-                    <Button type="primary" htmlType="submit" size="large">Back</Button>
-                </FormItem>
-                </Card>
-            </Form>
-        </Card>
-    );
-}
+        model.queryAll(function (response) {
+            if (response && response.data) {
+                console.log(JSON.stringify(response.data));
+                console.log(response.data);
+                response.data.map(function(item, i) {
+                    item.key = item.id
+                });
+                that.setState({
+                    list: response.data
+                });
+            }
+        });
+    
 }
 
+    pagination() {
+        return {
+            total: this.state.list.length,
+            showSizeChanger: true,
+            onShowSizeChange: (current, pageSize) => {
+                console.log('Current: ', current, '; PageSize: ', pageSize);
+            },
+            onChange: (current) => {
+                console.log('Current: ', current);
+            },
+        };
+    }
+    handleLineUpdate(index, record) {
+        let that = this;
 
-const MyForm = Form.create()(EditForm);
+        this.state.currentItem = record;
+        this.state.currentItem.index = index;
+        router.push({pathname:'/pxtable/edit',query: {...that.props.query,pxtableId:record.id}});
+        
+      
+
+    }
+    handleLineDetail(record) {
+        let that = this;
+
+        this.state.currentItem = record;
+        //this.state.currentItem.index = index;
+        //console.log('record:' + record);
+        //this.context.router.push({pathname:'//pxtable/detail',state:{item:record}});
+        router.push({pathname:'/pxtable/detail',query:{...that.props.query,pxtableId:record.id}});
+
+
+    }
+    handleLineDetailModal(record) {
+
+        this.state.currentItem = record;
+        this.setState({
+            visible: true
+        });
+
+    }
+
+    handleLineAdd() {
+        let that = this;
+        //this.context.router.push({pathname:'//pxtable/add'});
+        router.push({pathname:'/pxtable/add',query:{...that.props.query}});
+    }
+    handleLineDelete(index, record) {
+        var that = this;
+        model.removeById(record.id, function() {
+            console.log('successful to remove: ID:' + record.id);
+            const dataSource = [...that.state.list];
+            dataSource.splice(index, 1);
+            that.setState({
+                list: dataSource
+            });
+        });
+
+    }
+
+    handleCancelUpdate(e) {
+        //e.preventDefault();
+        this.setState({
+            visible: false
+        });
+    }
+
+    handleSearchChange(e){
+        console.log("search text;" + e.target.value);
+        this.setState({searchText: e.target.value,name: e.target.value});
+    }
+    handleSearch(e) {
+        e.preventDefault();
+        console.log("begin to send search2...");
+        var that = this;
+
+        const data = {keywork: this.state.searchText};
+        console.log(JSON.stringify(data));
+        that.executeSearch(data);
+
+    }
+    executeSearch(param) {
+        var that = this;
+       model.queryByNameLike(param.keyword,function(response){
+            if (response&& response.data) {
+                console.log(JSON.stringify(response.data));
+                response.data.map(function(item, i) {
+                    item.key = item.id;
+                });
+                that.setState({
+                    list: response.data
+                });
+            }
+       });
+
+    }
+    render() {
+        var that = this;
+        
+        return (
+            < div >
+            <div>
+            < Form layout="inline" onSubmit = {this.handleSearch.bind(this)} >
+                < Form.Item  >
+                    <Input type = "text" onChange={this.handleSearchChange.bind(this)} />
+                < /Form.Item>
+                < Form.Item  >
+                    < Button style = {{marginRight: '10px'}} type = "primary" htmlType = "submit" > 搜索 </Button>
+                < /Form.Item>
+                < Form.Item  >
+                    <Button onClick = {this.handleLineAdd.bind(this)} > 添加 </Button>
+                < /Form.Item>
+
+            < /Form>
+            < /div>
+< Table rowSelection = {
+                rowSelection
+            }
+            columns = {
+                this.columns
+            }
+            dataSource = {
+                this.state.list
+            }
+            pagination = {
+                this.pagination()
+            }
+            bordered title = {
+                this.title
+            }
+            footer = {
+                 () => (<Button onClick={that.onFooterBack.bind(that)}>Back</Button>)
+            }
+            />
+
+            < /div>
+        );
+    }
+}
+
+
 
 export default class Page extends React.Component{
 
     render(){
-        return (<Layout  path={this.props.path}><MyForm query={this.props.query}/></Layout>)
+        return (<Layout  path={this.props.path}><ListExample query={this.props.query}/></Layout>)
     }
 }
 Page.getInitialProps = async function(context){
     return {query:context.query,path:context.pathname};
 }
-
+//export default()=>(<Layout> <ListExample/></Layout>)

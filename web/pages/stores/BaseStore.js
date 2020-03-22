@@ -10,7 +10,10 @@ class BaseStore {
           this.model = new BaseModel(moduleName);
       }
   }
-
+  initialize(intialData){
+    print('initialize data in BaseStore Class');
+    print(intialData);
+  }
    @computed get
     dataLength() {
         return this.items.length;

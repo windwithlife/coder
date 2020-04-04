@@ -1,20 +1,23 @@
 import React from 'react';
-import model from './models/model.js';
+//import model from './models/model.js';
 import Table from 'antd/lib/table';
 import Icon from 'antd/lib/icon';
 import Button from 'antd/lib/button';
 import Popconfirm from 'antd/lib/popconfirm';
 import {
+    Collapse,
     Modal,
     Form,
+    Input,
     Card,
     Select,
-    Input
 } from 'antd';
+const { Panel } = Collapse;
+import { SettingOutlined } from '@ant-design/icons';
 
 import router from 'next/router';
 import { inject, observer } from 'mobx-react';
-import AddorEditPage from './AddorEditColumn';
+//import AddColumnPage from './AddColumnDialog';
 
 const rowSelection = {
 };
@@ -24,13 +27,20 @@ export default class ListPage extends React.Component {
     state = {
         visible: false,
         operationTitle: "新增",
-        operationType: "add"
+        operationType: "add",
+        editMode: false,
     }
     constructor() {
         super();
         //var that = this;
         this.startHeader();
 
+    }
+    changeEditMode = (event) => {
+        event.stopPropagation();
+        console.log('click on edit model');
+        let nextMode = !this.state.editMode;
+        this.setState({ editMode: nextMode });
     }
     startHeader() {
         var that = this;
@@ -69,10 +79,11 @@ export default class ListPage extends React.Component {
             title: 'Action',
             key: 'action',
             render: (text, record, index) => (
-                <span >
+                <span hidden={!that.state.editMode} >
 
+                    <span className="ant-divider" />
                     <Popconfirm title="Sure to delete?" onConfirm={that.handleLineDelete.bind(that, index, record)} >
-                        <a href="#" > Delete </a>
+                        < a href="#" > Delete </a>
                     </Popconfirm>
                     <span className="ant-divider" />
                     <a href="#" onClick={that.handleLineUpdate.bind(that, index, record)} > Edit </a>
@@ -85,15 +96,13 @@ export default class ListPage extends React.Component {
 
     }
 
-    onFooterBack() {
-        router.back();
-    }
     componentDidMount() {
         //this.props.tablesStore.fetchAll();
         console.log('DidMount');
         let tableId = this.props.query.tableId;
         console.log("edit id:=" + tableId);
-        this.props.columnsStore.initializeByTableId(9999);
+        this.props.columnsStore.initializeByTableId(tableId);
+        //this.props.columnsStore.initializeByTableId(9999);
         this.props.tablesStore.queryById(tableId);
     }
 
@@ -104,27 +113,23 @@ export default class ListPage extends React.Component {
         }
     }
     handleLineUpdate(index, record) {
-
-        //router.push({ pathname: '/zxtable/edit', query: { ...that.props.query, pxtableId: record.id } });
-        this.setState({
-            visible: true,
-            operationTitle: "修改",
-            operationType: "edit"
-        });
+        console.log("colId" + record.id);
+        router.push({pathname:'/xtable/edit_column',query:{columnId:record.id}});
+       
     }
     handleLineDetail(record) {
         //router.push({ pathname: '/zxtable/detail', query: { ...that.props.query, pxtableId: record.id } });
     }
     handleLineAdd() {
-        this.setState({ visible: true });
+        //this.setState({ visible: true });
+        console.log('ddd column');
+        let tableId = this.props.query.tableId;
+        router.push({ pathname:'/xtable/add_column', query:{tableId:tableId}});
     }
-    onModalConfirm() {
-        //router.push({pathname:'/zxtable/add',query:{...that.props.query}});
-        this.setState({ visible: false });
-    }
+   
     handleLineDelete(index, record) {
         console.log(record.id);
-        this.props.columnsStore.removeById(record.id, index);
+        this.props.columnsStore.removeById(index,record.id);
     }
 
     handleSearchChange(e) {
@@ -138,16 +143,13 @@ export default class ListPage extends React.Component {
     }
     render() {
         let that = this;
+        let tableId = this.props.query.tableId;
         let itemData = that.props.tablesStore.dataObject.currentItem;
         return (
             < div >
-                <Modal visible={that.state.visible} title={that.state.operationTitle}
-                    onCancel={this.onModalConfirm.bind(that)}
-                    footer={[]}>
-                    <AddorEditPage operationType={this.state.operationType} onConfirm={this.onModalConfirm.bind(that)}></AddorEditPage>
-                </Modal>
-
+               
                 <div>
+                <Card size="small" title="表基本信息" style={{ width: 500 }}  >
                     <Form  >
                         < Form.Item name="name" label="表名：">
                             {itemData.name}
@@ -158,40 +160,41 @@ export default class ListPage extends React.Component {
                         < Form.Item name="description" label="描述信息：">
                             {itemData.description}
                         </Form.Item>
-                        < Form.Item name="defineText">
-                            <Card size="small" title="表定义" style={{ width: 500 }}>
+                        < Form.Item name="defineText" label='表结构定义'>
+                            
                                 {itemData.defineText}
-                            </Card>
+                           
                         </Form.Item>
-
 
                     </Form>
+                    </Card>
                 </div>
 
-                < Table rowSelection={
-                    rowSelection
-                }
-                    columns={
-                        this.columns
-                    }
-                    dataSource={
-                        //that.props.tablesStore.items.slice()
-                        that.props.columnsStore.dataObject.list.slice()
-                    }
-                    pagination={
-                        this.pagination()
-                    }
-                    bordered title={() => (<Form layout="inline" onSubmit={this.handleSearch.bind(this)} >
+                <Collapse accordion>
+                    <Panel header="此表中所有列" key="2" extra={<SettingOutlined onClick={that.changeEditMode}></SettingOutlined>}>
 
-                        < Form.Item label="表的列信息：">
-                            <Button onClick={this.handleLineAdd.bind(this)} > 添加 </Button>
+
+                        < Form.Item  >
+                            <Button type="primary" onClick={this.handleLineAdd.bind(this)} hidden={!that.state.editMode}> 添加 </Button>
                         </Form.Item>
-                    </Form>)}
-                    footer={
-                        () => (<Button onClick={that.onFooterBack.bind(that)}>Back</Button>)
-                    }
-                />
 
+
+                        < Table rowSelection={
+                            rowSelection
+                        }
+                            columns={
+                                this.columns
+                            }
+                            dataSource={
+                                //that.props.tablesStore.items.slice()
+                                that.props.columnsStore.dataObject.list.slice()
+                            }
+                            pagination={
+                                this.pagination()
+                            }
+
+                        />
+                    </Panel></Collapse>
             </div>
         );
     }

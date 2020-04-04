@@ -2,7 +2,9 @@ var path = require('path');
 var fs = require('fs');
 var codeTools = require('./code_tools');
 var ModuleDefine = require('./module_define');
+var ProjectConfig = require('./project_config');
 var moduleDefines = new ModuleDefine();
+var projectConfig = new ProjectConfig();
 
 var generatorList = [];
 //var moduleDefines = {basePackage:"com.simple.bz",apiServer:"127.0.0.1:8080",enables: [], modules: {}};
@@ -66,50 +68,77 @@ function initPathEnv() {
     config.workRootPath = currentPath;
 }
 
-function initProject(byFiles, setting) {
+function initProject(isFromFiles, setting) {
     initGenerators();
-    if (byFiles==true){
+    if (isFromFiles==true){
         moduleDefines.loadDefinesFromFiles(config.workModulesPath());
         moduleDefines.loadContractsFromFiles(config.workContractsPath());
     }else{
-        moduleDefines.loadDefinesFromParams(setting.projectSetting, setting.modules);
+        //moduleDefines.loadDefinesFromParams(setting.projectSetting, setting.modules);
+        moduleDefines.loadDefinesFromParams(setting.defines);
+        projectConfig.initFromSettingParams(setting.projectSetting);
     }
     console.log("finished init project ! new project!");
 }
-function generateCode(language, type,subtype, withFramework,withCommonModules) {
-    console.log('getplatformName:' + platformName + "withframework:"  + withFramework);
-
-    initGenerators();
-    var generatorSelector = 'java-web';
-    if(subtype){
-        generatorSelector = language + '-' + type + '-' +subtype;
-    }else{
-        generatorSelector = language + '-' + type;
+function getSelectorName(targetConfig){
+    let generatorSelector = targetConfig.sideType + '-' + targetConfig.language;
+    
+    if (!targetConfig.sideType){
+        targetConfig.sideType = 'web';
     }
-
-    var generator = findGeneratorByName(generatorSelector);
+    if (!targetConfig.framework){
+        generatorSelector = generatorSelector + '-' + 'none';
+    }else{
+        generatorSelector = generatorSelector + '-' + targetConfig.framework;
+    }
+    if (!targetConfig.platform){
+        generatorSelector = generatorSelector + '-' + 'all';
+       
+    }else{
+        generatorSelector = generatorSelector + '-' +  targetConfig.platform;
+    }
+   
+    //generatorSelector = targetConfig.sideType + '-' + targetConfig.language + '-' + targetConfig.framework + targetConfig.platform;
+    console.log(generatorSelector);
+    return generatorSelector;
+}
+function generateCode(options) {
+    console.log('begin to create code!');
+    let targetOptions = options;
+    console.log(targetOptions);
+    
+    initGenerators();
+    
+    var generator = findGeneratorByName(getSelectorName(targetOptions));
+    console.log(generator);
     if (!generator) {
-        console.log("Generator named:[" + language + "] not found!");
+        console.log("Generator named:[" + targetOptions.language + "] not found!");
         return;
     }
 
-    generator.initEnv(moduleDefines.getProjectSetting(),platformName);
+    generator.initEnv(targetOptions);
 
 
-    if (!withFramework){withFramework = false;}
-    generator.generateFramework(withFramework);
+   //if ((targetOptions.hasFramework) && (targetOptions.hasFramework == true)){   
+        generator.generateFramework();
+    //}
 
-
-    if (withCommonModules){
-        generator.generateCommon();
-    }
-    moduleDefines.getProjectSetting().enables.forEach(function (moduleName) {
-        generator.generateModuleByName(moduleName, moduleDefines.getModuleDefineByName(moduleName),platformName);
+    // if ((targetOptions.hasCommon) && (targetOptions.hasCommon == true)){   
+    //     generator.generateCommon();
+    // }
+   
+    // moduleDefines.getProjectSetting().enables.forEach(function (moduleName) {
+    //     generator.generateModuleByName(moduleName, moduleDefines.getModuleDefineByName(moduleName),platformName);
+    // });
+    console.log(moduleDefines.defines);
+  
+    moduleDefines.defines.forEach(function (module) {
+        generator.generateModuleByName(module);
     });
 
-    moduleDefines.contracts.forEach(function (contractName) {
-        generator.generateContractByName(contractName, moduleDefines.getServiceContractDefineByName(contractName),platformName);
-    });
+    // moduleDefines.contracts.forEach(function (contractName) {
+    //     generator.generateContractByName(contractName, moduleDefines.getServiceContractDefineByName(contractName),platformName);
+    // });
 
     console.log("generated code by define file in modules directory\n");
 

@@ -14,7 +14,7 @@ var config = {
     language : "reactjs",
     framework:"simple",
     basePackage:"com.simple.base.bz",
-    apiServer:"",
+    apiServer:"127.0.0.1",
     defines:null,
     //当前工作目录下的模块定义目录
     workModulesPath: function(){return path.join(this.workRootPath , "modules/")},

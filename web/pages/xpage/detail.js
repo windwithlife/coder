@@ -1,103 +1,91 @@
 import React from 'react';
+//import model from './models/model.js';
+import Table from 'antd/lib/table';
+import Icon from 'antd/lib/icon';
+import Button from 'antd/lib/button';
+import Popconfirm from 'antd/lib/popconfirm';
+import {
+    Collapse,
+    Modal,
+    Form,
+    Input,
+    Card,
+    Select,
+} from 'antd';
+const { Panel } = Collapse;
+import { SettingOutlined } from '@ant-design/icons';
+
 import router from 'next/router';
-import Layout from '../common/pages/layout';
-import { Form, Input,Button} from 'antd';
-import {Card} from 'antd';
-import FileUpload from '../common/components/form/upload';
-import XSelect from '../common/components/form/select';
-import XList from '../common/components/form/referlist';
-import model from './models/model.js';
-//import '../common/styles/App.less';
+import { inject, observer } from 'mobx-react';
+//import AddColumnPage from './AddColumnDialog';
 
-const FormItem = Form.Item;
-
-class EditForm extends React.Component {
-
-    state={
-        items:{id:-1},
-    }
-    componentWillMount(){
-
-        var that = this;
-        console.log("edit id:=" + this.props.query.id);
-        model.queryById(this.props.query.xpageId,function(response) {
-            if (response && response.data) {
-                console.log(response.data);
-                that.setState({items:response.data});
-            }
-        })
-    }
-
-    handleSubmit(e) {
-        e.preventDefault();
-        router.back();
-    }
-
-render()
-{
-    var that = this;
-    var listItems = this.state.items;
-    console.log(listItems);
-    const { getFieldDecorator } = this.props.form;
-    console.log("detail render data:" + JSON.stringify(listItems));
+const rowSelection = {
+};
+@inject('pagesStore') 
+@observer
+export default class DetailPage extends React.Component {
     
-    return (
-            <Card >
-            <Form  onSubmit={this.handleSubmit.bind(this)}>
-               
-                        <Card type="inner">
-                        <FormItem
-                            label="名称"
-                            >
-                            {listItems.name}
-                        </FormItem>
-                        </Card>
-                
-                        <Card type="inner">
-                        <FormItem
-                            label="说明"
-                            >
-                            {listItems.description}
-                        </FormItem>
-                        </Card>
-                
-                        <Card type="inner">
-                        <FormItem
-                            label="页面代码"
-                            >
-                            {listItems.defineText}
-                        </FormItem>
-                        </Card>
-                
-                        <Card type="inner">
-                        <FormItem
-                            label="页面状态"
-                            >
-                            {listItems.status}
-                        </FormItem>
-                        </Card>
-                
-                 <Card type="inner">
-                 <FormItem className="form-item-clear" >
-                    <Button type="primary" htmlType="submit" size="large">Back</Button>
-                </FormItem>
-                </Card>
-            </Form>
-        </Card>
-    );
-}
-}
+    state = {
+        editMode: false,
+    }
+    constructor() {
+        super();
+
+    }
+    Store=()=>{
+        return this.props.pagesStore;
+    }
+    changeEditMode = (event) => {
+        event.stopPropagation();
+        console.log('click on edit model');
+        let nextMode = !this.state.editMode;
+        this.setState({ editMode: nextMode });
+    }
+   
+    componentDidMount() {
+       
+        console.log('DidMount');
+        let id = this.props.query.id;
+        this.Store().queryById(id);
+    }
 
 
-const MyForm = Form.create()(EditForm);
+    handleLineDelete(index, record) {
+        console.log(record.id);
+        this.Store().removeById(index, record.id);
+    }
 
-export default class Page extends React.Component{
+   
+    render() {
+        let that = this;
+        let itemData = this.Store().dataObject.currentItem;
+        return (
 
-    render(){
-        return (<Layout  path={this.props.path}><MyForm query={this.props.query}/></Layout>)
+            <Card size="small" title="基本信息" style={{ width: 500 }}  >
+                <Form  >
+                    < Form.Item name="name" label="名称：">
+                        {itemData.name}
+                    </Form.Item>
+                    
+                    < Form.Item name="description" label="描述信息：">
+                        {itemData.description}
+                    </Form.Item>
+                    < Form.Item name="inputParams" label='请求参数定义'>
+                        {itemData.inputParams}
+                    </Form.Item>
+                    < Form.Item name="outputParams" label='返回参数定义'>
+                        {itemData.inputParams}
+                    </Form.Item>
+                    < Form.Item name="moduleName" label="所属模块：">
+                        {itemData.moduleId}
+                    </Form.Item>
+                </Form>
+            </Card>
+
+        );
     }
 }
-Page.getInitialProps = async function(context){
-    return {query:context.query,path:context.pathname};
-}
 
+DetailPage.getInitialProps = async function (context) {
+    return { query: context.query };
+}

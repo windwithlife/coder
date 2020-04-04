@@ -5,6 +5,10 @@ import TableStore from '../xtable/models/TablesStore.js';
 import ColumnStore from '../xtable/models/ColumnStore.js';
 import ModuleStore from '../xmodule/models/ModuleStore';
 import ProjectStore from '../xproject/models/ProjectStore';
+import CategoryStore from '../public/category/models/CategoryStore';
+import DictionaryStore from '../public/dictionary/models/DictionaryStore';
+import InterfaceStore from '../xinterface/models/InterfaceStore';
+import PageStore from '../xpage/models/PageStore';
 //import TestStore from '../zxtable/models/TestStore.js'
 /*import AppStore from "./AppStore";
 
@@ -24,7 +28,11 @@ let stores = {
     columnsStore: new ColumnStore(),
     modulesStore: new ModuleStore(),
     projectsStore: new ProjectStore(),
-
+    categorysStore: new CategoryStore(),
+    dictionarysStore: new DictionaryStore(),
+    interfacesStore: new InterfaceStore(),
+    pagesStore: new PageStore(),
+    
 }   
 
 

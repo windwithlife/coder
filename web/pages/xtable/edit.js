@@ -5,6 +5,7 @@ import Icon from 'antd/lib/icon';
 import Button from 'antd/lib/button';
 import Popconfirm from 'antd/lib/popconfirm';
 import {
+    Collapse,
     Modal,
     Form,
     Input,
@@ -12,15 +13,18 @@ import {
     Select,
 } from 'antd';
 const { TextArea } = Input;
+const { Panel } = Collapse;
+import { SettingOutlined } from '@ant-design/icons';
 import router from 'next/router';
 import { inject, observer } from 'mobx-react';
-import AddorEditPage from './AddorEditColumn';
+//import AddorEditPage from './AddColumnDialog';
 
 const rowSelection = {
 };
 @inject('columnsStore') @inject('tablesStore')
 @observer
 export default class ListPage extends React.Component {
+    formRef = React.createRef();
     state = {
         visible: false,
         operationTitle: "新增",
@@ -85,15 +89,19 @@ export default class ListPage extends React.Component {
 
     }
 
-    onFooterBack() {
-        router.back();
+    
+    onFinish = values => {
+        var that = this;
+        let moduleId = this.props.query.moduleId;
+        values.module = moduleId;
+        this.props.tablesStore.add(values, () => { console.log('finished add row'); router.back(); });
     }
     componentDidMount() {
         //this.props.tablesStore.fetchAll();
         console.log('DidMount');
         let tableId = this.props.query.tableId;
         console.log("edit id:=" + tableId);
-        this.props.columnsStore.initializeByTableId(9999);
+        this.props.columnsStore.initializeByTableId(tableId);
         this.props.tablesStore.queryById(tableId);
     }
 
@@ -104,19 +112,17 @@ export default class ListPage extends React.Component {
         }
     }
     handleLineUpdate(index, record) {
-
-        //router.push({ pathname: '/zxtable/edit', query: { ...that.props.query, pxtableId: record.id } });
-        this.setState({
-            visible: true,
-            operationTitle: "修改",
-            operationType: "edit"
-        });
+        console.log("colId" + record.id);
+        router.push({pathname:'/xtable/edit_column',query:{columnId:record.id}});
+       
     }
     handleLineDetail(record) {
         //router.push({ pathname: '/zxtable/detail', query: { ...that.props.query, pxtableId: record.id } });
     }
     handleLineAdd() {
-        this.setState({ visible: true });
+        //this.setState({ visible: true });
+        let tableId = this.props.query.tableId;
+        router.push({ pathname: '/xtable/add_column', query:{tableId:tableId}});
     }
     onModalConfirm() {
         //router.push({pathname:'/zxtable/add',query:{...that.props.query}});
@@ -141,14 +147,14 @@ export default class ListPage extends React.Component {
         let itemData = that.props.tablesStore.dataObject.currentItem;
         return (
             < div >
-                <Modal visible={that.state.visible} title={that.state.operationTitle}
-                    onCancel={this.onModalConfirm.bind(that)}
-                    footer={[]}>
-                    <AddorEditPage operationType={this.state.operationType} onConfirm={this.onModalConfirm.bind(that)}></AddorEditPage>
-                </Modal>
-
+                
                 <div>
-                    <Form  >
+                <Card size="small" title="表基本信息" style={{ width: 500 }}  >
+                    <Form ref={this.formRef} onFinish={that.onFinish.bind(that)}>
+                        <Form.Item
+                            name="id"
+                            noStyle='true'
+                        ></Form.Item>
                         < Form.Item name="moduleName" label="所属模块：">
                             {itemData.module}
                         </Form.Item>
@@ -161,11 +167,15 @@ export default class ListPage extends React.Component {
                         < Form.Item name="defineText" label="表定义">
                             <TextArea rows={5} />
                         </Form.Item>
-
-
+                        <Form.Item >
+                                <Button type="primary" htmlType="submit" size="large">保存修改基本信息</Button>
+                            </Form.Item>
                     </Form>
+                    </Card>
                 </div>
-
+                <Collapse >
+                    <Panel header="此表所有列" key="1" extra={<SettingOutlined ></SettingOutlined>}>
+                      
                 < Table rowSelection={
                     rowSelection
                 }
@@ -181,15 +191,14 @@ export default class ListPage extends React.Component {
                     }
                     bordered title={() => (<Form layout="inline" onSubmit={this.handleSearch.bind(this)} >
 
-                        < Form.Item label="表的列信息：">
-                            <Button onClick={this.handleLineAdd.bind(this)} > 添加 </Button>
+                        < Form.Item >
+                            <Button type="primary" onClick={this.handleLineAdd.bind(this)} > 添加 </Button>
                         </Form.Item>
                     </Form>)}
-                    footer={
-                        () => (<Button onClick={that.onFooterBack.bind(that)}>Back</Button>)
-                    }
+                   
                 />
-
+            </Panel>
+            </Collapse>
             </div>
         );
     }

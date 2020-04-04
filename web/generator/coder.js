@@ -7,8 +7,8 @@ var spawn = require('child_process').spawn;
 var NPM = (process.platform === 'win32') ? 'npm.cmd' : 'npm';
 var mainGenerator = require('./lib/common_creator');
 
-function init(byFiles, setting) {
-    mainGenerator.initProject(byFiles,setting);
+function init(isFromFiles, setting) {
+    mainGenerator.initProject(isFromFiles,setting);
     console.log('initialize the project env!');
 }
 
@@ -17,7 +17,13 @@ function generator(cmdOptions,platformName, withframework) {
     //verboseCommand = verbose ? ' --verbose' : '';
     mainGenerator.generateCode(cmdOptions, platformName, withframework);
 }
-
+function generateByWebQuery(params) {
+    //生成代码
+    //verboseCommand = verbose ? ' --verbose' : '';
+    console.log(params);
+    mainGenerator.generateCode(params);
+}
 module.exports.init = init;
 module.exports.generate = generator;
+module.exports.generateByQuery = generateByWebQuery;
 module.exports.usage = function(){return mainGenerator.generatorPromptMsg()};

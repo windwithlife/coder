@@ -87,15 +87,15 @@ export default class AddPage extends React.Component {
           ]}
         >
          
-        < XSelect  category="fieldType" refer =""  />
+        < XSelect  category="fieldType"  />
         </Form.Item>
 
-        {/* <Form.Item
-          name="referModule"
-          label="外关联表"
+        <Form.Item
+          name="map"
+          label="外关联关系"
         >
-         < XSelect  category="" refer ="xtable"  onChange={this.onChangeTable}/>
-        </Form.Item> */}
+         < XSelect  category="mapType" />
+        </Form.Item>
        <Form.Item
           name="referModuleSelect"
           label="外关联表"

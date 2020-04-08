@@ -1,103 +1,150 @@
 import React from 'react';
+//import model from './models/model.js';
+import Table from 'antd/lib/table';
+import Icon from 'antd/lib/icon';
+import Button from 'antd/lib/button';
+import Popconfirm from 'antd/lib/popconfirm';
+import {
+    Collapse,
+    Modal,
+    Form,
+    Input,
+    Card,
+    Select,
+} from 'antd';
+const { Panel } = Collapse;
+import { SettingOutlined } from '@ant-design/icons';
+import EditTable from '../common/components/EditableTable';
 import router from 'next/router';
-import Layout from '../common/pages/layout';
-import { Form, Input,Button} from 'antd';
-import {Card} from 'antd';
-import FileUpload from '../common/components/form/upload';
-import XSelect from '../common/components/form/select';
-import XList from '../common/components/form/referlist';
-import model from './models/model.js';
-//import '../common/styles/App.less';
+import { inject, observer } from 'mobx-react';
 
-const FormItem = Form.Item;
+const rowSelection = {
+};
+@inject('pagesStore')
+@observer
+export default class DetailPage extends React.Component {
 
-class EditForm extends React.Component {
-
-    state={
-        items:{id:-1},
+    state = {
+        editMode: false,
     }
-    componentWillMount(){
+    constructor() {
+        super();
 
+    }
+    Store = () => {
+        return this.props.pagesStore;
+    }
+    tableHeader() {
         var that = this;
-        console.log("edit id:=" + this.props.query.id);
-        model.queryById(this.props.query.xpageId,function(response) {
-            if (response && response.data) {
-                console.log(response.data);
-                that.setState({items:response.data});
-            }
-        })
+
+        var fieldColumns = [];
+
+        fieldColumns.push({
+            title: "名称",
+            dataIndex: 'name',
+            key: 'name'
+        });
+
+        fieldColumns.push({
+            title: "说明",
+            dataIndex: 'description',
+            key: 'description'
+        });
+
+        return fieldColumns;
+    }
+    changeEditMode = (event) => {
+        event.stopPropagation();
+        console.log('click on edit model');
+        let nextMode = !this.state.editMode;
+        this.setState({ editMode: nextMode });
     }
 
-    handleSubmit(e) {
-        e.preventDefault();
-        router.back();
+    componentDidMount() {
+
+        console.log('DidMount');
+        let id = this.props.query.id;
+        this.Store().queryById(id);
     }
 
-render()
-{
-    var that = this;
-    var listItems = this.state.items;
-    console.log(listItems);
-    const { getFieldDecorator } = this.props.form;
-    console.log("detail render data:" + JSON.stringify(listItems));
+
+    handleLineDetail(type, record) {
+        let path = '/' + type + '/detail';
+        router.push({ pathname: path, query: { id: record.id } });
+    }
+    handleLineAdd(type) {
+        let pageId = this.props.query.id;
+        if('xinterface' == type){
+            router.push({ pathname: '/xpage/add_interface', query: { id: pageId } });
+        }
+        if('widget' == type){
+            router.push({ pathname: '/xpage/add_widget', query: { id: pageId } });
+        }
+        //router.push({ pathname: path, query: { moduleId: moduleId } });
+        
+
+    }
+
+    handleDelete(type, index, record) {
+        console.log(record.id);
+        let that = this;
+        let pageId = this.props.query.id;
+        if (type == 'xinterface') {
+            let interId = record.id;
+            that.Store().deleteInterface(pageId, interId, function (value) {
+                console.log('remove interface from page ID is:' + value);
+            });
+        }
+        if (type=='widget'){
+            let widgetId = record.id;
+            that.Store().deleteWidget(pageId, widgetId, function (value) {
+                console.log('remove widget from page ID is:' + value);
+            });
+        }
+
+        //this.props.tablesStore.removeById(index, record.id);
+    }
     
-    return (
-            <Card >
-            <Form  onSubmit={this.handleSubmit.bind(this)}>
-               
-                        <Card type="inner">
-                        <FormItem
-                            label="名称"
-                            >
-                            {listItems.name}
-                        </FormItem>
-                        </Card>
-                
-                        <Card type="inner">
-                        <FormItem
-                            label="说明"
-                            >
-                            {listItems.description}
-                        </FormItem>
-                        </Card>
-                
-                        <Card type="inner">
-                        <FormItem
-                            label="页面代码"
-                            >
-                            {listItems.defineText}
-                        </FormItem>
-                        </Card>
-                
-                        <Card type="inner">
-                        <FormItem
-                            label="页面状态"
-                            >
-                            {listItems.status}
-                        </FormItem>
-                        </Card>
-                
-                 <Card type="inner">
-                 <FormItem className="form-item-clear" >
-                    <Button type="primary" htmlType="submit" size="large">Back</Button>
-                </FormItem>
+
+
+    render() {
+        let that = this;
+        let itemData = this.Store().dataObject.currentItem;
+        return (
+            <div>
+                <Card size="small" title="基本信息" style={{ width: 500 }}  >
+                    <Form  >
+                        < Form.Item name="name" label="名称：">
+                            {itemData.name}
+                        </Form.Item>
+
+                        < Form.Item name="description" label="描述信息：">
+                            {itemData.description}
+                        </Form.Item>
+                        < Form.Item name="defineText" label='页面布局定义'>
+                            {itemData.inputParams}
+                        </Form.Item>
+
+                        < Form.Item name="moduleName" label="所属模块：">
+                            {itemData.moduleId}
+                        </Form.Item>
+                    </Form>
                 </Card>
-            </Form>
-        </Card>
-    );
-}
-}
-
-
-const MyForm = Form.create()(EditForm);
-
-export default class Page extends React.Component{
-
-    render(){
-        return (<Layout  path={this.props.path}><MyForm query={this.props.query}/></Layout>)
+                <EditTable title="页面用到的接口" columns={that.tableHeader()} data={itemData.interfaces}
+                    onAdd={that.handleLineAdd.bind(that, 'xinterface')}
+                    onDelete={that.handleDelete.bind(that, 'xinterface')}
+                    onDetail={that.handleLineDetail.bind(that, 'xinterface')}
+                ></EditTable>
+                <EditTable title="页面用到组件" columns={that.tableHeader()} data={itemData.widgets}
+                    onAdd={that.handleLineAdd.bind(that, 'widget')}
+                    onDelete={that.handleDelete.bind(that, 'widget')}
+                    onDetail={that.handleLineDetail.bind(that, 'widget')}
+                ></EditTable>
+            </div>
+        );
     }
 }
-Page.getInitialProps = async function(context){
-    return {query:context.query,path:context.pathname};
-}
 
+DetailPage.getInitialProps = async function (context) {
+    return { query: context.query };
+}

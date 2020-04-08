@@ -8,13 +8,13 @@ var ParamsHelper = require('../params_helper');
 pathConfig = new PathConfig();
 paramsHelper = new ParamsHelper();
 
-function createModel(moduleName,tableDefine){
+function createStore(moduleName,defineData){
     let templateFilename =   "/model.js";
-    let targetFileName = codeTools.firstUpper(tableDefine.name) + "Store.js";
+    let targetFileName = codeTools.firstUpper(defineData.name) + "Store.js";
 
     templateFilename = pathConfig.templateModel() + templateFilename ;
     targetFileName   = pathConfig.targetModel(moduleName)+ targetFileName;
-    var params = paramsHelper.buildParamsByTable(moduleName,tableDefine);
+    var params = paramsHelper.buildParamsByDomain(moduleName,defineData);
     codeTools.generateCode(templateFilename,params,targetFileName);
 
 };
@@ -29,21 +29,26 @@ function createView(moduleName,tableDefine,viewName){
 };
 
 
-function generatePagesByTable(moduleName,tableDefine){
-    
-    createModel(moduleName,tableDefine);
-    //createView(moduleName,tableDefine,'add');
-    //createView(moduleName,tableDefine,'edit');
+function generatePages(moduleName,tableDefine){
+     //createModel(moduleName,tableDefine);
     createView(moduleName,tableDefine,'detail');
-    //createView(moduleName,tableDefine,'list');
-   
+}
+
+
+
+function generateStoreByInterfaces(moduleName,defines){
+    //createModel(moduleName,tableDefine);
+    createStore(moduleName,defines);
 }
 
 function generateModuleByName(moduleDefine){
     
     console.log('module defines:' + JSON.stringify(moduleDefine));
-    moduleDefine.tables.forEach(function(table){
-        generatePagesByTable(moduleDefine.name,table);
+    // moduleDefine.tables.forEach(function(table){
+    //     generatePages(moduleDefine.name,table);
+    // });
+    moduleDefine.domains.forEach(function(domainItem){
+        generateStoreByInterfaces(moduleDefine.name,domainItem);
     });
 }
 

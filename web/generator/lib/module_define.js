@@ -36,8 +36,8 @@ class ModuleDefines {
         //return this.modules[moduleName];
         return this.moduleDefines[moduleName];
     }
-    getModules() {
-        return this.moduleDefines;
+    modules() {
+        return this.defines;
     }
 
     getServiceContractDefineByName(contractName) {
@@ -48,9 +48,39 @@ class ModuleDefines {
 
         let that = this;
         this.defines = modules;
+        this.defines.forEach(function(module){
+            that.adjustModulesData(module);
+        })
+        
 
     }
+    adjustModulesData(module){
 
+        module.domains = [];
+        module.tables.forEach(function(table){
+            console.log('table info ************################');
+            console.log(table);
+            let domainItem = {name:table.name,tableFields:table.columns};
+            module.domains.push(domainItem);
+        });
+
+        
+        module.domains.forEach(function(domainItem){
+            domainItem.interfaces =[];
+            module.interfaces.forEach(function(interfaceItem){
+                if(interfaceItem.domain==domainItem.name){
+                    domainItem.interfaces.push(interfaceItem);
+                }
+            });
+
+        })
+        module.stores = module.domains;
+        module.serverDomains = module.domains;
+        console.log('**************************' + module.name + '模块的所有域 Begin**********************');
+        console.log(module.domains);
+        console.log('**************************' + module.name + '模块的所有域 End**********************');
+        
+    }
     loadDefinesFromFiles(moduleDefinePath) {
 
         var that = this;

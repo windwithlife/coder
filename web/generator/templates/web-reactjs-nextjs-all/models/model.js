@@ -17,9 +17,23 @@ let Data = {
 export default class ProjectStore extends BaseStore {
     //@observable dataObject = Data;
     constructor() {
-        super('<%=data.tableName%>');
+        super('<%=data.name%>');
         this.dataObject = Data;
     }
+    
+    <% data.interfaces.forEach(function(interfaceObj){%>
+    @action.bound
+    <%=interfaceObj.name%>(inputParams){
+        let that = this;
+        this.model.<%=interfaceObj.requestMethodName%>("/<%=interfaceObj.name%>",inputParams,function (response) {
+            if (response && response.data) {
+                console.log(response.data);
+                that.dataObject.<%=interfaceObj.responseDataName%>= response.data;
+            }
+        });
+
+    }
+  <%})%>
 }
 
 

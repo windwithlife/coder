@@ -112,10 +112,9 @@ export default class ListPage extends React.Component {
         }
     }
     handleLineUpdate(index, record) {
-
-        //router.push({ pathname: '/zxtable/edit', query: { ...that.props.query, pxtableId: record.id } });
-        let tableId = this.props.query.tableId;
-        router.push({ pathname: '/xtable/edit_column', query:{tableId:tableId}});
+        console.log("colId" + record.id);
+        router.push({pathname:'/xtable/edit_column',query:{columnId:record.id}});
+       
     }
     handleLineDetail(record) {
         //router.push({ pathname: '/zxtable/detail', query: { ...that.props.query, pxtableId: record.id } });

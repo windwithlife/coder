@@ -16,7 +16,6 @@ const { Panel } = Collapse;
 import { SettingOutlined } from '@ant-design/icons';
 import router from 'next/router';
 import { inject, observer } from 'mobx-react';
-//import AddorEditPage from './AddorEditColumn';
 import NetworkHelper from '../common/components/models/network';
 
 const rowSelection = {
@@ -34,7 +33,6 @@ export default class DetailPage extends React.Component {
     }
     constructor() {
         super();
-        //var that = this;
         this.startHeader();
 
     }
@@ -83,28 +81,8 @@ export default class DetailPage extends React.Component {
     }
 
    
-    generateCode=(type)=>{
-        console.log(type);
-        let projectId = this.props.query.id;
-        let params = {sideType:type,projectId: projectId};
-        if(type==='web'){
-            params.projectName = this.Store().dataObject.currentItem.name;
-            params.platform = this.Store().dataObject.currentItem.webPlatform;
-            params.language= this.Store().dataObject.currentItem.webLanguage;
-            params.framework= this.Store().dataObject.currentItem.webFramework;
-        }
-        let finalParams = {};
-        finalParams.projectSetting = params;
-        finalParams.defines = this.props.modulesStore.dataObject.list;
-        
-        NetworkHelper.webPost("generateCodeByProjectId/",finalParams);
-    }
-    downloadCode=(type)=>{
-        console.log(type);
-    }
     
-    componentDidMount() {
-        //this.props.tablesStore.fetchAll();
+    componentDidMount() { //this.props.tablesStore.fetchAll();
         console.log('DidMount');
         let id = this.props.query.id;
         console.log("edit id:=" + id);
@@ -114,15 +92,10 @@ export default class DetailPage extends React.Component {
 
     pagination() {
         return {
-            //total: this.props.tablesStore.dataLength,
             showSizeChanger: true
         }
     }
-    handleLineUpdate(index, record) {
-
-        router.push({ pathname: '/xmodule/edit', query: {moduleId: record.id } });
-       
-    }
+    
     changeEditMode = (event) => {
         event.stopPropagation();
         console.log('click on edit model');
@@ -132,16 +105,14 @@ export default class DetailPage extends React.Component {
     handleLineDetail(record) {
         router.push({ pathname: '/xmodule/detail', query: {moduleId: record.id }});
     }
-    handleLineAdd() {
-        //this.setState({ visible: true });
+    handleLineAdd() {   
         let id = this.props.query.id;
         router.push({ pathname: '/xmodule/add' ,query: {projectId: id }});
-
     }
-    handleLineEditModule() {
-        let id = this.props.query.id;
-        router.push({ pathname: '/xmodule/list', query: { projectId: id } });
+    handleLineUpdate(index, record) {
 
+        router.push({ pathname: '/xmodule/edit', query: {moduleId: record.id } });
+       
     }
    
     handleLineDelete(index, record) {
@@ -149,15 +120,6 @@ export default class DetailPage extends React.Component {
         this.props.modulesStore.removeById(index,record.id);
     }
 
-    handleSearchChange(e) {
-        this.setState({ searchText: e.target.value, name: e.target.value });
-    }
-    handleSearch(e) {
-        e.preventDefault();
-        let keywork = this.state.searchText
-        //this.props.tablesStore.fetchByNameLike(param.keyword);
-
-    }
     render() {
         let that = this;
         let itemData = this.Store().dataObject.currentItem;
@@ -171,26 +133,24 @@ export default class DetailPage extends React.Component {
                           < Form.Item name="secondcol" label="">
                             {itemData.secondcol}
                           </Form.Item>
-                            
+
                           < Form.Item name="colthree" label="">
                             {itemData.colthree}
                           </Form.Item>
-                            
+
+                          < Form.Item name="fieldList" label="">
+                            {itemData.fieldList}
+                          </Form.Item>
+
                         </Form>
                     </Card>
                    
                 
 
                 <Collapse accordion>
-                    <Panel header="项目中的所有模块" key="4" extra={<SettingOutlined onClick={that.changeEditMode}></SettingOutlined>}>
+                    <Panel header="详细信息：" key="4" extra={<SettingOutlined onClick={that.changeEditMode}></SettingOutlined>}>
      
                     <Form layout="inline" onSubmit = {this.handleSearch.bind(this)} >
-                <Form.Item  >
-                    <Input type = "text" onChange={this.handleSearchChange.bind(this)} />
-                </Form.Item>
-                < Form.Item  >
-                    < Button style = {{marginRight: '10px'}} type = "primary" htmlType = "submit" > 搜索 </Button>
-                </Form.Item>
                 < Form.Item  >
                     <Button onClick = {this.handleLineAdd.bind(this)} hidden={!that.state.editMode}> 添加 </Button>
                 </Form.Item>

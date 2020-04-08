@@ -9,6 +9,8 @@ import CategoryStore from '../public/category/models/CategoryStore';
 import DictionaryStore from '../public/dictionary/models/DictionaryStore';
 import InterfaceStore from '../xinterface/models/InterfaceStore';
 import PageStore from '../xpage/models/PageStore';
+import WidgetStore from '../xwidget/models/WidgetStore';
+import TempalteStore from '../pagetemplate/models/TemplateStore';
 //import TestStore from '../zxtable/models/TestStore.js'
 /*import AppStore from "./AppStore";
 
@@ -32,6 +34,8 @@ let stores = {
     dictionarysStore: new DictionaryStore(),
     interfacesStore: new InterfaceStore(),
     pagesStore: new PageStore(),
+    widgetsStore: new WidgetStore(),
+    templatesStore: new TempalteStore(),
     
 }   
 

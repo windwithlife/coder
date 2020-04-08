@@ -74,11 +74,15 @@ class BaseStore {
   }
 
   @action.bound
-  removeById(index,id){
+  removeById(index,id,callback){
       let that = this;
-      this.model.removeById(id, function() {
+      this.model.removeById(id, function(response) {
           console.log('successful to remove: ID:' + id);
-          that.dataObject.list.splice(index,1);
+          //that.dataObject.list.splice(index,1);
+          //console.log(that.dataObject.list.slice());
+          if(callback){
+              callback(response.data);
+          }
       });
 
   }

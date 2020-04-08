@@ -7,13 +7,16 @@ const { TextArea } = Input;
 const FormItem = Form.Item;
 
 
-@inject('interfacesStore') @observer
+@inject('interfacesStore') @inject('tablesStore') @inject('modulesStore')
+@observer
 export default class TableAdd extends React.Component {
     formRef = React.createRef();
 
     constructor(props) {
         super(props);
         this.state = {};
+        props.tablesStore.queryByModuleId(props.query.moduleId);
+        props.modulesStore.queryById(props.query.moduleId);
     }
     Store = () => {
         return this.props.interfacesStore;
@@ -26,6 +29,17 @@ export default class TableAdd extends React.Component {
         this.Store().add(values, () => { console.log('finished add interface row'); router.back(); });
     }
 
+    onChangeTable=(value)=>{
+        let that = this;
+        console.log('name' + value);
+        let domainName = value;
+        //if('other'== value){
+        //    domainName = this.props.modulesStore.dataObject.currentItem.name;
+        //}
+        
+        this.formRef.current.setFieldsValue({domain:domainName});
+       
+      }
     render() {
         var that = this;
 
@@ -38,14 +52,34 @@ export default class TableAdd extends React.Component {
                         },]}>
                         <Input />
                     </Form.Item>
-                    <Form.Item name="description" label="描述">
-                        <Input />
+                    <Form.Item name="requestMethod" label="请求方法">
+                    <Select>
+                        <Select.Option value="post">Post</Select.Option>
+                        <Select.Option value="get">Get</Select.Option>
+                    </Select>
                     </Form.Item>
+                    
+                    
+                    <Form.Item name="domain" label="选择接口所属的域(按数据表定义识别)" >
+                    <Select>
+                        {that.props.tablesStore.dataObject.list.map(function (item, i) {
+                            return (<Select.Option value={item.name}>{item.name}</Select.Option>);
+                        })}
+                    </Select>
+                    </Form.Item>
+                    
                     <Form.Item name="inputParams" label="入口参数对象定义">
                         <TextArea rows={5} />
                     </Form.Item>
                     <Form.Item name="outputParams" label="出口参数对象定义">
                         <TextArea rows={5} />
+                    </Form.Item>
+
+                    <Form.Item name="customSql" label="自定义查询语句">
+                        <TextArea rows={5} />
+                    </Form.Item>
+                    <Form.Item name="description" label="描述">
+                        <Input />
                     </Form.Item>
 
                     <Card type="inner">

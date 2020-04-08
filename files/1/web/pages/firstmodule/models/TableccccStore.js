@@ -9,6 +9,9 @@ let  DataItem = {
         colthree:'',
         
     
+        fieldList:'',
+        
+    
 }
 let Data = {
     currentItem :DataItem,
@@ -20,6 +23,22 @@ export default class ProjectStore extends BaseStore {
         super('tablecccc');
         this.dataObject = Data;
     }
+    
+    
+    @action.bound
+    firstinterface(inputParams){
+        let that = this;
+        //console.log('moduleid is :' + id);
+        this.model.post("/firstinterface",inputParams,function (response) {
+            if (response && response.data) {
+                //console.log(JSON.stringify(response.data));
+                console.log(response.data);
+                that.dataObject.firstinterfaceResponse= response.data;
+            }
+        });
+
+    }
+  
 }
 
 

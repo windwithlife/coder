@@ -38,7 +38,7 @@ app.prepare()
     server.post('/generateCodeByProjectId/', (req, res) => {
       console.log('generator');
       console.log(req.body);
-        generator.init(false,req.body);
+        generator.initByQuery(req.body);
         //generator.generate(req.body);
         generator.generateByQuery(req.body.projectSetting);
         res.sendStatus(200)

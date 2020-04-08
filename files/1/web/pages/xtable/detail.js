@@ -96,9 +96,6 @@ export default class ListPage extends React.Component {
 
     }
 
-    onFooterBack() {
-        router.back();
-    }
     componentDidMount() {
         //this.props.tablesStore.fetchAll();
         console.log('DidMount');
@@ -116,8 +113,8 @@ export default class ListPage extends React.Component {
         }
     }
     handleLineUpdate(index, record) {
-
-        router.push({ pathname:'/xtable/edit_column', query:{columnId:record.id}});
+        console.log("colId" + record.id);
+        router.push({pathname:'/xtable/edit_column',query:{columnId:record.id}});
        
     }
     handleLineDetail(record) {

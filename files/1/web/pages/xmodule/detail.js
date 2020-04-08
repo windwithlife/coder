@@ -17,7 +17,7 @@ import { SettingOutlined } from '@ant-design/icons';
 const { TextArea } = Input;
 import router from 'next/router';
 import { inject, observer } from 'mobx-react';
-
+import EditTable from '../common/components/EditableTable';
 //import AddorEditPage from './AddorEditColumn';
 
 const rowSelection = {
@@ -31,24 +31,21 @@ const rowSelection = {
 export default class EditPage extends React.Component {
     formRef = React.createRef();
     state = {
-        visible: false,
-        operationTitle: "新增",
-        operationType: "add",
-        editMode:false,
+        editMode: false,
     }
     constructor() {
         super();
-        //var that = this;
-        this.startHeader();
+       
+        //this.startHeader();
 
     }
     changeEditMode = (event) => {
         event.stopPropagation();
         console.log('click on edit model');
         let nextMode = !this.state.editMode;
-        this.setState({editMode:nextMode});
+        this.setState({ editMode: nextMode });
     }
-    startHeader() {
+    tableHeader() {
         var that = this;
 
         var fieldColumns = [];
@@ -64,44 +61,33 @@ export default class EditPage extends React.Component {
             dataIndex: 'description',
             key: 'description'
         });
-        fieldColumns.push({
-            title: "当前状态",
-            dataIndex: 'status',
-            key: 'status'
-        });
-
-
-        this.columns = [...fieldColumns, {
-            title: 'Action',
-            key: 'action',
-            render: (text, record, index) => (
-                <span hidden={!that.state.editMode} >
-                   
-                <span className = "ant-divider" />
-                <Popconfirm title = "Sure to delete?" onConfirm = {that.handleLineDelete.bind(that,index, record)} >
-                    < a href = "#" > Delete </a>
-                </Popconfirm>
-                <span className = "ant-divider" />
-                <a href = "#" onClick = {that.handleLineUpdate.bind(that,index, record)} > Edit </a>
-                <span className = "ant-divider" />
-                <a href = "#" onClick = {that.handleLineDetail.bind(that,record)} > Detail </a>
-            </span>
         
-            )
-        }];
-
-
+        return fieldColumns;
     }
 
-    onFooterBack() {
-        router.back();
+    buildPageColumns() {
+        let fieldColumns = [];
+
+        fieldColumns.push({
+            title: "模块名称",
+            dataIndex: 'name',
+            key: 'name'
+        });
+        fieldColumns.push({
+            title: "说明",
+            dataIndex: 'description',
+            key: 'description'
+        });
+
+        return fieldColumns;
+
     }
     componentDidMount() {
         let that = this;
         console.log('DidMount');
         let id = this.props.query.moduleId;
-        console.log("edit id:=" + id);
-        this.props.tablesStore.queryByModuleId(id);
+        console.log("module id:=" + id);
+        //this.props.tablesStore.queryByModuleId(id);
         this.props.modulesStore.queryById(id, function (values) {
             console.log(values);
             that.formRef.current.setFieldsValue(values);
@@ -114,103 +100,93 @@ export default class EditPage extends React.Component {
             showSizeChanger: true
         }
     }
-   
-    handleLineUpdate(index, record) {
+
+    handleLineUpdate(type,index, record) {
         let that = this;
-        router.push({pathname:'/xtable/edit',query:{tableId:record.id}});
+        let path= '/'+ type+'/edit';
+        router.push({ pathname: path, query: { id: record.id } });
 
     }
-    handleLineDetail(record) {
-        router.push({ pathname: '/xtable/detail', query: {tableId: record.id } });
+    handleLineDetail(type,record) {
+        let path= '/'+ type+'/detail';
+        router.push({ pathname: path, query: { id: record.id } });
     }
-    handleLineAdd() {
-        let moduleId =this.props.query.moduleId;
-        router.push({ pathname: '/xtable/add', query: { moduleId: moduleId } });
+    handleLineAdd(type) {
+        let moduleId = this.props.query.moduleId;
+        let path= '/'+ type+'/add';
+        router.push({ pathname: path, query: { moduleId: moduleId } });
 
     }
 
-    handleLineDelete(index, record) {
+    handleLineDelete(type,index, record) {
         console.log(record.id);
-        this.props.tablesStore.removeById(index,record.id);
+        let moduleId = this.props.query.moduleId;
+        if('xtable'==type){
+            //console.log('inde')
+            this.props.tablesStore.removeById(index, record.id,function(value){
+                this.props.modulesStore.queryById(moduleId);
+            });
+        }
+        
     }
-
     handleSearchChange(e) {
         this.setState({ searchText: e.target.value, name: e.target.value });
     }
     handleSearch(e) {
         e.preventDefault();
-        //let keywork = this.state.searchText
-        //this.props.tablesStore.fetchByNameLike(param.keyword);
 
     }
     render() {
         let that = this;
         let editUrl = "/xmodule/edit?moduleId=" + this.props.query.moduleId;
         let itemData = that.props.modulesStore.dataObject.currentItem;
+        
         console.log('render module edit page');
         return (
             < div >
-                    <Card size="small" title="模块基本信息" style={{ width: 500 }} extra={<a href={editUrl}>编辑项目基本信息</a>} >
+                <Card size="small" title="模块基本信息" style={{ width: 500 }} extra={<a href={editUrl}>编辑项目基本信息</a>} >
+                    <Form ref={this.formRef}>
+                        < Form.Item name="name" label="模块名：">
+                            {itemData.name}
+                        </Form.Item>
+                        < Form.Item name="description" label="描述信息：">
+                            {itemData.description}
+                        </Form.Item>
 
-                        <Form ref={this.formRef}>
-                            < Form.Item name="name" label="模块名：">
-                                {itemData.name}
-                            </Form.Item>
-                            < Form.Item name="description" label="描述信息：">
-                                {itemData.description}
-                            </Form.Item>
+                        < Form.Item name="projectId" label="所属项目：">
+                            {itemData.project}
+                        </Form.Item>
+                        < Form.Item name="status" label="状态">
+                            {itemData.status}
+                        </Form.Item>
 
-                            < Form.Item name="projectId" label="所属项目：">
-                                {itemData.project}
-                            </Form.Item>
-                            < Form.Item name="status" label="状态">
-                                {itemData.status}
-                            </Form.Item>
+                    </Form>
+                </Card>
 
-                        </Form>
-                    </Card>
 
-                
-                <Collapse accordion>
-                    <Panel header="此模块中的所有表" key="1" extra={<SettingOutlined onClick={that.changeEditMode}></SettingOutlined>}>
-     
-                    <Form layout="inline" onSubmit = {this.handleSearch.bind(this)} >
-                <Form.Item  >
-                    <Input type = "text" onChange={this.handleSearchChange.bind(this)} />
-                </Form.Item>
-                < Form.Item  >
-                    < Button style = {{marginRight: '10px'}} type = "primary" htmlType = "submit" > 搜索 </Button>
-                </Form.Item>
-                < Form.Item  >
-                    <Button onClick = {this.handleLineAdd.bind(this)} hidden={!that.state.editMode}> 添加 </Button>
-                </Form.Item>
-
-            </Form>
-                < Table rowSelection={
-                    rowSelection
-                }
-                    columns={
-                        this.columns
-                    }
-                    dataSource={
-                        //that.props.tablesStore.items.slice()
-                        that.props.tablesStore.dataObject.list.slice()
-                    }
-                    pagination={
-                        this.pagination()
-                    }
-                    
-                    // footer={
-                    //     () => (<Button onClick={this.handleLineAdd.bind(this)} > 编辑模块表... </Button>)
-                    // }
-                />
-             </Panel>
-             </Collapse>
+                <EditTable title="此模块中的所有表" columns={that.tableHeader()} data={itemData.tables} 
+                onAdd={that.handleLineAdd.bind(that,'xtable')} 
+                onDelete={that.handleLineDelete.bind(that,'xtable')}
+                onUpdate={that.handleLineUpdate.bind(that,'xtable')}
+                onDetail={that.handleLineDetail.bind(that,'xtable')}
+                ></EditTable>
+                <EditTable title="页面：" columns={that.buildPageColumns()} data={itemData.pages} 
+                onAdd={that.handleLineAdd.bind(that,'xpage')} 
+                onDelete={that.handleLineDelete.bind(that,'xpage')}
+                onUpdate={that.handleLineUpdate.bind(that,'xpage')}
+                onDetail={that.handleLineDetail.bind(that,'xpage')}
+                ></EditTable>
+                <EditTable title="接口：" columns={that.buildPageColumns()} data={itemData.interfaces} 
+                onAdd={that.handleLineAdd.bind(that,'xinterface')} 
+                onDelete={that.handleLineDelete.bind(that,'xinterface')}
+                onDetail={that.handleLineDetail.bind(that,'xinterface')}
+                onUpdate={that.handleLineUpdate.bind(that,'xinterface')}
+                ></EditTable>
             </div>
         );
     }
 }
 
 EditPage.getInitialProps = async function (context) {
-    return { query: context.query, path: context.pathname };
+    return { query: context.query };
 }

@@ -14,6 +14,7 @@ import {
 } from 'antd';
 const { TextArea } = Input;
 const { Option } = Select;
+import XSelect from '../common/components/form/select';
 //const { Panel } = Collapse;
 //import { SettingOutlined } from '@ant-design/icons';
 import router from 'next/router';
@@ -23,10 +24,10 @@ import { inject, observer } from 'mobx-react';
 
 const tailLayout = {
     wrapperCol: {
-      offset: 8,
-      span: 16,
+        offset: 8,
+        span: 16,
     },
-  };
+};
 
 const rowSelection = {
 };
@@ -49,7 +50,7 @@ export default class EditPage extends React.Component {
         this.Store().update(values, () => { console.log('finished add row'); router.back(); });
     }
     componentDidMount() {
-      
+
         console.log('DidMount');
         let that = this;
         let colId = this.props.query.columnId;
@@ -68,7 +69,7 @@ export default class EditPage extends React.Component {
         return (
 
             <Card size="small" title="表列定义" style={{ width: 500 }}  >
-                <Form  ref={this.formRef} name="control-ref" onFinish={this.onFinish.bind(that)}>
+                <Form ref={this.formRef} name="control-ref" onFinish={this.onFinish.bind(that)}>
                     <Form.Item
                         name="name"
                         label="名称"
@@ -109,6 +110,12 @@ export default class EditPage extends React.Component {
                         </Select>
                     </Form.Item>
 
+                    <Form.Item
+                        name="map"
+                        label="外关联关系"
+                    >
+                        < XSelect category="mapType" />
+                    </Form.Item>
                     <Form.Item
                         name="description"
                         label="说明"

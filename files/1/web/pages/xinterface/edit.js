@@ -1,168 +1,99 @@
 import React from 'react';
-
-import router from 'next/router';
-import Layout from '../common/pages/layout';
-import { Form, Input,Button} from 'antd';
-import {Card} from 'antd';
-import FileUpload from '../common/components/form/upload';
-import XSelect from '../common/components/form/select';
-import XList from '../common/components/form/referlist';
-import model from './models/model.js';
-//import '../common/styles/App.less';
-
+//import model from './models/model.js';
+import Table from 'antd/lib/table';
+import Icon from 'antd/lib/icon';
+import Button from 'antd/lib/button';
+import Popconfirm from 'antd/lib/popconfirm';
+import {
+    Collapse,
+    Modal,
+    Form,
+    Input,
+    Card,
+    Select,
+} from 'antd';
 const { TextArea } = Input;
-const FormItem = Form.Item;
-const formItemLayout = {
-    labelCol: {
-        span: 6,
-    },
-    wrapperCol: {
-        span: 14,
-    },
-};
+const { Panel } = Collapse;
+import { SettingOutlined } from '@ant-design/icons';
+import router from 'next/router';
+import { inject, observer } from 'mobx-react';
+//import AddorEditPage from './AddColumnDialog';
 
-
-
-class EditForm extends React.Component {
-
-    state={
-        items:{id:-1},
-    }
-    componentWillMount(){
-        // this.setState({item:this.props.location.state.item});
-        var that = this;
-        console.log("edit id:=" + this.props.query.xinterfaceid);
-        model.queryById(this.props.query.xinterfaceId,function(response) {
-            if (response && response.data) {
-                console.log(response.data);
-                that.setState({items:response.data});
-            }
-        })
-    }
-
-    handleSaveAndEdit(childModuleName,data) {
-
-        let that = this;
-        let params = {...that.props.query,fromModule:'xinterface'};
-        router.push({pathname:'/'+ childModuleName+ '/list',query:params});
-    }
-
-    onSaveAndEdit(childModuleName,e){
-        e.preventDefault();
-        var that = this;
-        this.props.form.validateFieldsAndScroll((err, values) => {
-            if (!err) {
-                const data = {...values};
-                console.log('Received values of form: ', values);
-                that.handleSaveAndEdit(childModuleName,data);
-            }
-        });
-    }
-    onAssociationEdit(aName,referm,e){
-        e.preventDefault();
-        var that = this;
-        var mId = this.props.query.xinterfaceId;
-        let params = {...that.props.query,moduleName:"xinterface",moduleId:mId,associationName:aName,referModule:referm};
-        router.push({pathname:'/xinterface/association',query:params});
-    }
-    handleSubmitUpdate(data) {
-        let that = this;
-        model.update(data, function(response) {
-            if (response && response.data) {
-                console.log(data);
-                let params = {...that.props.query};
-                router.push({pathname:'/xinterface/list',query:params});
-            }
-        })
-
-    }
+@inject('interfacesStore')
+@observer
+export default class ListPage extends React.Component {
+    formRef = React.createRef();
     
-    handleSubmit(e) {
-        e.preventDefault();
-        var that = this;
-        this.props.form.validateFieldsAndScroll((err, values) => {
-            if (!err) {
-                const data = {...values, id:this.state.items.id};
-                console.log('Received values of form: ', values);
-                that.handleSubmitUpdate(data);
-            }
-        });
+    constructor(props) {
+        super(props);
+    }
+    Store=()=>{
+        return this.props.interfacesStore;
     }
    
-
-
-render()
-{
-    var that = this;
-    var listItems = this.state.items;
-    console.log(listItems);
-   // let selectIndex = listItems.sex? listItems.sex:-1;
-
-    const { getFieldDecorator } = this.props.form;
-    console.log("modal interal" + JSON.stringify(listItems));
     
-    return (
-            <Card>
-            <Form  onSubmit={this.handleSubmit.bind(this)}>
-               
-                        <Card type="inner">
-                        <FormItem label="名称" >
-                            {getFieldDecorator("name", {
-                                initialValue: listItems.name
-                            })(
-                                <Input type="text" />
-                            )}
-                        </FormItem>
-                        </Card>
-                
-                        <Card type="inner">
-                        <FormItem label="说明" >
-                            {getFieldDecorator("description", {
-                                initialValue: listItems.description
-                            })(
-                                <Input type="text" />
-                            )}
-                        </FormItem>
-                        </Card>
-                
-                    <Card type="inner">
-                        <Form.Item label="页面接口定义">
-                            {getFieldDecorator("defineText", { initialValue: listItems.defineText})(<TextArea rows={5} />)}
+    onFinish = values => {
+        var that = this;
+        //let moduleId = this.props.query.moduleId;
+        //values.module = moduleId;
+        this.Store().add(values, () => { console.log('finished add row'); router.back(); });
+    }
+    componentDidMount() {
+       
+        console.log('DidMount');
+        let id = this.props.query.id;
+        this.Store().queryById(id);
+    }
+
+  
+    handleLineUpdate(index, record) {
+        console.log("colId" + record.id);
+        router.push({pathname:'/xtable/edit_column',query:{columnId:record.id}});
+       
+    }
+    
+    handleLineDelete(index, record) {
+        console.log(record.id);
+        this.Store().removeById(record.id, index);
+    }
+
+    
+    render() {
+        let that = this;
+        let itemData = this.Store().dataObject.currentItem;
+        return (
+            
+                <Card size="small" title="表基本信息" style={{ width: 500 }}  >
+                    <Form ref={this.formRef} onFinish={that.onFinish.bind(that)}>
+                        <Form.Item
+                            name="id"
+                            noStyle='true'
+                        ></Form.Item>
+                        < Form.Item noStyle='true' name="moduleId" label="所属模块：">
                         </Form.Item>
+                        < Form.Item name="name" label="名称（必须用英文）：">
+                            <Input />
+                        </Form.Item>
+                        < Form.Item name="description" label="描述信息：">
+                            <Input />
+                        </Form.Item>
+                        < Form.Item name="inputParams" label="请求参数定义(DTO)">
+                            <TextArea rows={5} />
+                        </Form.Item>
+                        < Form.Item name="outputParams" label="返回结果定义(DTO)">
+                            <TextArea rows={5} />
+                        </Form.Item>
+                        <Form.Item >
+                                <Button type="primary" htmlType="submit" size="large">保存修改基本信息</Button>
+                            </Form.Item>
+                    </Form>
                     </Card>
+              
                 
-                    <Card type="inner">
-                <Form.Item label="页面状态"
-                            hasFeedback {...formItemLayout}> {
-                    getFieldDecorator("status", {
-                        initialValue: listItems.status,
-                    })(
-                        < XSelect  category="data_status" refer ="" display= {this.props.query.fromModule =='' ? 'no':'yes'} />
-                    )}
-                    < /Form.Item>
-                        </Card>
-                        
-                 <Card type="inner">
-                 <FormItem className="form-item-clear" >
-                    <Button type="primary" htmlType="submit" size="large">Save</Button>
-                </FormItem>
-                </Card>
-            </Form>
-        </Card>
-    );
-}
+        );
+    }
 }
 
-
-const MyForm = Form.create()(EditForm);
-
-export default class Page extends React.Component{
-
-    render(){
-        return (<Layout  path={this.props.path}><MyForm query={this.props.query}/></Layout>)
+ListPage.getInitialProps = async function (context) {
+    return { query: context.query };
 }
-}
-Page.getInitialProps = async function(context){
-    return {query:context.query,path:context.pathname};
-}
-

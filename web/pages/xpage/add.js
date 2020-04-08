@@ -41,10 +41,7 @@ export default class TableAdd extends React.Component {
                     <Form.Item name="description" label="描述">
                         <Input />
                     </Form.Item>
-                    <Form.Item name="inputParams" label="入口参数对象定义">
-                        <TextArea rows={5} />
-                    </Form.Item>
-                    <Form.Item name="outputParams" label="出口参数对象定义">
+                    <Form.Item name="defineText" label="页面布局">
                         <TextArea rows={5} />
                     </Form.Item>
 

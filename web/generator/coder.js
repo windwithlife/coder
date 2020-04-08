@@ -12,6 +12,11 @@ function init(isFromFiles, setting) {
     console.log('initialize the project env!');
 }
 
+function initByWebQuery(setting) {
+    mainGenerator.initProject(false,setting);
+    console.log('initialize the project!');
+}
+
 function generator(cmdOptions,platformName, withframework) {
     //生成代码
     //verboseCommand = verbose ? ' --verbose' : '';
@@ -25,5 +30,6 @@ function generateByWebQuery(params) {
 }
 module.exports.init = init;
 module.exports.generate = generator;
+module.exports.initByQuery = initByWebQuery;
 module.exports.generateByQuery = generateByWebQuery;
 module.exports.usage = function(){return mainGenerator.generatorPromptMsg()};

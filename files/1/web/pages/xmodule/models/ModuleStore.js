@@ -6,7 +6,10 @@ let  ModuleItem = {
     name:"oldName",
     description:"oldDescription",
     defineText:'',
-    status:-1
+    status:-1,
+    tables:[],
+    interfaces:[],
+    pages:[],
 }
 let Data = {
     currentItem :ModuleItem,

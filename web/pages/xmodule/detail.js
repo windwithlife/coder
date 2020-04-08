@@ -26,7 +26,7 @@ const rowSelection = {
 
 
 
-@inject('modulesStore') //@inject('tablesStore')
+@inject('modulesStore') @inject('tablesStore')
 @observer
 export default class EditPage extends React.Component {
     formRef = React.createRef();
@@ -118,9 +118,16 @@ export default class EditPage extends React.Component {
 
     }
 
-    handleLineDelete(index, record) {
+    handleLineDelete(type,index, record) {
         console.log(record.id);
-        this.props.tablesStore.removeById(index, record.id);
+        let moduleId = this.props.query.moduleId;
+        if('xtable'==type){
+            //console.log('inde')
+            this.props.tablesStore.removeById(index, record.id,function(value){
+                this.props.modulesStore.queryById(moduleId);
+            });
+        }
+        
     }
     handleSearchChange(e) {
         this.setState({ searchText: e.target.value, name: e.target.value });

@@ -16,8 +16,9 @@ const { Panel } = Collapse;
 import { SettingOutlined } from '@ant-design/icons';
 import router from 'next/router';
 import { inject, observer } from 'mobx-react';
-import AddorEditPage from './AddorEditColumn';
+//import AddorEditPage from './AddorEditColumn';
 import NetworkHelper from '../common/components/models/network';
+//import EditTable from '../common/components/EditableTable';
 
 const rowSelection = {
 };
@@ -36,8 +37,10 @@ export default class DetailPage extends React.Component {
         super();
         //var that = this;
         this.startHeader();
+        //this.buildPageColumns();
 
     }
+   
     startHeader() {
         var that = this;
 
@@ -82,9 +85,7 @@ export default class DetailPage extends React.Component {
 
     }
 
-    onFooterBack() {
-        router.back();
-    }
+   
     generateCode=(type)=>{
         console.log(type);
         let projectId = this.props.query.id;
@@ -122,13 +123,8 @@ export default class DetailPage extends React.Component {
     }
     handleLineUpdate(index, record) {
 
-        //router.push({ pathname: '/zxtable/edit', query: { ...that.props.query, pxtableId: record.id } });
-        this.setState({
-            visible: true,
-            operationTitle: "修改",
-            operationType: "edit",
-            editMode:false,
-        });
+        router.push({ pathname: '/xmodule/edit', query: {moduleId: record.id } });
+       
     }
     changeEditMode = (event) => {
         event.stopPropagation();
@@ -150,10 +146,7 @@ export default class DetailPage extends React.Component {
         router.push({ pathname: '/xmodule/list', query: { projectId: id } });
 
     }
-    onModalConfirm() {
-        //router.push({pathname:'/zxtable/add',query:{...that.props.query}});
-        this.setState({ visible: false });
-    }
+   
     handleLineDelete(index, record) {
         console.log(record.id);
         this.props.modulesStore.removeById(index,record.id);
@@ -174,14 +167,7 @@ export default class DetailPage extends React.Component {
         let editUrl = "/xproject/edit?id=" + this.props.query.id;
         return (
             < div >
-                <Modal visible={that.state.visible} title={that.state.operationTitle}
-                    onCancel={this.onModalConfirm.bind(that)}
-                    footer={[]}>
-                    <AddorEditPage operationType={this.state.operationType} onConfirm={this.onModalConfirm.bind(that)}></AddorEditPage>
-                </Modal>
-
-                <div>
-                
+               
                     <Card size="small" title="项目基本信息" style={{ width: 500 }} extra={<a href={editUrl}>编辑项目基本信息</a>} >
 
 
@@ -262,7 +248,7 @@ export default class DetailPage extends React.Component {
                     
                     </Panel>
                     </Collapse>
-                </div>
+                
 
                 <Collapse accordion>
                     <Panel header="项目中的所有模块" key="4" extra={<SettingOutlined onClick={that.changeEditMode}></SettingOutlined>}>
@@ -293,18 +279,15 @@ export default class DetailPage extends React.Component {
                         this.pagination()
                     }
                     
-                    // footer={
-                    //     () => (<Button onClick={this.handleLineAdd.bind(this)} > 编辑模块表... </Button>)
-                    // }
                 />
              </Panel>
              </Collapse>
-
+            
             </div>
         );
     }
 }
 
 DetailPage.getInitialProps = async function (context) {
-    return { query: context.query, path: context.pathname };
+    return { query: context.query };
 }

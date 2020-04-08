@@ -45,6 +45,29 @@ var codeTools = require('./code_tools');
         return params;
 
     }
+    buildParamsByDomain(moduleName,defineData){
+        let params = {
+            projectName:this.projectName,      
+        }
+        params.define = defineData;
+        params.moduleName = moduleName;
+        params.name = defineData.name;
+        params.moduleClassName = codeTools.firstUpper(moduleName);
+        params.nameClassName = codeTools.firstUpper(defineData.name);
+        params.fields = defineData.tableFields;
+        params.interfaces = defineData.interfaces;
+        params.interfaces.forEach(function(interfaceObj){
+            //interfaceObj.responseName = interfaceObj.name + 'Response';
+            if(interfaceObj.requestMethod == 'get'){
+                interfaceObj.requestMethodName = 'query';
+            }else{
+                interfaceObj.requestMethodName = 'post';
+            }
+            interfaceObj.responseDataName = interfaceObj.name + 'Response';
+        })
+        return params;
+
+    }
     
 }
 

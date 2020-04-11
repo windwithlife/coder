@@ -19,7 +19,7 @@ import router from 'next/router';
 import { inject, observer } from 'mobx-react';
 //import AddorEditPage from './AddColumnDialog';
 
-@inject('widgetsStore')
+@inject('templatesStore')
 @observer
 export default class EditPage extends React.Component {
     formRef = React.createRef();
@@ -28,7 +28,7 @@ export default class EditPage extends React.Component {
         super(props);
     }
     Store = () => {
-        return this.props.widgetsStore;
+        return this.props.templatesStore;
     }
 
 
@@ -60,21 +60,38 @@ export default class EditPage extends React.Component {
                         name="id"
                         noStyle='true'
                     ></Form.Item>
-                    < Form.Item name="name" label="名称（必须用英文）：">
+                   
+                    <Form.Item name="name" label="名称(必须用英文）"
+                        rules={[{
+                            required: true,
+                        },]}>
                         <Input />
-                    </Form.Item>
-                    < Form.Item name="description" label="描述信息：">
-                        <Input />
-                    </Form.Item>
-                    < Form.Item name="fieldMap" label='数据结构定义'>
-                        <TextArea rows={5} />
-                    </Form.Item>
-                    < Form.Item name="defineText" label='组件定义'>
-                        <TextArea rows={5} />
                     </Form.Item>
 
+                    <Form.Item name="description" label="描述">
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name="sideType" label="端点" >
+                        <Select>
+                            <Select.Option value='web'>网站</Select.Option>
+                            <Select.Option value='server'>服务器</Select.Option>
+                            <Select.Option value='server'>移动前端</Select.Option>
+                        </Select>
+                    </Form.Item>
+                    < Form.Item name="language" label="编程语言选择：">
+                        < XSelect category="language" />
+                    </Form.Item>
+                    < Form.Item name="framework" label="技术框架：">
+                        < XSelect category="framework" />
+                    </Form.Item>
+                    < Form.Item name="tag" label="页面标签：">
+                       <Input />
+                    </Form.Item>
+                    <Form.Item name="defineText" label="页面定义">
+                        <TextArea rows={10} />
+                    </Form.Item>
                     <Form.Item >
-                        <Button type="primary" htmlType="submit" size="large">保存修改基本信息</Button>
+                        <Button type="primary" htmlType="submit" size="large">保存</Button>
                     </Form.Item>
                 </Form>
             </Card>

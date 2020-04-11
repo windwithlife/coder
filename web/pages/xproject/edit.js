@@ -16,7 +16,7 @@ import {
 const { TextArea } = Input;
 import router from 'next/router';
 import { inject, observer } from 'mobx-react';
-import AddorEditPage from './AddorEditColumn';
+//import AddorEditPage from './AddorEditColumn';
 
 const rowSelection = {
 };

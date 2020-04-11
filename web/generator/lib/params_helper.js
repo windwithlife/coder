@@ -5,8 +5,8 @@ var codeTools = require('./code_tools');
 
  class ParamsHelper {
     
-    ParamsHelper(){
-        this.basePackage="com.simple.bz.auto";
+    constructor(){
+        this.basePackage="com.simple.server.auto";
         this.apiServer ="127.0.0.1:8080";
         this.sideType ='web';
         this.language = 'js';
@@ -27,20 +27,38 @@ var codeTools = require('./code_tools');
         let params = {
             projectName:this.projectName,      
         }
+        params.packageName = this.basePackage;
         params.moduleDefine = tableDefine;
         params.moduleName = moduleName;
         params.tableName = tableDefine.name;
+        params.name = tableDefine.name;
+        params.className = codeTools.firstUpper(tableDefine.name);
         params.moduleClassName = codeTools.firstUpper(moduleName);
         params.tableClassName = codeTools.firstUpper(tableDefine.name);
         params.refers = [];
         params.fields = [];
         tableDefine.columns.forEach(function(col){
             let clsName = codeTools.firstUpper(col.name);
-            params.fields.push({def:col,name:col.name,cls:clsName});
+            //Map Type
+            let mapType = "OneToOne";
+            if (col.map == 1){mapType = "OneToMany";}
+            if (col.map == 2){mapType = "ManyToOne";}
+            if (col.map == 3){mapType = "ManyToMany";}
+            if (col.map < 0){mapType = "NULL";}
+            var referModuleClass;
             if(col.referModule){
-                var referModuleClass = codeTools.firstUpper(col.referModule);
-                params.refers.push({module:col.referModule,cls:referModuleClass,map:col.referMap});
+                referModuleClass = codeTools.firstUpper(col.referModule);
+                params.refers.push({name:col.referModule,className:referModuleClass,mapType:mapType});
             }
+            // Field Type
+            let fieldType = col.fieldType;
+            let fieldColumnType = col.fieldType;
+            if (col.fieldType == 'int'){fieldColumnType = 'Long'};
+            if (col.fieldType == 'Text'){fieldColumnType = 'String'};
+            params.fields.push({def:col,name:col.name,className:clsName,
+                mapType:mapType,mapField:col.mapField,referModule:col.referModule,referModuleClass:referModuleClass,
+                columnType:fieldColumnType});
+            
         });
         return params;
 
@@ -65,6 +83,55 @@ var codeTools = require('./code_tools');
             }
             interfaceObj.responseDataName = interfaceObj.name + 'Response';
         })
+        return params;
+
+    }
+
+    buildParamsByPage(moduleName,defineData){
+        let params = {
+            projectName:this.projectName,      
+        }
+        params.define = defineData;
+        params.moduleName = moduleName;
+        params.name = defineData.name;
+        params.moduleClassName = codeTools.firstUpper(moduleName);
+        params.nameClassName = codeTools.firstUpper(defineData.name);
+        //params.fields = defineData.tableFields;
+        params.domains = [];
+        params.interfaces = defineData.interfaces;
+
+        params.interfaces.forEach(function(interfaceObj){
+            //interfaceObj.responseName = interfaceObj.name + 'Response';
+            if(interfaceObj.requestMethod == 'get'){
+                interfaceObj.requestMethodName = 'query';
+            }else{
+                interfaceObj.requestMethodName = 'post';
+            }
+            interfaceObj.responseDataName = interfaceObj.name + 'Response';
+            
+            let haveThisDomain = false;
+            params.domains.forEach(function(domainItem){
+                if(domainItem == interfaceObj.domain){
+                    haveThisDomain = true;
+                }
+            });
+            if (!haveThisDomain){
+                params.domains.push(interfaceObj.domain);
+            }
+
+            interfaceObj.fullName = interfaceObj.domain + "." + interfaceObj.name;
+            interfaceObj.resultDataObjName = interfaceObj.name + 'Response';
+            interfaceObj.inputParamObjName = interfaceObj.name + "InputParam";
+            interfaceObj.invokeName = interfaceObj.fullName  + "("+ interfaceObj.inputParamObjName +').then(this.composeResultData.bind(this,'+'"' +interfaceObj.resultDataObjName+ '"' +'))';
+
+        })
+
+        params.widgets = defineData.widgets;
+        params.widgets.forEach(function(item){
+            item.className =  codeTools.firstUpper(item.name);
+            item.fileName =  item.name;
+        });
+
         return params;
 
     }

@@ -18,6 +18,15 @@ function createStore(moduleName,defineData){
     codeTools.generateCode(templateFilename,params,targetFileName);
 
 };
+
+function generatePage(moduleName,defineData){
+    //let templateFilename =   "/model.js";
+    let targetFileName = pathConfig.targetView(moduleName) + codeTools.firstUpper(defineData.name) + ".js";
+    templateText = defineData.defineText;
+    var params = paramsHelper.buildParamsByPage(moduleName,defineData);
+    codeTools.generateCodeFileByText(templateText,params,targetFileName);
+
+};
 function createView(moduleName,tableDefine,viewName){
     let templateFilename =  viewName + ".js";
     let targetFileName = tableDefine.name + "_"+viewName + ".js";
@@ -28,11 +37,6 @@ function createView(moduleName,tableDefine,viewName){
     codeTools.generateCode(templateFilename,params,targetFileName);
 };
 
-
-function generatePages(moduleName,tableDefine){
-     //createModel(moduleName,tableDefine);
-    createView(moduleName,tableDefine,'detail');
-}
 
 
 
@@ -49,6 +53,10 @@ function generateModuleByName(moduleDefine){
     // });
     moduleDefine.domains.forEach(function(domainItem){
         generateStoreByInterfaces(moduleDefine.name,domainItem);
+    });
+
+    moduleDefine.pages.forEach(function(pageItem){
+        generatePage(moduleDefine.name,pageItem);
     });
 }
 

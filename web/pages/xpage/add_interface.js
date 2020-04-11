@@ -15,7 +15,8 @@ import {
 const { Panel } = Collapse;
 import { SettingOutlined } from '@ant-design/icons';
 import EditTable from '../common/components/EditableTable';
-import SelectTransfer from './add_test';
+//import SelectTransfer from './add_test';
+import SelectTransfer from '../common/components/TransferSelect';
 import router from 'next/router';
 import { inject, observer } from 'mobx-react';
 
@@ -39,8 +40,9 @@ export default class DetailPage extends React.Component {
         //values.module = moduleId;
         this.finalKeys.forEach(function(item){
             let interId = item.id;//= that.props.interfacesStore.dataObject.list[item];
-            that.Store().addInterface(pageId,inter.id,function(value){
+            that.Store().addInterface(pageId,interId,function(value){
                 console.log('success to add interface id:' + value);
+                router.back();
             });
         });
         //this.Store().add(values, () => { console.log('finished add page'); router.back(); });
@@ -94,7 +96,7 @@ export default class DetailPage extends React.Component {
 
     handleLineDelete(index, record) {
         console.log(record.id);
-        //this.props.tablesStore.removeById(index, record.id);
+       
     }
     
     render() {

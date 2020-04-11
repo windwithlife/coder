@@ -89,12 +89,18 @@ export default class DetailPage extends React.Component {
     generateCode=(type)=>{
         console.log(type);
         let projectId = this.props.query.id;
-        let params = {sideType:type,projectId: projectId};
+        let params = {sideType:type,projectId: projectId,projectName:this.Store().dataObject.currentItem.name};
         if(type==='web'){
-            params.projectName = this.Store().dataObject.currentItem.name;
+            //params.projectName = this.Store().dataObject.currentItem.name;
             params.platform = this.Store().dataObject.currentItem.webPlatform;
             params.language= this.Store().dataObject.currentItem.webLanguage;
             params.framework= this.Store().dataObject.currentItem.webFramework;
+        }
+        if(type==='server'){
+            //params.projectName = this.Store().dataObject.currentItem.name;
+            //params.platform = this.Store().dataObject.currentItem.serverPlatform;
+            params.language= this.Store().dataObject.currentItem.serverLanguage;
+            params.framework= this.Store().dataObject.currentItem.serverFramework;
         }
         let finalParams = {};
         finalParams.projectSetting = params;
@@ -220,7 +226,7 @@ export default class DetailPage extends React.Component {
                             </Form.Item>
 
                             <Form.Item className="form-item-function" >
-                                <Button type="primary"  size="large">生成服务端代码</Button>
+                                <Button type="primary" onClick={that.generateCode.bind(that,"server")} size="large">生成服务端代码</Button>
                                 <Button type="primary"  size="large">下载代码</Button>
                             </Form.Item>
                         </Form>

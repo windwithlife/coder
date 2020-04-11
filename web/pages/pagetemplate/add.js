@@ -7,7 +7,7 @@ const { TextArea } = Input;
 const FormItem = Form.Item;
 
 
-@inject('widgetsStore')
+@inject('templatesStore')
 @observer
 export default class TableAdd extends React.Component {
     formRef = React.createRef();
@@ -18,7 +18,7 @@ export default class TableAdd extends React.Component {
         //props.widgetsStore.queryAll();
     }
     Store = () => {
-        return this.props.widgetsStore;
+        return this.props.templatesStore;
     }
     onFinish = values => {
         var that = this;
@@ -39,16 +39,30 @@ export default class TableAdd extends React.Component {
                         },]}>
                         <Input />
                     </Form.Item>
-                   
+
                     <Form.Item name="description" label="描述">
                         <Input />
                     </Form.Item>
-                    <Form.Item name="fieldMap" label="单元数据结构">
-                        <TextArea rows={5} />
+                    <Form.Item name="sideType" label="端点" >
+                        <Select>
+                            <Select.Option value='web'>网站</Select.Option>
+                            <Select.Option value='server'>服务器</Select.Option>
+                            <Select.Option value='server'>移动前端</Select.Option>
+                        </Select>
                     </Form.Item>
-                    <Form.Item name="defineText" label="组件定义">
-                        <TextArea rows={5} />
+                    < Form.Item name="language" label="编程语言选择：">
+                        < XSelect category="language" />
                     </Form.Item>
+                    < Form.Item name="framework" label="技术框架：">
+                        < XSelect category="framework" />
+                    </Form.Item>
+                    < Form.Item name="tag" label="页面标签：">
+                       <Input />
+                    </Form.Item>
+                    <Form.Item name="defineText" label="页面模板定义">
+                        <TextArea rows={10} />
+                    </Form.Item>
+
 
                     <Card type="inner">
                         <FormItem className="form-item-clear" >

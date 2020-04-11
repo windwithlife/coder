@@ -23,7 +23,7 @@ const rowSelection = {
 @inject('pagesStore')
 @observer
 export default class DetailPage extends React.Component {
-
+    formRef = React.createRef();
     state = {
         editMode: false,
     }
@@ -58,6 +58,8 @@ export default class DetailPage extends React.Component {
         console.log('click on edit model');
         let nextMode = !this.state.editMode;
         this.setState({ editMode: nextMode });
+        this.formRef.current.setFieldsValue(this.Store().dataObject.currentItem);
+        
     }
 
     componentDidMount() {
@@ -66,7 +68,12 @@ export default class DetailPage extends React.Component {
         let id = this.props.query.id;
         this.Store().queryById(id);
     }
-
+    onFinish = values => {
+        var that = this;
+        //let moduleId = this.props.query.moduleId;
+        //values.module = moduleId;
+        this.Store().update(values, () => { console.log('finished update page'); });
+    }
 
     handleLineDetail(type, record) {
         let path = '/' + type + '/detail';
@@ -102,7 +109,6 @@ export default class DetailPage extends React.Component {
             });
         }
 
-        //this.props.tablesStore.removeById(index, record.id);
     }
     
 
@@ -112,21 +118,25 @@ export default class DetailPage extends React.Component {
         let itemData = this.Store().dataObject.currentItem;
         return (
             <div>
-                <Card size="small" title="基本信息" style={{ width: 500 }}  >
-                    <Form  >
+                <Card size="small" title="基本信息" style={{ width: 900 }}  extra={<SettingOutlined onClick={that.changeEditMode}></SettingOutlined>} >
+                    <Form ref={this.formRef} name="control-ref" onFinish={that.onFinish.bind(that)}>
+                       <Form.Item
+                            name="id"
+                            noStyle='true'
+                        ></Form.Item>
                         < Form.Item name="name" label="名称：">
-                            {itemData.name}
+                        {this.state.editMode==true? <Input  /> :itemData.name}
                         </Form.Item>
 
                         < Form.Item name="description" label="描述信息：">
-                            {itemData.description}
+                        {this.state.editMode==true? <Input  /> :itemData.description}
+                          
                         </Form.Item>
                         < Form.Item name="defineText" label='页面布局定义'>
-                            {itemData.inputParams}
+                            {this.state.editMode==true? <Input.TextArea rows={10} /> :itemData.defineText}
                         </Form.Item>
-
-                        < Form.Item name="moduleName" label="所属模块：">
-                            {itemData.moduleId}
+                        <Form.Item hidden={!that.state.editMode}>
+                            <Button type="primary" htmlType="submit" size="large">保存修改</Button>
                         </Form.Item>
                     </Form>
                 </Card>

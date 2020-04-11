@@ -57,7 +57,7 @@ export default class ListPage extends React.Component {
         let itemData = this.Store().dataObject.currentItem;
         return (
             
-                <Card size="small" title="表基本信息" style={{ width: 500 }}  >
+                <Card size="small" title="表基本信息" style={{ width: 500 }} >
                     <Form ref={this.formRef} onFinish={that.onFinish.bind(that)}>
                         <Form.Item
                             name="id"
@@ -78,8 +78,8 @@ export default class ListPage extends React.Component {
                             <TextArea rows={5} />
                         </Form.Item>
                         <Form.Item >
-                                <Button type="primary" htmlType="submit" size="large">保存修改基本信息</Button>
-                            </Form.Item>
+                            <Button type="primary" htmlType="submit" size="large">保存修改基本信息</Button>
+                        </Form.Item>
                     </Form>
                     </Card>
               

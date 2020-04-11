@@ -99,7 +99,7 @@ export default class ListPage extends React.Component {
     componentDidMount() {
         //this.props.tablesStore.fetchAll();
         console.log('DidMount');
-        let tableId = this.props.query.tableId;
+        let tableId = this.props.query.id;
         console.log("edit id:=" + tableId);
         this.props.columnsStore.initializeByTableId(tableId);
         //this.props.columnsStore.initializeByTableId(9999);
@@ -123,7 +123,7 @@ export default class ListPage extends React.Component {
     handleLineAdd() {
         //this.setState({ visible: true });
         console.log('ddd column');
-        let tableId = this.props.query.tableId;
+        let tableId = this.props.query.id;
         router.push({ pathname:'/xtable/add_column', query:{tableId:tableId}});
     }
    

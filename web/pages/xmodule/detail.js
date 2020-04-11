@@ -26,7 +26,7 @@ const rowSelection = {
 
 
 
-@inject('modulesStore') @inject('tablesStore')
+@inject('modulesStore') @inject('tablesStore') @inject('pagesStore') @inject('interfacesStore')
 @observer
 export default class EditPage extends React.Component {
     formRef = React.createRef();
@@ -120,11 +120,25 @@ export default class EditPage extends React.Component {
 
     handleLineDelete(type,index, record) {
         console.log(record.id);
+        let that = this;
         let moduleId = this.props.query.moduleId;
         if('xtable'==type){
             //console.log('inde')
             this.props.tablesStore.removeById(index, record.id,function(value){
-                this.props.modulesStore.queryById(moduleId);
+                that.props.modulesStore.queryById(moduleId);
+            });
+        }
+
+        if('xinterface'==type){
+            //console.log('inde')
+            this.props.interfacesStore.removeById(index, record.id,function(value){
+                that.props.modulesStore.queryById(moduleId);
+            });
+        }
+        if('xpage'==type){
+            //console.log('inde')
+            this.props.pagesStore.removeById(index, record.id,function(value){
+                that.props.modulesStore.queryById(moduleId);
             });
         }
         

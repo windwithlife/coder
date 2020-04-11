@@ -8,10 +8,36 @@ var fs       = require('fs');
 
 
 
-function generateCode(templateFile, params, outFile){
-    console.log("Generate source *template file*:[[" + templateFile + "]]")
-    console.log("Generate source *Output   file*:[["+outFile +"]]");
-    console.log("The PARAMS transfered to template:***");
+function generateCodeFileByTemplateText(templateText, params, outFile){
+    //console.log("Generate source template file*:[[" + templateFile + "]]")
+    console.log("***********Begin to Generate source file************[[" + outFile + "]]" );
+    //console.log("The Template file---------:[[" + templateFile + "]]")
+    console.log("The PARAMS transfered to template:");
+    //console.log(params);
+    console.log(JSON.stringify(params));
+
+    var strResult = ejsTool.render(templateText, {data: params});
+    fs.writeFileSync(outFile,strResult,'utf-8');
+
+    console.log("***********Finished to Generate source file************[[" + outFile + "]]" );
+}
+
+function generateCodeTextByTemplateText(templateText, params){
+    //console.log("Generate source template file*:[[" + templateFile + "]]")
+    console.log("***********Begin to create code Text************");
+    console.log("The PARAMS transfered to template:");
+    console.log(JSON.stringify(params));
+
+    var strResult = ejsTool.render(templateText, {data: params});
+    fs.writeFileSync(outFile,strResult,'utf-8');
+
+    console.log("***********Finished to create code Text************");
+}
+
+function generateCodeFileByTemplateFile(templateFile, params, outFile){
+    console.log("***********Begin to Generate source file************[[" + outFile + "]]" );
+    console.log("The Template file---------:[[" + templateFile + "]]")
+    console.log("The PARAMS transfered to template:");
     //console.log(params);
     console.log(JSON.stringify(params));
 
@@ -19,7 +45,7 @@ function generateCode(templateFile, params, outFile){
     var strResult = ejsTool.render(temple, {data: params});
     fs.writeFileSync(outFile,strResult,'utf-8');
 
-    console.log("***********Finished to create source file************");
+    console.log("***********Finished to Generate source file************[[" + outFile + "]]" );
 }
 function generateH5Code(templateFile, params, outFile){
     var temple = fs.readFileSync(templateFile, 'utf-8');
@@ -58,7 +84,9 @@ function firstUpper(input){
     return strTemp;
 }
 
-exports.generateCode = generateCode;
+exports.generateCode = generateCodeFileByTemplateFile;
+exports.generateCodeFileByText = generateCodeFileByTemplateText;
+exports.generateCodeTextByText = generateCodeTextByTemplateText;
 exports.generateH5Code = generateH5Code;
 exports.createDirectory = createDirectory;
 exports.firstUpper = firstUpper;

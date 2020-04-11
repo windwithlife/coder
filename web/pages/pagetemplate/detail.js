@@ -21,10 +21,10 @@ import { inject, observer } from 'mobx-react';
 
 const rowSelection = {
 };
-@inject('widgetsStore') 
+@inject('templatesStore')
 @observer
 export default class DetailPage extends React.Component {
-    
+
     state = {
         editMode: false,
     }
@@ -32,8 +32,8 @@ export default class DetailPage extends React.Component {
         super();
 
     }
-    Store=()=>{
-        return this.props.widgetsStore;
+    Store = () => {
+        return this.props.templatesStore;
     }
     changeEditMode = (event) => {
         event.stopPropagation();
@@ -41,9 +41,9 @@ export default class DetailPage extends React.Component {
         let nextMode = !this.state.editMode;
         this.setState({ editMode: nextMode });
     }
-   
+
     componentDidMount() {
-       
+
         console.log('DidMount');
         let id = this.props.query.id;
         this.Store().queryById(id);
@@ -55,7 +55,7 @@ export default class DetailPage extends React.Component {
         this.Store().removeById(index, record.id);
     }
 
-   
+
     render() {
         let that = this;
         let itemData = this.Store().dataObject.currentItem;
@@ -66,17 +66,24 @@ export default class DetailPage extends React.Component {
                     < Form.Item name="name" label="名称：">
                         {itemData.name}
                     </Form.Item>
-                    
                     < Form.Item name="description" label="描述信息：">
                         {itemData.description}
                     </Form.Item>
-                    < Form.Item name="fieldMap" label='数据结构定义'>
-                        {itemData.fieldMap}
+                    <Form.Item name="sideType" label="其适用的端" >
+                        {itemData.sideType}
                     </Form.Item>
-                    < Form.Item name="defineText" label='组件定义'>
+                    < Form.Item name="language" label="编程语言选择：">
+                        {itemData.language}
+                    </Form.Item>
+                    < Form.Item name="framework" label="技术框架：">
+                        {itemData.framework}
+                    </Form.Item>
+                    < Form.Item name="tag" label="页面标签：">
+                    {itemData.tag}
+                    < Form.Item name="defineText" label='页面定义'>
                         {itemData.defineText}
                     </Form.Item>
-                    
+
                 </Form>
             </Card>
 

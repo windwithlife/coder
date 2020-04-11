@@ -130,7 +130,7 @@ function generateCode(options) {
     // moduleDefines.getProjectSetting().enables.forEach(function (moduleName) {
     //     generator.generateModuleByName(moduleName, moduleDefines.getModuleDefineByName(moduleName),platformName);
     // });
-    console.log(moduleDefines.defines);
+    //console.log(moduleDefines.defines);
   
     moduleDefines.defines.forEach(function (module) {
         generator.generateModuleByName(module);

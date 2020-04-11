@@ -103,14 +103,14 @@ export default class EditableTable extends React.Component {
                     <Panel header={headerTitle} key="4" extra={<SettingOutlined onClick={that.changeEditMode}></SettingOutlined>}>
 
                         <Form layout="inline" onSubmit={this.handleSearch.bind(this)} >
-                            <Form.Item  >
+                            {/* <Form.Item  >
                                 <Input type="text" onChange={this.handleSearchChange.bind(this)} />
                             </Form.Item>
                             < Form.Item  >
                                 < Button style={{ marginRight: '10px' }} type="primary" htmlType="submit" > 搜索 </Button>
-                            </Form.Item>
+                            </Form.Item> */}
                             < Form.Item  >
-                                <Button onClick={this.handleLineAdd.bind(this)} hidden={!that.state.editMode}> 添加 </Button>
+                                <Button type="primary" onClick={this.handleLineAdd.bind(this)} hidden={!that.state.editMode}> 添加 </Button>
                             </Form.Item>
                         </Form>
                         < Table

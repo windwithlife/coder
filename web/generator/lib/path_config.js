@@ -22,7 +22,9 @@ let TargetRoot = '../files/';
  class PathConfig{
 
    
-    PathConfig(){
+    constructor(){
+        
+        this.basePackage="com.simple.server.auto";
         this.languageExt = 'js';
         this.srcRoot = '/pages/';
         console.log('init papth config');
@@ -33,6 +35,23 @@ let TargetRoot = '../files/';
         this.currentRootPath = process.cwd();
         this.projectConfig = projectConfig;
         console.log(this.projectConfig);
+    }
+    javaPackageToPath(packageName){
+        if (packageName) {
+            var pathtmp;
+            packageName.split('.').forEach(function(item) {
+                if (pathtmp) {
+                    pathtmp += item +"/" ;
+                }
+                else {
+    
+                    pathtmp = '/' + item + '/';
+                }
+    
+            });
+            return pathtmp;
+        }
+        return "/";
     }
     getPrjectPath(){
         let projectConfig = this.projectConfig;
@@ -76,6 +95,11 @@ let TargetRoot = '../files/';
         //checkPath(pathName);
         return pathName;
     }
+    templateServer(moduleName){
+        let pathName  = path.join(this.templateRoot(),"/server/");
+        //checkPath(pathName);
+        return pathName;
+    }
     templateCopyFiles(){
         let pathName  = path.join(this.templateRoot(),"/copyfiles");
         //checkPath(pathName);
@@ -98,6 +122,15 @@ let TargetRoot = '../files/';
     }
     targetModel(moduleName){
         let pathName  = path.join(this.targetSrcRoot(),moduleName,'/models/');
+        checkPath(pathName);
+        return pathName;
+    }
+    targetServer(moduleName){
+       
+        let pathName  = path.join(this.targetSrcRoot(),this.javaPackageToPath(this.basePackage) + '/');
+        //console.log(this.basePackage);
+        //console.log(this.javaPackageToPath(this.basePackage));
+        //console.log(pathName);
         checkPath(pathName);
         return pathName;
     }

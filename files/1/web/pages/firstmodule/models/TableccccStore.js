@@ -28,12 +28,34 @@ export default class ProjectStore extends BaseStore {
     @action.bound
     firstinterface(inputParams){
         let that = this;
-        //console.log('moduleid is :' + id);
         this.model.post("/firstinterface",inputParams,function (response) {
             if (response && response.data) {
-                //console.log(JSON.stringify(response.data));
                 console.log(response.data);
                 that.dataObject.firstinterfaceResponse= response.data;
+            }
+        });
+
+    }
+  
+    @action.bound
+    testmyinterface(inputParams){
+        let that = this;
+        this.model.query("/testmyinterface",inputParams,function (response) {
+            if (response && response.data) {
+                console.log(response.data);
+                that.dataObject.testmyinterfaceResponse= response.data;
+            }
+        });
+
+    }
+  
+    @action.bound
+    test(inputParams){
+        let that = this;
+        this.model.query("/test",inputParams,function (response) {
+            if (response && response.data) {
+                console.log(response.data);
+                that.dataObject.testResponse= response.data;
             }
         });
 

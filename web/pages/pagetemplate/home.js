@@ -50,6 +50,16 @@ export default class DetailPage extends React.Component {
             dataIndex: 'description',
             key: 'description'
         });
+        fieldColumns.push({
+            title: "所适用开发语言",
+            dataIndex: 'language',
+            key: 'language'
+        });
+        fieldColumns.push({
+            title: "所适用端",
+            dataIndex: 'sideType',
+            key: 'sideType'
+        });
 
         return fieldColumns;
     }
@@ -69,14 +79,14 @@ export default class DetailPage extends React.Component {
 
 
     handleLineDetail(record) {
-        router.push({ pathname: '/xwidget/detail', query: { id: record.id } });
+        router.push({ pathname: '/pagetemplate/detail', query: { id: record.id } });
     }
 
     handleLineUpdate(record) {
-        router.push({ pathname: '/xwidget/edit', query: { id: record.id } });
+        router.push({ pathname: '/pagetemplate/edit', query: { id: record.id } });
     }
     handleLineAdd() {
-        router.push({ pathname: '/xwidget/add' });
+        router.push({ pathname: '/pagetemplate/add' });
     }
 
 
@@ -99,7 +109,7 @@ export default class DetailPage extends React.Component {
                 <Card size="small" title="基本信息" style={{ width: 500 }}  >
 
                 </Card>
-                <EditTable title="组件列表" columns={that.tableHeader()} data={that.props.widgetsStore.dataObject.list}
+                <EditTable title="模板列表" columns={that.tableHeader()} data={that.Store().dataObject.list}
                     onAdd={that.handleLineAdd.bind(that)}
                     onDelete={that.handleDelete.bind(that)}
                     onDetail={that.handleLineDetail.bind(that)}

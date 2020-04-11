@@ -97,7 +97,7 @@ export default class AddPage extends React.Component {
          < XSelect  category="mapType" />
         </Form.Item>
        <Form.Item
-          name="referModuleSelect"
+         
           label="外关联表"
         >
          <Select  onChange={this.onChangeTable}>

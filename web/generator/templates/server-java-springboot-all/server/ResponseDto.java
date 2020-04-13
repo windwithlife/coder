@@ -13,103 +13,58 @@ import java.util.List;
 
 @Entity
 public class <%=data.moduleNameCLS%>Response implements Serializable {
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    
 
     <%
+    data.fields.forEach(function(field){
+        if((field.mapType=='ManyToMany')||(field.mapType=='OneToMany')){%>
+    private List<<%=field.referModuleClass%>> <%=field.referModule%>s;
+    <%}else if(field.mapType=='ManyToOne')){%>
+    private Long <%=field.referModule%>Id; 
+    private String <%=field.referModule%>Name;
+    <%}else {%> 
+        private <%=field.columnType%> <%=field.name%>;            
+    <%}})%>
 
+    public <%=data.className%>ResposeDTO() {
+    } 
+   
 
-    for (var field in data.moduleDefine){
-           var fieldDef = data.moduleDefine[field];
-           var keyName     = field;
-           var fieldNameUpper = fieldDef.nameCLS;
-           var displayName = fieldDef.dName;
-
-           var type        = fieldDef.type;
-           var refer       = fieldDef.refer;
-           if (refer){
-                var referModule = refer.moduleCLS;
-                var relation = refer.map;
-                if ((relation=='ManyToOne')||(relation=='ManyToMany)){%>
-
-    private String <%=field%>;
-                <%}else if(relation=='OneToMany'){%>
-    //<%-displayName%>
-    private List<<%=refer.moduleCLS%>> <%=keyName%>;
-                              <%}
-                 }
-            }else{
-                if ((type =='Text')||(type=='String')){%>
-
-
-    private String <%=field%>;
-                <%} else {
-    private <%=type%> <%=field%>;
-            }
-    }%>
-    public <%=data.moduleNameCLS%>ResponseDto() {
-	}
     <%
-    for (var field in data.moduleDefine){
-           var fieldDef = data.moduleDefine[field];
-           var keyName     = fieldDef.nameCLS;
-           var displayName = fieldDef.dName;
-           var type        = fieldDef.type;
-           var refer       = fieldDef.refer;
-           if (refer){
-                var referModule = refer.moduleCLS;
-                var relation = refer.map;
-                if ((relation=='ManyToOne')||(relation=='ManyToMany)){%>
-
-
-    public String get<%=keyName%>(){
-         return this.<%=field%>;
-    };
-    public void set<%=keyName%>(String <%=field%>){
-         this.<%=field%> = <%=field%>;
+    data.fields.forEach(function(field){
+        if((field.mapType=='ManyToMany')||(field.mapType=='OneToMany')){%>
+    private List<<%=field.referModuleClass%>> get<%%>(){return this.<%=field.referModule%>s;}
+    private List<<%=field.referModuleClass%>> get<%%>(List<<%=field.referModuleClass%>> <%=field.referModule%>s){
+        this.<%=field.referModule%>s = <%=field.referModule%>;
     }
 
+    <%}else if(field.mapType=='ManyToOne')){%>
+    private Long get<%=field.referModuleClass%>Id(){
+        return  <%=field.referModule%>Id; 
+    }; 
+    private void set<%=field.referModuleClass%>Id(Long <%=field.referModule%>Id){
+        this.<%=field.referModule%>Id = <%=field.referModule%>Id;
+    }; 
 
-                 <%}else if(relation=='OneToMany'){%>
-     //<%-displayName%>
-     public List<<%=refer.moduleCLS%>> get<%=keyName%>(){
-         return this.<%=field%>;
-     };
-     public void set<%=keyName%>(List<<%=refer.moduleCLS%>> <%=field%>){
-         this.<%=field%> = <%=field%>;
-     }
-               <%}
-          }else{
-
-                if (type =='Text'){type ='String'}%>
-     public void set<%=keyName%>(<%=type%> <%=field%>){
-         this.<%=field%> = <%=field%>;
-     }
-
-     public <%=type%> get<%=keyName%>(){
-        return this.<%=field%>;
-     }
-
-          <%}
-     }%>
-
-    public static <%=data.moduleNameCLS%>Response createByEntity (<%=data.moduleNameCLS%> entity){
-            <%=data.moduleNameCLS%>Response response = new <%=data.moduleNameCLS%>Response();
-            <%
-            for (var field in data.moduleDefine){
-                       var fieldDef = data.moduleDefine[field];
-                       var keyName     = fieldDef.nameCLS;
-                       var displayName = fieldDef.dName;
-                       var type        = fieldDef.type;
-                       var refer       = fieldDef.refer;
-                       if (refer)&&(refer.map =='OneToMany'){ continue;}%>
-        response.set<%=keyName%>(entity.get<%=keyName%>())
-            <%}%>
-        return response;
+    private String get<%=field.referModuleClass%>Name(){
+        return this.<%=field.referModule%>Name;
     }
+    private void set<%=field.referModuleClass%>Name(String <%=field.referModule%>Name){
+        this.<%=field.referModule%>Name = <%=field.referModule%>Name;
+    }
+    //private <%=field.referModuleClass%> <%=field.referModule%>Name;
+    <%}else {%> 
+    public <%=field.columnType%> get<%=field.className%>(){
+        return this.<%=field.name%>;
+    }   
+    public void set<%=field.className%>(<%=field.columnType%> <%=field.name%>){
+        this.<%=field.name%> = <%=field.name%>;
+    }               
+    <%}})%>
 
-
-	@Override
+    
+    @Override
 	public String toString() {
-		return "CLASS DATA: [id=" + id +"]";
-	}
+		return "CLASS DATA: [" +"id=" + this.id +'name='+ this.name +"]";
 }

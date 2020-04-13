@@ -14,26 +14,25 @@ public class <%=data.className%> implements Serializable {
 	private static final long serialVersionUID = 1L;
 
     <%
-    data.fields.forEach(function(field){
-        if(field.mapType=='NULL'){%>
-    private <%=field.columnType%> <%=field.name%>;         
-    <%}})%>
+    data.fields.forEach(function(field){%>
+    private <%=field.type%> <%=field.name%>;         
+    <%})%>
 
-    public <%=data.className%>RequestDTO() {
+    public <%=data.className%>() {
     } 
    
 
 
     <%
-    data.fields.forEach(function(field){
-        if(field.mapType=='NULL'){%>
-    public <%=field.columnType%> get<%=field.className%>(){
+    data.fields.forEach(function(field){%>
+       
+    public <%=field.type%> get<%=field.className%>(){
         return this.<%=field.name%>;
     }   
-    public void set<%=field.className%>(<%=field.columnType%> <%=field.name%>){
+    public void set<%=field.className%>(<%=field.type%> <%=field.name%>){
         this.<%=field.name%> = <%=field.name%>;
     }        
-    <%}})%>
+    <%})%>
 
     @Override
 	public String toString() {

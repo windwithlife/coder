@@ -4,7 +4,7 @@
 
 var path = require('path');
 var fs = require('fs');
-
+var codeTools = require('./code_tools');
 
 function firstUpperCase(str) {
     if (!str) {
@@ -48,38 +48,107 @@ class ModuleDefines {
 
         let that = this;
         this.defines = modules;
-        this.defines.forEach(function(module){
+        this.defines.forEach(function (module) {
             that.adjustModulesData(module);
         })
-        
+
 
     }
-    adjustModulesData(module){
+
+    adjustModulesData(module) {
 
         module.domains = [];
-        module.tables.forEach(function(table){
+        module.dtos = [];
+        module.tables.forEach(function (table) {
+            table.refers =[];
             console.log('table info ************################');
             console.log(table);
-            let domainItem = {name:table.name,tableFields:table.columns};
+            let requestDtoDefines = [];
+            let responseDtoDefines = [];
+            table.columns.forEach(function (col) {
+                let clsName = codeTools.firstUpper(col.name);
+                let fieldType = col.fieldType;
+                let fieldName = col.name;
+                requestDtoDefines.push({ name: fieldName, className: clsName, type: fieldType });
+                if (col.referModule) {
+                    let referModuleClass = codeTools.firstUpper(col.referModule);
+                    
+                    let mapType = "OneToOne";
+                    if (col.map == 1) { mapType = "OneToMany"; }
+                    if (col.map == 2) { mapType = "ManyToOne"; }
+                    if (col.map == 3) { mapType = "ManyToMany"; }
+                    if (col.map < 0) { mapType = "NULL"; }
+                    table.refers.push({ name: col.referModule, className: referModuleClass, mapType: mapType });
+
+                    if ((col.map == 1) || (col.map == 3)) {
+                        fieldType = "List<" + referModuleClass + ">";
+                        fieldName = col.referModule + 's';
+                    } else if (col.map == 2){
+                        fieldName = col.referModule + "Id";
+                        fieldType = 'Long';
+                    }
+
+                }
+                clsName = codeTools.firstUpper(fieldName);
+                responseDtoDefines.push({ name: fieldName, className: clsName, type: fieldType });
+
+            });
+            let requestDtoName = table.name + "RequestDTO";
+            let requestDtoClass = codeTools.firstUpper(requestDtoName);
+            let requestDto = { name: requestDtoName, className: requestDtoClass, defines: requestDtoDefines };
+            let responseDtoName = table.name + "ResponseDTO";
+            let responseDtoClass = codeTools.firstUpper(responseDtoName);
+            let responseDto = { name: responseDtoName, className: responseDtoClass, defines: responseDtoDefines };
+
+            module.dtos.push(requestDto);
+            module.dtos.push(responseDto);
+
+            let domainItem = { name: table.name, tableFields: table.columns,refers:table.refers};
             module.domains.push(domainItem);
         });
 
-        
-        module.domains.forEach(function(domainItem){
-            domainItem.interfaces =[];
-            module.interfaces.forEach(function(interfaceItem){
-                if(interfaceItem.domain==domainItem.name){
+
+        module.domains.forEach(function (domainItem) {
+            domainItem.interfaces = [];
+            module.interfaces.forEach(function (interfaceItem) {
+                if (interfaceItem) {
+
+                    interfaceItem.inputType = '';
+                    if((interfaceItem.inputParams)&&(interfaceItem.inputParams.length == 1)) {
+                        interfaceItem.inputType = interfaceItem.inputParams[0].type;
+                        interfaceItem.inputName = interfaceItem.inputParams[0].name;
+                    } else if ((interfaceItem.inputParams)&&(interfaceItem.inputParams.length > 1)) {
+                        let requestName = interfaceItem.name + 'Request';
+                        let requestNameClass = firstUpperCase(requestName);
+                        let inputDTO = { name: requestName, className: requestNameClass, defines: interfaceItem.inputParams };
+                        module.dtos.push(inputDTO);
+                        interfaceItem.inputType = requestNameClass;
+                    }
+                    interfaceItem.outputType = '';
+                    if ((interfaceItem.outputParams)&&(interfaceItem.inputParams.length == 1)) {
+                        interfaceItem.outputType = interfaceItem.outputParams[0].type;
+                        interfaceItem.outputName = interfaceItem.outputParams[0].name;
+                    } else if ((interfaceItem.outputParams)&&(interfaceItem.outputParams.length > 1)) {
+                        let responseName = interfaceItem.name + 'Response';
+                        let responseNameClass = firstUpperCase(responseName);
+                        let outputDTO = { name: responseName, className: responseNameClass, defines: interfaceItem.outputParams };
+                        module.dtos.push(outputDTO);
+                        interfaceItem.outputType = responseNameClass;
+                    }
+
+                }
+                if (interfaceItem.domain == domainItem.name) {
                     domainItem.interfaces.push(interfaceItem);
                 }
             });
 
         })
-        module.stores = module.domains;
-        module.serverDomains = module.domains;
+        module.storeDomains = module.domains;
+        module.serviceDomains = module.domains;
         console.log('**************************' + module.name + '模块的所有域 Begin**********************');
         console.log(module.domains);
         console.log('**************************' + module.name + '模块的所有域 End**********************');
-        
+
     }
     loadDefinesFromFiles(moduleDefinePath) {
 

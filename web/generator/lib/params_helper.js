@@ -87,6 +87,23 @@ var codeTools = require('./code_tools');
 
     }
 
+    buildParamsByDTO(moduleName,defineData){
+        let params = {
+            projectName:this.projectName,      
+        }
+        params.define = defineData;
+        params.moduleName = moduleName;
+        params.name = defineData.name;
+        params.moduleClassName = codeTools.firstUpper(moduleName);
+        params.nameClassName = codeTools.firstUpper(defineData.name);
+        params.className = codeTools.firstUpper(defineData.name);
+        params.fields = defineData.defines;
+        //params.fields = defineData.tableFields;
+        //params.interfaces = defineData.interfaces;
+        
+        return params;
+
+    }
     buildParamsByPage(moduleName,defineData){
         let params = {
             projectName:this.projectName,      
@@ -101,11 +118,13 @@ var codeTools = require('./code_tools');
         params.interfaces = defineData.interfaces;
 
         params.interfaces.forEach(function(interfaceObj){
-            //interfaceObj.responseName = interfaceObj.name + 'Response';
+            interfaceObj.requestURL = interfaceObj.name;
             if(interfaceObj.requestMethod == 'get'){
                 interfaceObj.requestMethodName = 'query';
+                interfaceObj.requestMethodType = 'GET';
             }else{
                 interfaceObj.requestMethodName = 'post';
+                interfaceObj.requestMethodType = 'POST';
             }
             interfaceObj.responseDataName = interfaceObj.name + 'Response';
             

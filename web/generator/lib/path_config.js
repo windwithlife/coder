@@ -125,9 +125,12 @@ let TargetRoot = '../files/';
         checkPath(pathName);
         return pathName;
     }
-    targetServer(moduleName){
-       
-        let pathName  = path.join(this.targetSrcRoot(),this.javaPackageToPath(this.basePackage) + '/');
+    targetServer(moduleName,typeName){
+        let typePath ='/';
+        if (typeName){
+            typePath = typeName + '/';
+        }
+        let pathName  = path.join(this.targetSrcRoot(),this.javaPackageToPath(this.basePackage),typePath);
         //console.log(this.basePackage);
         //console.log(this.javaPackageToPath(this.basePackage));
         //console.log(pathName);

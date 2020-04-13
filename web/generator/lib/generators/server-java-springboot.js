@@ -10,14 +10,14 @@ paramsHelper = new ParamsHelper();
 
 function generateEntity(moduleName,defineData){
     let templateFilename =   pathConfig.templateServer() + "/entity.java";
-    let targetFileName = pathConfig.targetServer(moduleName) + "/entity/" + codeTools.firstUpper(defineData.name) + ".java";
+    let targetFileName = pathConfig.targetServer(moduleName,'entity') +  + codeTools.firstUpper(defineData.name) + ".java";
     var params = paramsHelper.buildParamsByTable(moduleName,defineData);
     codeTools.generateCode(templateFilename,params,targetFileName);
 
 };
 function generateDAO(moduleName,defineData){
     let templateFilename =   pathConfig.templateServer() + "/DAO.java";
-    let targetFileName = pathConfig.targetServer(moduleName) + "/dao/" + codeTools.firstUpper(defineData.name) + "DAO.java";
+    let targetFileName = pathConfig.targetServer(moduleName,"dao") + codeTools.firstUpper(defineData.name) + "DAO.java";
     var params = paramsHelper.buildParamsByTable(moduleName,defineData);
     codeTools.generateCode(templateFilename,params,targetFileName);
 
@@ -25,17 +25,31 @@ function generateDAO(moduleName,defineData){
 
 function generateService(moduleName,defineData){
     let templateFilename =   pathConfig.templateServer() + "/service.java";
-    let targetFileName = pathConfig.targetServer(moduleName) + "/service/" + codeTools.firstUpper(defineData.name) + "Service.java";
+    let targetFileName = pathConfig.targetServer(moduleName,'service') + codeTools.firstUpper(defineData.name) + "Service.java";
     var params = paramsHelper.buildParamsByTable(moduleName,defineData);
     codeTools.generateCode(templateFilename,params,targetFileName);
 
 };
 function generateController(moduleName,defineData){
     let templateFilename =   pathConfig.templateServer() + "/controller.java";
-    let targetFileName = pathConfig.targetServer(moduleName) + "/controller/" + codeTools.firstUpper(defineData.name) + "Controller.java";
+    let targetFileName = pathConfig.targetServer(moduleName,'controller') + codeTools.firstUpper(defineData.name) + "Controller.java";
     var params = paramsHelper.buildParamsByTable(moduleName,defineData);
     codeTools.generateCode(templateFilename,params,targetFileName);
 
+};
+
+function generateServiceController(moduleName,defineData){
+    let templateFilename =   pathConfig.templateServer() + "/servercontroller.java";
+    let targetFileName = pathConfig.targetServer(moduleName,'controller') + codeTools.firstUpper(defineData.name) + "ServiceController.java";
+    var params = paramsHelper.buildParamsByDomain(moduleName,defineData);
+    codeTools.generateCode(templateFilename,params,targetFileName);
+
+};
+function generateDTO(moduleName,defineData){
+    let templateFilename =   pathConfig.templateServer() + "/dto.java";
+    let targetFileName = pathConfig.targetServer(moduleName,'dto') + "/dto/" + defineData.className +".java";
+    var params = paramsHelper.buildParamsByDTO(moduleName,defineData);
+    codeTools.generateCode(templateFilename,params,targetFileName);
 };
 
 function generateStore(moduleName,defineData){
@@ -66,16 +80,17 @@ function generateModuleByName(moduleDefine){
         generateDAO(moduleDefine.name,item);
         generateService(moduleDefine.name,item);
         generateController(moduleDefine.name,item);
-        //generateStore(moduleDefine.name,domainItem);
+        
     });
-    moduleDefine.domains.forEach(function(domainItem){
-       
+    moduleDefine.dtos.forEach(function(item){
+        generateDTO(moduleDefine.name,item);
+    });
+
+    moduleDefine.serviceDomains.forEach(function(domainItem){
+        generateServiceController(moduleDefine.name,item);
         //generateStore(moduleDefine.name,domainItem);
     });
 
-    // moduleDefine.pages.forEach(function(pageItem){
-    //     //generatePage(moduleDefine.name,pageItem);
-    // });
 }
 
 

@@ -51,7 +51,7 @@ function generateModuleByName(moduleDefine){
     // moduleDefine.tables.forEach(function(table){
     //     generatePages(moduleDefine.name,table);
     // });
-    moduleDefine.domains.forEach(function(domainItem){
+    moduleDefine.storeDomains.forEach(function(domainItem){
         generateStoreByInterfaces(moduleDefine.name,domainItem);
     });
 

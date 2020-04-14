@@ -44,7 +44,7 @@ function loadGenerators() {
     var files = fs.readdirSync(mPath);
     files.forEach(function (file) {
         var filePath = path.join(mPath, file);
-        console.log("generater file:" + filePath);
+        //console.log("generater file:" + filePath);
         var stats = fs.statSync(filePath);
         if (!stats.isDirectory()) {
             var generator = require(filePath);
@@ -110,7 +110,7 @@ function generateCode(options) {
     initGenerators();
     
     var generator = findGeneratorByName(getSelectorName(targetOptions));
-    console.log(generator);
+    //console.log(generator);
     if (!generator) {
         console.log("Generator named:[" + targetOptions.language + "] not found!");
         return;

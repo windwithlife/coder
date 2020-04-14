@@ -79,7 +79,8 @@ export default class DetailPage extends React.Component {
                         {itemData.framework}
                     </Form.Item>
                     < Form.Item name="tag" label="页面标签：">
-                    {itemData.tag}
+                        {itemData.tag}
+                    </Form.Item>
                     < Form.Item name="defineText" label='页面定义'>
                         {itemData.defineText}
                     </Form.Item>

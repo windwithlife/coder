@@ -1,7 +1,7 @@
 package com.simple.server.bz.jobs;
 
-import com.simple.server.auto.entity.Indexfutures;
-import com.simple.server.auto.service.IndexfuturesService;
+import com.simple.server.bz.entity.Indexfutures;
+import com.simple.server.bz.service.IndexfuturesService;
 import com.simple.server.bz.service.CrawlerRemoteService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

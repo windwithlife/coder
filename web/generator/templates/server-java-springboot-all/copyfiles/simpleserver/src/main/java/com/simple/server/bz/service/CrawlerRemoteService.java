@@ -1,8 +1,8 @@
 package com.simple.server.bz.service;
 
 
-import com.simple.server.auto.entity.Indexfutures;
-import com.simple.server.auto.service.IndexfuturesService;
+import com.simple.server.bz.entity.Indexfutures;
+import com.simple.server.bz.service.IndexfuturesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

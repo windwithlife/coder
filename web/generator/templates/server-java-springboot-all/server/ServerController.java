@@ -127,12 +127,12 @@ public class <%=data.className%>Controller {
     operations.forEach(function(operation){
    %>
    @ResponseBody
-   @RequestMapping(value = "/<%=operation.name%>", method = RequestMethod.<%operation.requestMethodType%>)
-   public <%=operation.outputType%> <%=operation.name%>(@RequestBody <%=operation.inputType%> request) {
-
+   @RequestMapping(value = "/<%=operation.name%>", method = RequestMethod.<%-operation.requestMethodType%>)
+   public <%-operation.outputType%> <%=operation.name%>(@RequestBody <%-operation.inputType%> request) {
+        
    }
    <%
-     }
+     })
     %>
    
    

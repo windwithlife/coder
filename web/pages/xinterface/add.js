@@ -31,13 +31,15 @@ export default class TableAdd extends React.Component {
 
     onChangeTable=(value)=>{
         let that = this;
-        console.log('name' + value);
-        let domainName = value;
+        console.log('Index:'+ value);
+        let item = this.props.tablesStore.dataObject.list[value];
+        let domainName = item.name;
+        let domainId = item.id;
         //if('other'== value){
         //    domainName = this.props.modulesStore.dataObject.currentItem.name;
         //}
         
-        this.formRef.current.setFieldsValue({domain:domainName});
+        this.formRef.current.setFieldsValue({domainId:domainId,domain:domainName});
        
       }
     render() {
@@ -46,6 +48,11 @@ export default class TableAdd extends React.Component {
         return (
             <Card>
                 <Form ref={this.formRef} name="control-ref" onFinish={this.onFinish.bind(that)}>
+                    <Form.Item
+                            name="moduleId"
+                            noStyle='true'
+                        ></Form.Item>
+                    
                     <Form.Item name="name" label="名称(必须用英文）"
                         rules={[{
                             required: true,
@@ -58,12 +65,15 @@ export default class TableAdd extends React.Component {
                         <Select.Option value="get">Get</Select.Option>
                     </Select>
                     </Form.Item>
-                    
+                    <Form.Item
+                            name="domainId"
+                            noStyle='true'
+                        ></Form.Item>
                     
                     <Form.Item name="domain" label="选择接口所属的域(按数据表定义识别)" >
-                    <Select>
+                    <Select onChange={onChangeTable}>
                         {that.props.tablesStore.dataObject.list.map(function (item, i) {
-                            return (<Select.Option value={item.name}>{item.name}</Select.Option>);
+                            return (<Select.Option value={i}>{item.name}</Select.Option>);
                         })}
                     </Select>
                     </Form.Item>

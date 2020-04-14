@@ -10,7 +10,7 @@ paramsHelper = new ParamsHelper();
 
 function generateEntity(moduleName,defineData){
     let templateFilename =   pathConfig.templateServer() + "/entity.java";
-    let targetFileName = pathConfig.targetServer(moduleName,'entity') +  + codeTools.firstUpper(defineData.name) + ".java";
+    let targetFileName = pathConfig.targetServer(moduleName,'entity') + codeTools.firstUpper(defineData.name) + ".java";
     var params = paramsHelper.buildParamsByTable(moduleName,defineData);
     codeTools.generateCode(templateFilename,params,targetFileName);
 
@@ -47,7 +47,7 @@ function generateServiceController(moduleName,defineData){
 };
 function generateDTO(moduleName,defineData){
     let templateFilename =   pathConfig.templateServer() + "/dto.java";
-    let targetFileName = pathConfig.targetServer(moduleName,'dto') + "/dto/" + defineData.className +".java";
+    let targetFileName = pathConfig.targetServer(moduleName,'dto')  + defineData.className +".java";
     var params = paramsHelper.buildParamsByDTO(moduleName,defineData);
     codeTools.generateCode(templateFilename,params,targetFileName);
 };
@@ -74,7 +74,7 @@ function generatePage(moduleName,defineData){
 
 function generateModuleByName(moduleDefine){
     
-    console.log('module defines:' + JSON.stringify(moduleDefine));
+    //console.log('module defines:' + JSON.stringify(moduleDefine));
     moduleDefine.tables.forEach(function(item){
         generateEntity(moduleDefine.name,item);
         generateDAO(moduleDefine.name,item);
@@ -87,7 +87,7 @@ function generateModuleByName(moduleDefine){
     });
 
     moduleDefine.serviceDomains.forEach(function(domainItem){
-        generateServiceController(moduleDefine.name,item);
+        generateServiceController(moduleDefine.name,domainItem);
         //generateStore(moduleDefine.name,domainItem);
     });
 

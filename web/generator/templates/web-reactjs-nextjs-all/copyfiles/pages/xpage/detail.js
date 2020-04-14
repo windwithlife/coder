@@ -102,7 +102,6 @@ export default class DetailPage extends React.Component {
             });
         }
 
-        //this.props.tablesStore.removeById(index, record.id);
     }
     
 

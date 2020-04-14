@@ -91,7 +91,7 @@ public class <%=data.className%>Controller {
           <%}})%>
           <%=data.className%> result = service.save(old);
         }catch (Exception e){
-                System.out.println("***************failed to update item*****************");
+                System.out.println("***************failed to update item******  ***********");
                 e.printStackTrace();
                 return null;
         }

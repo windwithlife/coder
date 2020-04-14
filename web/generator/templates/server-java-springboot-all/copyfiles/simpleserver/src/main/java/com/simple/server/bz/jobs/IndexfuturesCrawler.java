@@ -1,8 +1,9 @@
 package com.simple.server.bz.jobs;
 
 import com.simple.core.components.crawler.SoupCrawler;
-import com.simple.server.auto.entity.Indexfutures;
-import com.simple.server.auto.service.IndexfuturesService;
+import com.simple.server.bz.entity.Indexfutures;
+import com.simple.server.bz.controller.*;
+import com.simple.server.bz.service.*;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.slf4j.Logger;

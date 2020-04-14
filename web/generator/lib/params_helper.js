@@ -73,13 +73,16 @@ var codeTools = require('./code_tools');
         params.moduleClassName = codeTools.firstUpper(moduleName);
         params.nameClassName = codeTools.firstUpper(defineData.name);
         params.fields = defineData.tableFields;
+        params.refers = defineData.refers;
         params.interfaces = defineData.interfaces;
         params.interfaces.forEach(function(interfaceObj){
             //interfaceObj.responseName = interfaceObj.name + 'Response';
             if(interfaceObj.requestMethod == 'get'){
-                interfaceObj.requestMethodName = 'query';
+                interfaceObj.requestName = 'query';
+                interfaceObj.requestMethodType = "GET";
             }else{
-                interfaceObj.requestMethodName = 'post';
+                interfaceObj.requestName = 'post';
+                interfaceObj.requestMethodType = "POST";
             }
             interfaceObj.responseDataName = interfaceObj.name + 'Response';
         })

@@ -24,6 +24,7 @@ function generateCodeFileByTemplateText(templateText, params, outFile){
 
 function generateCodeTextByTemplateText(templateText, params){
     //console.log("Generate source template file*:[[" + templateFile + "]]")
+    console.log("\r\n");
     console.log("***********Begin to create code Text************");
     console.log("The PARAMS transfered to template:");
     console.log(JSON.stringify(params));
@@ -32,9 +33,11 @@ function generateCodeTextByTemplateText(templateText, params){
     fs.writeFileSync(outFile,strResult,'utf-8');
 
     console.log("***********Finished to create code Text************");
+    console.log("\r\n");
 }
 
 function generateCodeFileByTemplateFile(templateFile, params, outFile){
+    console.log("\r\n");
     console.log("***********Begin to Generate source file************[[" + outFile + "]]" );
     console.log("The Template file---------:[[" + templateFile + "]]")
     console.log("The PARAMS transfered to template:");
@@ -46,6 +49,7 @@ function generateCodeFileByTemplateFile(templateFile, params, outFile){
     fs.writeFileSync(outFile,strResult,'utf-8');
 
     console.log("***********Finished to Generate source file************[[" + outFile + "]]" );
+    console.log("\r\n");
 }
 function generateH5Code(templateFile, params, outFile){
     var temple = fs.readFileSync(templateFile, 'utf-8');

@@ -15,7 +15,7 @@ function firstUpperCase(str) {
 }
 
 class ModuleDefines {
-    ModuleDefines() {
+    constructor() {
         this.pSetting = {};
         this.pSetting.basePackage = "com.simple.bz.auto";
         this.pSetting.apiServer = "127.0.0.1:8080";
@@ -54,15 +54,22 @@ class ModuleDefines {
 
 
     }
-
+    parseInterfaceParams(params){
+        let fields = [];
+        for (let param in params){
+            let className = codeTools.firstUpper(param);
+            fields.push({name:param,className:className, type:params[param]});
+        }
+        return fields;
+    }
     adjustModulesData(module) {
-
+        let that = this;
         module.domains = [];
         module.dtos = [];
         module.tables.forEach(function (table) {
-            table.refers =[];
+            table.refers = [];
             console.log('table info ************################');
-            console.log(table);
+            //console.log(table);
             let requestDtoDefines = [];
             let responseDtoDefines = [];
             table.columns.forEach(function (col) {
@@ -72,7 +79,7 @@ class ModuleDefines {
                 requestDtoDefines.push({ name: fieldName, className: clsName, type: fieldType });
                 if (col.referModule) {
                     let referModuleClass = codeTools.firstUpper(col.referModule);
-                    
+
                     let mapType = "OneToOne";
                     if (col.map == 1) { mapType = "OneToMany"; }
                     if (col.map == 2) { mapType = "ManyToOne"; }
@@ -83,7 +90,7 @@ class ModuleDefines {
                     if ((col.map == 1) || (col.map == 3)) {
                         fieldType = "List<" + referModuleClass + ">";
                         fieldName = col.referModule + 's';
-                    } else if (col.map == 2){
+                    } else if (col.map == 2) {
                         fieldName = col.referModule + "Id";
                         fieldType = 'Long';
                     }
@@ -102,8 +109,8 @@ class ModuleDefines {
 
             module.dtos.push(requestDto);
             module.dtos.push(responseDto);
-
-            let domainItem = { name: table.name, tableFields: table.columns,refers:table.refers};
+            let domainClassName =  codeTools.firstUpper(table.name);
+            let domainItem = { name: table.name, className:domainClassName, domainId:table.id,tableFields: table.columns, refers: table.refers };
             module.domains.push(domainItem);
         });
 
@@ -111,38 +118,51 @@ class ModuleDefines {
         module.domains.forEach(function (domainItem) {
             domainItem.interfaces = [];
             module.interfaces.forEach(function (interfaceItem) {
-                if (interfaceItem) {
-
                     interfaceItem.inputType = '';
-                    if((interfaceItem.inputParams)&&(interfaceItem.inputParams.length == 1)) {
-                        interfaceItem.inputType = interfaceItem.inputParams[0].type;
-                        interfaceItem.inputName = interfaceItem.inputParams[0].name;
-                    } else if ((interfaceItem.inputParams)&&(interfaceItem.inputParams.length > 1)) {
-                        let requestName = interfaceItem.name + 'Request';
-                        let requestNameClass = firstUpperCase(requestName);
-                        let inputDTO = { name: requestName, className: requestNameClass, defines: interfaceItem.inputParams };
-                        module.dtos.push(inputDTO);
-                        interfaceItem.inputType = requestNameClass;
-                    }
-                    interfaceItem.outputType = '';
-                    if ((interfaceItem.outputParams)&&(interfaceItem.inputParams.length == 1)) {
-                        interfaceItem.outputType = interfaceItem.outputParams[0].type;
-                        interfaceItem.outputName = interfaceItem.outputParams[0].name;
-                    } else if ((interfaceItem.outputParams)&&(interfaceItem.outputParams.length > 1)) {
-                        let responseName = interfaceItem.name + 'Response';
-                        let responseNameClass = firstUpperCase(responseName);
-                        let outputDTO = { name: responseName, className: responseNameClass, defines: interfaceItem.outputParams };
-                        module.dtos.push(outputDTO);
-                        interfaceItem.outputType = responseNameClass;
-                    }
+                    if (interfaceItem.inputParams) {
+                        console.log(interfaceItem.inputParams);
+                        let params = that.parseInterfaceParams(JSON.parse(interfaceItem.inputParams));
+                        console.log(params);
+                        if (params.length == 1) {
+                            interfaceItem.inputType = params[0].type;
+                            interfaceItem.inputName = params[0].name;
+                        } else if (params.length > 1) {
+                            let requestName = interfaceItem.name + 'Request';
+                            let requestNameClass = firstUpperCase(requestName);
+                            let inputDTO = { name: requestName, className: requestNameClass, defines: params };
+                            module.dtos.push(inputDTO);
+                            interfaceItem.inputType = requestNameClass;
 
-                }
-                if (interfaceItem.domain == domainItem.name) {
-                    domainItem.interfaces.push(interfaceItem);
-                }
-            });
+                        }
 
-        })
+                    }
+                        interfaceItem.outputType = '';
+                        if (interfaceItem.outputParams) {
+                            console.log(interfaceItem.outputParams);
+                            let params = that.parseInterfaceParams(JSON.parse(interfaceItem.outputParams));
+                            console.log(params);
+                            if (params.length == 1) {
+                                interfaceItem.outputType = params[0].type;
+                                interfaceItem.outputName = params[0].name;
+                            } else if (params.length > 1) {
+                                let responseName = interfaceItem.name + 'Response';
+                                let responseNameClass = firstUpperCase(responseName);
+                                let outputDTO = { name: responseName, className: responseNameClass, defines: params };
+                                module.dtos.push(outputDTO);
+                                interfaceItem.outputType = responseNameClass;
+                            }
+
+
+
+                        }
+                        if (interfaceItem.domainId == domainItem.domainId) {
+                            //以保证表名修改Domain名称一致
+                            interfaceItem.domain = domainItem.name;
+                            domainItem.interfaces.push(interfaceItem);
+                        }
+                    });
+
+        });
         module.storeDomains = module.domains;
         module.serviceDomains = module.domains;
         console.log('**************************' + module.name + '模块的所有域 Begin**********************');

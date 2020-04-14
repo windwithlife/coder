@@ -110,16 +110,12 @@ export default class DetailPage extends React.Component {
         router.push({ pathname: '/xmodule/add' ,query: {projectId: id }});
     }
     handleLineUpdate(index, record) {
-
-        router.push({ pathname: '/xmodule/edit', query: {moduleId: record.id } });
-       
+        router.push({ pathname: '/xmodule/edit', query: {moduleId: record.id } });  
     }
-   
     handleLineDelete(index, record) {
         console.log(record.id);
         this.props.modulesStore.removeById(index,record.id);
     }
-
     render() {
         let that = this;
         let itemData = this.Store().dataObject.currentItem;

@@ -104,7 +104,7 @@ export default class EditPage extends React.Component {
     handleLineUpdate(type,index, record) {
         let that = this;
         let path= '/'+ type+'/edit';
-        router.push({ pathname: path, query: { id: record.id } });
+        router.push({ pathname: path, query: { id: record.id ,moduleId:this.props.query.moduleId} });
 
     }
     handleLineDetail(type,record) {

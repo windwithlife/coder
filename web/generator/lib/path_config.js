@@ -71,7 +71,7 @@ let TargetRoot = '../files/';
         }
        
         //generatorSelector = targetConfig.sideType + '-' + targetConfig.language + '-' + targetConfig.framework + targetConfig.platform;
-        console.log('Project Path is :' + projctPath);
+        //console.log('Project Path is :' + projctPath);
         return projctPath;
     }
     rootPath(){

@@ -15,7 +15,8 @@ import {
 const { Panel } = Collapse;
 import { SettingOutlined } from '@ant-design/icons';
 import EditTable from '../common/components/EditableTable';
-import SelectTransfer from './add_test';
+//import SelectTransfer from './add_test';
+import SelectTransfer from '../common/components/TransferSelect';
 import router from 'next/router';
 import { inject, observer } from 'mobx-react';
 
@@ -94,7 +95,7 @@ export default class DetailPage extends React.Component {
 
     handleLineDelete(index, record) {
         console.log(record.id);
-        //this.props.tablesStore.removeById(index, record.id);
+       
     }
     
     render() {

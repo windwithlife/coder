@@ -17,10 +17,7 @@ const { Panel } = Collapse;
 import { SettingOutlined } from '@ant-design/icons';
 import router from 'next/router';
 import { inject, observer } from 'mobx-react';
-//import AddorEditPage from './AddColumnDialog';
 
-const rowSelection = {
-};
 @inject('columnsStore') @inject('tablesStore')
 @observer
 export default class ListPage extends React.Component {
@@ -94,15 +91,18 @@ export default class ListPage extends React.Component {
         var that = this;
         let moduleId = this.props.query.moduleId;
         values.module = moduleId;
-        this.props.tablesStore.add(values, () => { console.log('finished add row'); router.back(); });
+        this.props.tablesStore.update(values, () => { console.log('finished update table'); router.back(); });
     }
-    componentDidMount() {
+    componentDidMount=()=>{
         //this.props.tablesStore.fetchAll();
+        let that = this;
         console.log('DidMount');
-        let tableId = this.props.query.tableId;
+        let tableId = this.props.query.id;
         console.log("edit id:=" + tableId);
         this.props.columnsStore.initializeByTableId(tableId);
-        this.props.tablesStore.queryById(tableId);
+        this.props.tablesStore.queryById(tableId,function(values){
+            that.formRef.current.setFieldsValue(values);
+        });
     }
 
     pagination() {
@@ -155,9 +155,11 @@ export default class ListPage extends React.Component {
                             name="id"
                             noStyle='true'
                         ></Form.Item>
-                        < Form.Item name="moduleName" label="所属模块：">
-                            {itemData.module}
-                        </Form.Item>
+                         <Form.Item
+                            name="moduleId"
+                            noStyle='true'
+                        ></Form.Item>
+                       
                         < Form.Item name="name" label="表名：">
                             <Input />
                         </Form.Item>
@@ -176,9 +178,7 @@ export default class ListPage extends React.Component {
                 <Collapse >
                     <Panel header="此表所有列" key="1" extra={<SettingOutlined ></SettingOutlined>}>
                       
-                < Table rowSelection={
-                    rowSelection
-                }
+                < Table 
                     columns={
                         this.columns
                     }

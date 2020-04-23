@@ -20,7 +20,6 @@ function createStore(moduleName,defineData){
 };
 
 function generatePage(moduleName,defineData){
-    //let templateFilename =   "/model.js";
     let targetFileName = pathConfig.targetView(moduleName) + codeTools.firstUpper(defineData.name) + ".js";
     templateText = defineData.defineText;
     var params = paramsHelper.buildParamsByPage(moduleName,defineData);

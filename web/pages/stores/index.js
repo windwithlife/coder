@@ -11,6 +11,7 @@ import InterfaceStore from '../xinterface/models/InterfaceStore';
 import PageStore from '../xpage/models/PageStore';
 import WidgetStore from '../xwidget/models/WidgetStore';
 import TempalteStore from '../pagetemplate/models/TemplateStore';
+import ReleaseStore from '../projectrelease/models/ReleaseStore';
 //import TestStore from '../zxtable/models/TestStore.js'
 /*import AppStore from "./AppStore";
 
@@ -36,6 +37,7 @@ let stores = {
     pagesStore: new PageStore(),
     widgetsStore: new WidgetStore(),
     templatesStore: new TempalteStore(),
+    releasesStore: new ReleaseStore(),
     
 }   
 

@@ -121,7 +121,7 @@ export default class ListPage extends React.Component {
     }
     handleLineAdd() {
         //this.setState({ visible: true });
-        let tableId = this.props.query.tableId;
+        let tableId = this.props.query.id;
         router.push({ pathname: '/xtable/add_column', query:{tableId:tableId}});
     }
     onModalConfirm() {

@@ -44,31 +44,74 @@ class ModuleDefines {
         return this.contracts[contractName];
     }
 
-    loadDefinesFromParams(modules) {
+    loadDefinesFromParams(release) {
 
         let that = this;
-        this.defines = modules;
-        this.defines.forEach(function (module) {
+        console.log(release);
+        release.modules.forEach(function (module) {
+            module.pages = release.pages;
             that.adjustModulesData(module);
-        })
-
-
+        });
+        this.defines = release.modules;
     }
-    parseInterfaceParams(params){
+    parseInterfaceParams(params) {
         let fields = [];
-        for (let param in params){
+        for (let param in params) {
             let className = codeTools.firstUpper(param);
-            fields.push({name:param,className:className, type:params[param]});
+            fields.push({ name: param, className: className, type: params[param] });
         }
         return fields;
+    }
+    buildInterface(name,method,inputType,outputType){
+        let interfaceItem={name:name};
+        interfaceItem.inputType =inputType;
+        interfaceItem.inputName = 'inputObj';
+        interfaceItem.outputType = outputType;
+        interfaceItem.outputName = 'outputObj';
+        interfaceItem.requestMethod = method;
+        return interfaceItem;
     }
     adjustModulesData(module) {
         let that = this;
         module.domains = [];
+        module.tableDomains = [];
+        module.moduleDomains = [];
+        module.storeDomains = [];
         module.dtos = [];
+        module.refers = [];
+        //调整table及列数据：
         module.tables.forEach(function (table) {
             table.refers = [];
             console.log('table info ************################');
+            //建立模块与表的引用相关性，用于创建与模块相关的实体。
+            let tableClassName = codeTools.firstUpper(table.name);
+            module.refers.push({ name: table.name, className:tableClassName, mapType: "OneToMany"});
+            //console.log(table);
+            table.columns.forEach(function (col) {
+                let clsName = codeTools.firstUpper(col.name);
+                let fieldType = col.fieldType;
+                let fieldName = col.name;
+                if (col.referModule) {
+                    let referModuleClass = codeTools.firstUpper(col.referModule);
+
+                    let mapType = "OneToOne";
+                    if (col.map == 1) { mapType = "OneToMany"; }
+                    if (col.map == 2) { mapType = "ManyToOne"; }
+                    if (col.map == 3) { mapType = "ManyToMany"; }
+                    if (col.map < 0) { mapType = "NULL"; }
+                    col.mapType=mapType;
+                    col.referModuleClassName = referModuleClass;
+                    table.refers.push({ name: col.referModule,nameClassName:referModuleClass, className: referModuleClass, mapType: mapType });
+                }
+            });
+
+            
+        });
+
+        //分新表对应的缺省的DTOs及缺省接口创建。
+        module.tables.forEach(function (table) {
+           
+            console.log('开始生成表对应的缺省的DTO及缺省创建的接口 ************################');
             //console.log(table);
             let requestDtoDefines = [];
             let responseDtoDefines = [];
@@ -78,15 +121,6 @@ class ModuleDefines {
                 let fieldName = col.name;
                 requestDtoDefines.push({ name: fieldName, className: clsName, type: fieldType });
                 if (col.referModule) {
-                    let referModuleClass = codeTools.firstUpper(col.referModule);
-
-                    let mapType = "OneToOne";
-                    if (col.map == 1) { mapType = "OneToMany"; }
-                    if (col.map == 2) { mapType = "ManyToOne"; }
-                    if (col.map == 3) { mapType = "ManyToMany"; }
-                    if (col.map < 0) { mapType = "NULL"; }
-                    table.refers.push({ name: col.referModule, className: referModuleClass, mapType: mapType });
-
                     if ((col.map == 1) || (col.map == 3)) {
                         fieldType = "List<" + referModuleClass + ">";
                         fieldName = col.referModule + 's';
@@ -94,77 +128,94 @@ class ModuleDefines {
                         fieldName = col.referModule + "Id";
                         fieldType = 'Long';
                     }
-
                 }
                 clsName = codeTools.firstUpper(fieldName);
                 responseDtoDefines.push({ name: fieldName, className: clsName, type: fieldType });
 
             });
-            let requestDtoName = table.name + "RequestDTO";
+
+            //识别DTOs
+            let requestDtoName = table.name + "Request";
             let requestDtoClass = codeTools.firstUpper(requestDtoName);
-            let requestDto = { name: requestDtoName, className: requestDtoClass, defines: requestDtoDefines };
-            let responseDtoName = table.name + "ResponseDTO";
-            let responseDtoClass = codeTools.firstUpper(responseDtoName);
-            let responseDto = { name: responseDtoName, className: responseDtoClass, defines: responseDtoDefines };
-
+            let requestDto = { name: requestDtoName,nameClassName:requestDtoClass, className: requestDtoClass, defines: requestDtoDefines };
             module.dtos.push(requestDto);
+            let responseDtoName = table.name + "Response";
+            let responseDtoClass = codeTools.firstUpper(responseDtoName);
+            let responseDto = { name: responseDtoName,nameClassName:responseDtoClass, className: responseDtoClass, defines: responseDtoDefines };
             module.dtos.push(responseDto);
-            let domainClassName =  codeTools.firstUpper(table.name);
-            let domainItem = { name: table.name, className:domainClassName, domainId:table.id,tableFields: table.columns, refers: table.refers };
-            module.domains.push(domainItem);
-        });
+            let responseListDtoName = table.name + "sResponse";
+            let responseListDtoClass = codeTools.firstUpper(responseListDtoName);
+            let fieldDefines = [];
+            fieldDefines.push({ name: "itemsCount", className: "ItemsCount", type: "Long"})
+            fieldDefines.push({ name: 'items', className: "Items", type: "List<"+ responseDtoClass +">" })
+            let responseListDto = { name: responseListDtoName,nameClassName: responseListDtoClass,className: responseListDtoClass, defines: fieldDefines};
+            module.dtos.push(responseListDto);
+           
+            
+            let domainClassName = codeTools.firstUpper(table.name);
+            let domainItem = { name: table.name, domainType: 'table', className: domainClassName, domainId: table.id, tableFields: table.columns, refers: table.refers };
+            
 
-
-        module.domains.forEach(function (domainItem) {
+            //创建缺省的接口,用于生成微服务的内部调用client.
             domainItem.interfaces = [];
-            module.interfaces.forEach(function (interfaceItem) {
-                    interfaceItem.inputType = '';
-                    if (interfaceItem.inputParams) {
-                        console.log(interfaceItem.inputParams);
-                        let params = that.parseInterfaceParams(JSON.parse(interfaceItem.inputParams));
-                        console.log(params);
-                        if (params.length == 1) {
-                            interfaceItem.inputType = params[0].type;
-                            interfaceItem.inputName = params[0].name;
-                        } else if (params.length > 1) {
-                            let requestName = interfaceItem.name + 'Request';
-                            let requestNameClass = firstUpperCase(requestName);
-                            let inputDTO = { name: requestName, className: requestNameClass, defines: params };
-                            module.dtos.push(inputDTO);
-                            interfaceItem.inputType = requestNameClass;
+            domainItem.interfaces.push(that.buildInterface("queryAll","get","",responseListDtoClass));
+            domainItem.interfaces.push(that.buildInterface("queryById","get","Long",responseDto));
+            domainItem.interfaces.push(that.buildInterface("add","post",requestDtoClass,responseDtoClass));
+            domainItem.interfaces.push(that.buildInterface("edit","post",requestDtoClass,responseDtoClass));
+            domainItem.interfaces.push(that.buildInterface("remove","post","Long","Long"));
+            module.tableDomains.push(domainItem);
+        });
 
-                        }
+      
+        //分析各接口中的输入输出参数形成DTO对象定义项。
+        module.interfaces.forEach(function (interfaceItem) {
+            interfaceItem.inputType = '';
+            if (interfaceItem.inputParams) {
+                console.log(interfaceItem.inputParams);
+                let params = that.parseInterfaceParams(JSON.parse(interfaceItem.inputParams));
+                console.log(params);
+                if (params.length == 1) {
+                    interfaceItem.inputType = params[0].type;
+                    interfaceItem.inputName = params[0].name;
+                } else if (params.length > 1) {
+                    let requestName = interfaceItem.name + 'Request';
+                    let requestNameClass = firstUpperCase(requestName);
+                    let inputDTO = { name: requestName, className: requestNameClass,nameClassName:requestNameClass, defines: params };
+                    module.dtos.push(inputDTO);
+                    interfaceItem.inputType = requestNameClass;
 
-                    }
-                        interfaceItem.outputType = '';
-                        if (interfaceItem.outputParams) {
-                            console.log(interfaceItem.outputParams);
-                            let params = that.parseInterfaceParams(JSON.parse(interfaceItem.outputParams));
-                            console.log(params);
-                            if (params.length == 1) {
-                                interfaceItem.outputType = params[0].type;
-                                interfaceItem.outputName = params[0].name;
-                            } else if (params.length > 1) {
-                                let responseName = interfaceItem.name + 'Response';
-                                let responseNameClass = firstUpperCase(responseName);
-                                let outputDTO = { name: responseName, className: responseNameClass, defines: params };
-                                module.dtos.push(outputDTO);
-                                interfaceItem.outputType = responseNameClass;
-                            }
+                }
 
+            }
+            interfaceItem.outputType = '';
+            if (interfaceItem.outputParams) {
+                console.log(interfaceItem.outputParams);
+                let params = that.parseInterfaceParams(JSON.parse(interfaceItem.outputParams));
+                console.log(params);
+                if (params.length == 1) {
+                    interfaceItem.outputType = params[0].type;
+                    interfaceItem.outputName = params[0].name;
+                } else if (params.length > 1) {
+                    let responseName = interfaceItem.name + 'Response';
+                    let responseNameClass = firstUpperCase(responseName);
+                    let outputDTO = { name: responseName, className: responseNameClass,nameClassName:responseNameClass,defines: params };
+                    module.dtos.push(outputDTO);
+                    interfaceItem.outputType = responseNameClass;
+                }
 
-
-                        }
-                        if (interfaceItem.domainId == domainItem.domainId) {
-                            //以保证表名修改Domain名称一致
-                            interfaceItem.domain = domainItem.name;
-                            domainItem.interfaces.push(interfaceItem);
-                        }
-                    });
+            }
 
         });
+
+        let moduleDomainName= module.name;
+        let moduleDomainClassName= codeTools.firstUpper(moduleDomainName);
+        let moduleDomain= { name: moduleDomainName, domainType: 'module', nameClassName: moduleDomainClassName,interfaces:module.interfaces,tableFields:[],refers:module.refers};
+        
+        module.domains = module.tableDomains;
+
+        module.moduleDomain= moduleDomain;
+        module.domains.push(moduleDomain);
         module.storeDomains = module.domains;
-        module.serviceDomains = module.domains;
         console.log('**************************' + module.name + '模块的所有域 Begin**********************');
         console.log(module.domains);
         console.log('**************************' + module.name + '模块的所有域 End**********************');

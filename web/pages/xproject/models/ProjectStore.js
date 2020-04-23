@@ -6,7 +6,9 @@ let  DataItem = {
     name:"projectName",
     description:"project Description",
     defineText:'',
-    status:-1
+    status:-1,
+    modules:[],
+    releases:[],
 }
 let Data = {
     currentItem :DataItem,

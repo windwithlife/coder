@@ -10,6 +10,11 @@ function checkPath(pathName) {
         mkdir('-p', pathName);
     }  
 }
+
+function pathIsReady(pathName) {
+    var isExist = fs.existsSync(pathName);
+    return isExist;
+}
 // var codeTools = require('../code_tools');
 // var xtools = require('../xtools');
 //var PathConfig = require('../path_config');
@@ -59,12 +64,12 @@ let TargetRoot = '../files/';
         projctPath = projctPath + this.projectConfig.sideType;
         projctPath = projctPath + '-' + this.projectConfig.language;
 
-        if (!this.projectConfig.framework){
+        if ((!this.projectConfig.framework)||(this.projectConfig.framework=='-1')){
              projctPath = projctPath + '-' + 'none';
         }else{
             projctPath = projctPath +'-' + this.projectConfig.framework;
         }
-        if (!this.projectConfig.platform){
+        if ((!this.projectConfig.platform)||(this.projectConfig.platform == '-1')){
             projctPath = projctPath +  '-all';
         }else{
             projctPath = projctPath + '-' +  this.projectConfig.platform;
@@ -81,7 +86,8 @@ let TargetRoot = '../files/';
         return path.join(this.currentRootPath, TemplateRoot,this.getPrjectPath());
     }
     targetRoot(){
-        let pathName  = path.join(this.currentRootPath,TargetRoot,this.projectConfig.projectId,this.projectConfig.sideType);
+        //let pathName  = path.join(this.currentRootPath,TargetRoot,this.projectConfig.projectId,this.projectConfig.sideType);
+        let pathName  = path.join(this.currentRootPath,TargetRoot,this.projectConfig.projectName,this.projectConfig.sideType);
         checkPath(pathName);
         return pathName;
     }
@@ -100,16 +106,37 @@ let TargetRoot = '../files/';
         //checkPath(pathName);
         return pathName;
     }
-    templateCopyFiles(){
-        let pathName  = path.join(this.templateRoot(),"/copyfiles");
+    templateCopyFiles(name){
+        let childPath = "";
+        if(name){childPath = name;}
+
+        let pathName  = path.join(this.templateRoot(),"/copyfiles/",childPath);
         //checkPath(pathName);
         return pathName;
     }
-    targetCopyFiles(){
+    targetCopyFiles(name){
+        let childPath = "";
+        if(name){childPath = name;}
+
+        let pathName  = path.join(this.targetRoot(),"/",childPath);
+        checkPath(pathName);
+        return pathName;
+    }
+    templateMicroServicesCopyFiles(){
+        let pathName  = path.join(this.templateRoot(),"/copyfiles/servers");
+        return pathName;
+    }
+    targetMicroServicesCopyFiles(){
         let pathName  = path.join(this.targetRoot(),"/");
         checkPath(pathName);
         return pathName;
     }
+    targetMicroServicesIsReady(){
+        let tryFile = this.targetMicroServicesCopyFiles() + "/pom.xml" ;
+        return pathIsReady(tryFile);
+        //return true;
+    }
+
     targetSrcRoot(){
         let pathName  = path.join(this.targetRoot(),this.srcRoot);
         checkPath(pathName);

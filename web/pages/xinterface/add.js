@@ -15,7 +15,7 @@ export default class TableAdd extends React.Component {
     constructor(props) {
         super(props);
         this.state = {};
-        props.tablesStore.queryByModuleId(props.query.moduleId);
+        //props.tablesStore.queryByModuleId(props.query.moduleId);
         props.modulesStore.queryById(props.query.moduleId);
     }
     Store = () => {
@@ -29,19 +29,17 @@ export default class TableAdd extends React.Component {
         this.Store().add(values, () => { console.log('finished add interface row'); router.back(); });
     }
 
-    onChangeTable=(value)=>{
-        let that = this;
-        console.log('Index:'+ value);
-        let item = this.props.tablesStore.dataObject.list[value];
-        let domainName = item.name;
-        let domainId = item.id;
-        //if('other'== value){
-        //    domainName = this.props.modulesStore.dataObject.currentItem.name;
-        //}
+    // onChangeTable=(value)=>{
+    //     let that = this;
+    //     console.log('Index:'+ value);
+    //     let item = this.props.tablesStore.dataObject.list[value];
+    //     let domainName = item.name;
+    //     let domainId = item.id;
         
-        this.formRef.current.setFieldsValue({domainId:domainId,domain:domainName});
+        
+    //     this.formRef.current.setFieldsValue({domainId:domainId,domain:domainName});
        
-      }
+    //   }
     render() {
         var that = this;
 
@@ -70,13 +68,13 @@ export default class TableAdd extends React.Component {
                             noStyle='true'
                         ></Form.Item>
                     
-                    <Form.Item name="domain" label="选择接口所属的域(按数据表定义识别)" >
-                    <Select onChange={onChangeTable}>
+                    {/* <Form.Item name="domain" label="选择接口所属的域(按数据表定义识别)" >
+                    <Select onChange={that.onChangeTable}>
                         {that.props.tablesStore.dataObject.list.map(function (item, i) {
                             return (<Select.Option value={i}>{item.name}</Select.Option>);
                         })}
                     </Select>
-                    </Form.Item>
+                    </Form.Item> */}
                     
                     <Form.Item name="inputParams" label="入口参数对象定义">
                         <TextArea rows={5} />
@@ -85,9 +83,9 @@ export default class TableAdd extends React.Component {
                         <TextArea rows={5} />
                     </Form.Item>
 
-                    <Form.Item name="customSql" label="自定义查询语句">
+                    {/* <Form.Item name="customSql" label="自定义查询语句">
                         <TextArea rows={5} />
-                    </Form.Item>
+                    </Form.Item> */}
                     <Form.Item name="description" label="描述">
                         <Input />
                     </Form.Item>

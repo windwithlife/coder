@@ -44,11 +44,11 @@ export default class TableAdd extends React.Component {
                         <Input />
                     </Form.Item>
                     <Form.Item name="sideType" label="端点" >
-                        <Select>
-                            <Select.Option value='web'>网站</Select.Option>
-                            <Select.Option value='server'>服务器</Select.Option>
-                            <Select.Option value='server'>移动前端</Select.Option>
-                        </Select>
+                    < XSelect category="sideType" />
+                    </Form.Item>
+                    <Form.Item name="category" label="页面功能分类" >
+                    <XSelect category="pageCategory">
+                    </XSelect>
                     </Form.Item>
                     < Form.Item name="language" label="编程语言选择：">
                         < XSelect category="language" />

@@ -85,10 +85,10 @@ export default class EditPage extends React.Component {
     componentDidMount() {
         let that = this;
         console.log('DidMount');
-        let id = this.props.query.moduleId;
-        console.log("module id:=" + id);
+        let moduleId = this.props.query.id;
+        console.log("module id:=" + moduleId);
         //this.props.tablesStore.queryByModuleId(id);
-        this.props.modulesStore.queryById(id, function (values) {
+        this.props.modulesStore.queryById(moduleId, function (values) {
             console.log(values);
             that.formRef.current.setFieldsValue(values);
         });
@@ -109,10 +109,11 @@ export default class EditPage extends React.Component {
     }
     handleLineDetail(type,record) {
         let path= '/'+ type+'/detail';
+        console.log(path);
         router.push({ pathname: path, query: { id: record.id } });
     }
     handleLineAdd(type) {
-        let moduleId = this.props.query.moduleId;
+        let moduleId = this.props.query.id;
         let path= '/'+ type+'/add';
         router.push({ pathname: path, query: { moduleId: moduleId } });
 
@@ -163,16 +164,25 @@ export default class EditPage extends React.Component {
                         < Form.Item name="name" label="模块名：">
                             {itemData.name}
                         </Form.Item>
+                        < Form.Item name="sideType" label="项目端点类型：">
+                            {itemData.sideType}
+                        </Form.Item>
                         < Form.Item name="description" label="描述信息：">
                             {itemData.description}
                         </Form.Item>
-
+                        < Form.Item name="language" label="编程语言：">
+                            {itemData.language}
+                        </Form.Item>
+                        < Form.Item name="framework" label="框架：">
+                            {itemData.framework}
+                        </Form.Item>
+                        < Form.Item name="platform" label="操作系统平台：">
+                            {itemData.platform}
+                        </Form.Item>
                         < Form.Item name="projectId" label="所属项目：">
-                            {itemData.project}
+                            {itemData.projectId}
                         </Form.Item>
-                        < Form.Item name="status" label="状态">
-                            {itemData.status}
-                        </Form.Item>
+                       
 
                     </Form>
                 </Card>
@@ -184,12 +194,7 @@ export default class EditPage extends React.Component {
                 onUpdate={that.handleLineUpdate.bind(that,'xtable')}
                 onDetail={that.handleLineDetail.bind(that,'xtable')}
                 ></EditTable>
-                <EditTable title="页面：" columns={that.buildPageColumns()} data={itemData.pages} 
-                onAdd={that.handleLineAdd.bind(that,'xpage')} 
-                onDelete={that.handleLineDelete.bind(that,'xpage')}
-                onUpdate={that.handleLineUpdate.bind(that,'xpage')}
-                onDetail={that.handleLineDetail.bind(that,'xpage')}
-                ></EditTable>
+                
                 <EditTable title="接口：" columns={that.buildPageColumns()} data={itemData.interfaces} 
                 onAdd={that.handleLineAdd.bind(that,'xinterface')} 
                 onDelete={that.handleLineDelete.bind(that,'xinterface')}

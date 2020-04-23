@@ -97,9 +97,8 @@ export default class EditableTable extends React.Component {
         let that = this;
         let headerTitle = this.props.title;
         let list = this.props.data;
-        //console.log(list);
         return (
-                <Collapse accordion>
+                <Collapse  accordion>
                     <Panel header={headerTitle} key="4" extra={<SettingOutlined onClick={that.changeEditMode}></SettingOutlined>}>
 
                         <Form layout="inline" onSubmit={this.handleSearch.bind(this)} >
@@ -113,7 +112,7 @@ export default class EditableTable extends React.Component {
                                 <Button type="primary" onClick={this.handleLineAdd.bind(this)} hidden={!that.state.editMode}> 添加 </Button>
                             </Form.Item>
                         </Form>
-                        < Table
+                        < Table 
                             columns={
                                 this.columns
                             }

@@ -36,11 +36,11 @@ app.prepare()
         res.sendStatus(200)
     })
     server.post('/generateCodeByProjectId/', (req, res) => {
-      console.log('generator');
+      console.log('generator params------------');
       console.log(req.body);
-        generator.initByQuery(req.body);
+        //generator.initByQuery(req.body);
         //generator.generate(req.body);
-        generator.generateByQuery(req.body.projectSetting);
+        generator.generateByQuery(req.body);
         res.sendStatus(200)
     })
     server.post('/generateCodeByDefine', (req, res) => {

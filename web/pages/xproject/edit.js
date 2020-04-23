@@ -144,45 +144,6 @@ export default class EditPage extends React.Component {
                                     < XSelect category="data_status" refer="" />
                                 </Form.Item>
                             </Card>
-                            <Card size="small" title="前端配置信息" style={{ width: 500 }} >
-
-                                < Form.Item name="frontendLanguage" label="编程语言选择：">
-                                    < XSelect category="language" refer="" />
-                                </Form.Item>
-                                < Form.Item name="frontendFramework" label="技术框架：">
-                                    < XSelect category="framework" refer="" />
-                                </Form.Item>
-                                < Form.Item name="frontendPlatform" label="目标操作系统">
-                                    < XSelect category="os" refer="" />
-                                </Form.Item>
-                            </Card>
-                            <Card size="small" title="服务配置信息" style={{ width: 500 }}  >
-
-                                < Form.Item name="serverLanguage" label="编程语言选择：">
-                                    < XSelect category="language" refer="" />
-                                </Form.Item>
-                                < Form.Item name="serverFramework" label="技术框架：">
-                                    < XSelect category="framework" refer="" />
-                                </Form.Item>
-                                < Form.Item name="soaIp" label="服务网关地址：">
-                                    <Input />
-                                </Form.Item>
-
-                            </Card>
-                            <Card size="small" title="站点配置信息" style={{ width: 500 }}  >
-
-                                < Form.Item name="webLanguage" label="编程语言选择：">
-                                    < XSelect category="language" refer="" />
-                                </Form.Item>
-                                < Form.Item name="webFramework" label="技术框架：">
-                                    < XSelect category="framework" refer="" />
-                                </Form.Item>
-
-                                < Form.Item name="website" label="网站地址：">
-                                    <Input />
-                                </Form.Item>
-
-                            </Card>
                             <Form.Item className="form-item-clear" >
                                 <Button type="primary" htmlType="submit" size="large">保存信息</Button>
                             </Form.Item>

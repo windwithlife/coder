@@ -41,10 +41,7 @@ render(){
                 <Form.Item name="defineText" label="表定义文本">
                     <TextArea rows={5} />
                 </Form.Item>
-                <Form.Item name="status" label="状态">
-                   < XSelect  category="data_status" refer ="" display= {(this.props.query.fromModule =='') ? 'no':'yes' } />
-                </Form.Item>
-        
+                
                  <Card type="inner">
                  <FormItem className="form-item-clear" >
                     <Button type="primary" htmlType="submit" size="large">Save</Button>

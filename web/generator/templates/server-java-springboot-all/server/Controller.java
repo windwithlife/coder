@@ -7,12 +7,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 //import org.springframework.web.servlet.ModelAndView;
 
-import com.simple.core.base.user.entity.*;
-import com.simple.core.base.user.service.*;
-
-import com.simple.server.bz.entity.*;
-import com.simple.server.bz.service.*;
-
 import <%=data.packageName%>.entity.*;
 import <%=data.packageName%>.service.*;
 import <%=data.packageName%>.dao.*;
@@ -22,10 +16,10 @@ import <%=data.packageName%>.dao.*;
 //import io.swagger.annotations.ApiOperation;
 
 @Controller
-@RequestMapping("/<%=data.className%>")
-public class <%=data.className%>Controller {
+@RequestMapping("/<%=data.name%>")
+public class <%=data.nameClassName%>Controller {
 	@Autowired
-	<%=data.className%>Service service;
+	<%=data.nameClassName%>Service service;
 
 	// @Autowired
     // <%=data.className%>QueryDao queryDao;
@@ -38,19 +32,19 @@ public class <%=data.className%>Controller {
    
 	@RequestMapping(value = "/queryAll", method = RequestMethod.GET)
 	@ResponseBody
-	public List<<%=data.className%>> findAll() {
+	public List<<%=data.nameClassName%>> findAll() {
 		return service.findAll();
 	}
 	@ResponseBody
     @RequestMapping(value = "/query/{id}", method = RequestMethod.GET)
-    public <%=data.className%> findByKeyId(@PathVariable Long id) {
+    public <%=data.nameClassName%> findByKeyId(@PathVariable Long id) {
        	System.out.println("input param Id:" + id);
-       	<%=data.className%> result = service.findById(id);
+       	<%=data.nameClassName%> result = service.findById(id);
     	return result;
     }
     @ResponseBody
     @RequestMapping(value = "/queryByNameLike/", method = RequestMethod.GET)
-    public List<<%=data.className%>> findByNameLike(@RequestParam("name") String name ) {
+    public List<<%=data.nameClassName%>> findByNameLike(@RequestParam("name") String name ) {
            	System.out.println("input param Name:" + name);
             return service.findByNameLike(name);
 
@@ -59,18 +53,18 @@ public class <%=data.className%>Controller {
 
     @ResponseBody
     @RequestMapping(value = "/queryByName", method = RequestMethod.GET)
-    public List<<%=data.className%>> findByName(@RequestParam("name") String name ) {
+    public List<<%=data.nameClassName%>> findByName(@RequestParam("name") String name ) {
            	System.out.println("input param Name:" + name);
-            return queryDao.findByName(name);
+            return service.findByName(name);
 
     }
 
     @ResponseBody
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public <%=data.className%> addSave(@RequestBody <%=data.className%> item) {
+	public <%=data.nameClassName%> addSave(@RequestBody <%=data.nameClassName%> item) {
 
 		System.out.println("input device params:" + item.toString());
-		<%=data.className%> result = service.save(item);
+		<%=data.nameClassName%> result = service.save(item);
 		System.out.println("output device result data:" + result.toString());
 		return result;
 	}
@@ -79,30 +73,26 @@ public class <%=data.className%>Controller {
 
  	@ResponseBody
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
-    public <%=data.className%> updateSave(@RequestBody <%=data.className%> item,@PathVariable Long id) {
+    public <%=data.nameClassName%> updateSave(@RequestBody <%=data.nameClassName%> item,@PathVariable Long id) {
      	System.out.println("input params id and name:" + item.toString());
-     	
+     	<%=data.nameClassName%> result= null;
         try{
-          <%=data.className%> old = service.findById(id);
+          <%=data.nameClassName%> old = service.findById(id);
           <%
           data.fields.forEach(function(field){
               if(field.mapType=='NULL'){%>
-                old.set<%=field.className%>(item.get<%=field.className%>());
+                old.set<%=field.nameClassName%>(item.get<%=field.nameClassName%>());
           <%}})%>
-          <%=data.className%> result = service.save(old);
+          result = service.save(old);
         }catch (Exception e){
                 System.out.println("***************failed to update item******  ***********");
                 e.printStackTrace();
                 return null;
         }
+        return result;
     }
 
-    @ResponseBody
-   	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-   	public Long remove(@PathVariable Long id) {
-		service.remove(id);
-        return id;
-    }
+    
     @ResponseBody
     @RequestMapping(value = "/remove/{id}", method = RequestMethod.POST)
     public Long removeById(@PathVariable Long id) {
@@ -116,8 +106,8 @@ public class <%=data.className%>Controller {
     @ResponseBody
     @RequestMapping(value = "/queryBy<%=fieldNameUpper%>", method = RequestMethod.GET)
     
-    public List<<%=data.className%>> queryBy<%=field.referModuleClass%>(@RequestParam("id") Long id) {
-        return List<<%=data.className%>> result = service.findBy<%=field.referModuleClass%>(id);
+    public List<<%=data.nameClassName%>> queryBy<%=field.referModuleClass%>(@RequestParam("id") Long id) {
+        return List<<%=data.nameClassName%>> result = service.findBy<%=field.referModuleClass%>(id);
       
     <%}})%>
    

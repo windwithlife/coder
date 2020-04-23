@@ -25,8 +25,25 @@ function generator(cmdOptions,platformName, withframework) {
 function generateByWebQuery(params) {
     //生成代码
     //verboseCommand = verbose ? ' --verbose' : '';
-    console.log(params);
-    mainGenerator.generateCode(params);
+    console.log('initialize the project and building.......!');
+    //console.log(params);
+    if ('project' == params.type){
+        let project = params.defines;
+        console.log(project);
+        project.releases.forEach(function(release){
+            console.log(release);
+            release.projectName = project.name;
+            mainGenerator.initProject(false,release);
+            mainGenerator.generateCode(release);
+        });      
+    }else if('release' == params.type){
+        let release = params.defines;
+        console.log(release);
+        mainGenerator.initProject(false,release);
+        mainGenerator.generateCode(release);
+    }
+   
+   
 }
 module.exports.init = init;
 module.exports.generate = generator;

@@ -4,8 +4,7 @@ package <%=data.packageName%>.dao;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
-import com.simple.core.base.user.entity.User;
-import com.simple.server.bz.entity.*;
+
 import <%=data.packageName%>.entity.*;
 
 

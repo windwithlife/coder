@@ -17,7 +17,7 @@ function generateEntity(moduleName,defineData){
 };
 function generateDAO(moduleName,defineData){
     let templateFilename =   pathConfig.templateServer() + "/DAO.java";
-    let targetFileName = pathConfig.targetServer(moduleName,"dao") + codeTools.firstUpper(defineData.name) + "DAO.java";
+    let targetFileName = pathConfig.targetServer(moduleName,"dao") + codeTools.firstUpper(defineData.name) + "Repository.java";
     var params = paramsHelper.buildParamsByTable(moduleName,defineData);
     codeTools.generateCode(templateFilename,params,targetFileName);
 
@@ -38,16 +38,16 @@ function generateController(moduleName,defineData){
 
 };
 
-function generateServiceController(moduleName,defineData){
-    let templateFilename =   pathConfig.templateServer() + "/servercontroller.java";
-    let targetFileName = pathConfig.targetServer(moduleName,'controller') + codeTools.firstUpper(defineData.name) + "ServiceController.java";
+function generateModuleController(moduleName,defineData){
+    let templateFilename =   pathConfig.templateServer() + "/ModuleController.java";
+    let targetFileName = pathConfig.targetServer(moduleName,'controller') + codeTools.firstUpper(defineData.name) + "ModuleController.java";
     var params = paramsHelper.buildParamsByDomain(moduleName,defineData);
     codeTools.generateCode(templateFilename,params,targetFileName);
 
 };
 function generateDTO(moduleName,defineData){
     let templateFilename =   pathConfig.templateServer() + "/dto.java";
-    let targetFileName = pathConfig.targetServer(moduleName,'dto')  + defineData.className +".java";
+    let targetFileName = pathConfig.targetServer(moduleName,'dto')  + defineData.nameClassName +".java";
     var params = paramsHelper.buildParamsByDTO(moduleName,defineData);
     codeTools.generateCode(templateFilename,params,targetFileName);
 };
@@ -86,22 +86,27 @@ function generateModuleByName(moduleDefine){
         generateDTO(moduleDefine.name,item);
     });
 
-    moduleDefine.serviceDomains.forEach(function(domainItem){
-        generateServiceController(moduleDefine.name,domainItem);
+    moduleDefine.domains.forEach(function(domainItem){
+        if(domainItem.domainType =='module'){
+            generateModuleController(moduleDefine.name,domainItem);
+        }
+        
         //generateStore(moduleDefine.name,domainItem);
     });
 
 }
 
 
-function generateFramework(){
-   
-    xtools.copyDirEx(pathConfig.templateCopyFiles(),pathConfig.targetCopyFiles());
+function generateFramework(release){
+    if (!pathConfig.targetMicroServicesIsReady()){
+        xtools.copyDirEx(pathConfig.templateMicroServicesCopyFiles(),pathConfig.targetMicroServicesCopyFiles());
+    }
+    xtools.copyDirEx(pathConfig.templateCopyFiles("microserver"),pathConfig.targetCopyFiles(release.name));
 }
 
 
 function initPathEnv(proConfig){
-    let srcRootPath =  "/simpleserver/src/main/java/";
+    let srcRootPath =  "/" + proConfig.name + "/src/main/java/";
     pathConfig.initWithRootPath(srcRootPath,proConfig);
     paramsHelper.initParamsFromProject(proConfig);
     projectConfig = proConfig;

@@ -22,41 +22,41 @@ var codeTools = require('./code_tools');
         this.projectId = setting.projectId;
         this.projectName = setting.projectName;
     }
+    buildGenericParams(moduleName,defineName){
+        let dname = "";
+        if(defineName){
+            dname = defineName;
+        }
+        let params = {
+            projectId:this.projectId,
+            projectName:this.projectName, 
+            basePackage:this.basePackage, 
+            packageName:this.basePackage,
+            moduleName:moduleName,
+            moduleNameClass:codeTools.firstUpper(moduleName),
+            name: dname,
+            nameClassName:codeTools.firstUpper(dname),
+        }
+
+        return params;
+    }
     buildParamsByTable(moduleName,tableDefine){
 
-        let params = {
-            projectName:this.projectName,      
-        }
-        params.packageName = this.basePackage;
-        params.moduleDefine = tableDefine;
-        params.moduleName = moduleName;
+        let params = this.buildGenericParams(moduleName,tableDefine.name);
         params.tableName = tableDefine.name;
-        params.name = tableDefine.name;
-        params.className = codeTools.firstUpper(tableDefine.name);
-        params.moduleClassName = codeTools.firstUpper(moduleName);
         params.tableClassName = codeTools.firstUpper(tableDefine.name);
-        params.refers = [];
+        params.refers = tableDefine.refers;
         params.fields = [];
         tableDefine.columns.forEach(function(col){
             let clsName = codeTools.firstUpper(col.name);
-            //Map Type
-            let mapType = "OneToOne";
-            if (col.map == 1){mapType = "OneToMany";}
-            if (col.map == 2){mapType = "ManyToOne";}
-            if (col.map == 3){mapType = "ManyToMany";}
-            if (col.map < 0){mapType = "NULL";}
-            var referModuleClass;
-            if(col.referModule){
-                referModuleClass = codeTools.firstUpper(col.referModule);
-                params.refers.push({name:col.referModule,className:referModuleClass,mapType:mapType});
-            }
+           
             // Field Type
             let fieldType = col.fieldType;
             let fieldColumnType = col.fieldType;
             if (col.fieldType == 'int'){fieldColumnType = 'Long'};
             if (col.fieldType == 'Text'){fieldColumnType = 'String'};
-            params.fields.push({def:col,name:col.name,className:clsName,
-                mapType:mapType,mapField:col.mapField,referModule:col.referModule,referModuleClass:referModuleClass,
+            params.fields.push({def:col,name:col.name,nameClassName:clsName,className:clsName,
+                mapType:col.mapType,mapField:col.mapField,referModule:col.referModule,referModuleClassName:col.referModuleClassName,
                 columnType:fieldColumnType});
             
         });
@@ -64,62 +64,45 @@ var codeTools = require('./code_tools');
 
     }
     buildParamsByDomain(moduleName,defineData){
-        let params = {
-            projectName:this.projectName,      
-        }
+        let params = this.buildGenericParams(moduleName,defineData.name);
+        let domainType = defineData.domainType;
         params.define = defineData;
-        params.moduleName = moduleName;
-        params.name = defineData.name;
-        params.moduleClassName = codeTools.firstUpper(moduleName);
-        params.nameClassName = codeTools.firstUpper(defineData.name);
         params.fields = defineData.tableFields;
         params.refers = defineData.refers;
         params.interfaces = defineData.interfaces;
         params.interfaces.forEach(function(interfaceObj){
-            //interfaceObj.responseName = interfaceObj.name + 'Response';
             if(interfaceObj.requestMethod == 'get'){
-                interfaceObj.requestName = 'query';
+                interfaceObj.requestMethodName = 'query';
                 interfaceObj.requestMethodType = "GET";
             }else{
-                interfaceObj.requestName = 'post';
+                interfaceObj.requestMethodName = 'post';
                 interfaceObj.requestMethodType = "POST";
             }
             interfaceObj.responseDataName = interfaceObj.name + 'Response';
+
+            if(domainType=='module'){
+                interfaceObj.declaredPath = "/" + interfaceObj.name;
+                interfaceObj.requestPath = "/" + moduleName + "/" + interfaceObj.name;
+            }else{
+                interfaceObj.declaredPath = "/" + interfaceObj.name;
+                interfaceObj.requestPath = "/" + moduleName + "/" + interfaceObj.name;
+            }
         })
         return params;
-
     }
 
     buildParamsByDTO(moduleName,defineData){
-        let params = {
-            projectName:this.projectName,      
-        }
+        let params = this.buildGenericParams(moduleName,defineData.name);
         params.define = defineData;
-        params.moduleName = moduleName;
-        params.name = defineData.name;
-        params.moduleClassName = codeTools.firstUpper(moduleName);
-        params.nameClassName = codeTools.firstUpper(defineData.name);
-        params.className = codeTools.firstUpper(defineData.name);
         params.fields = defineData.defines;
-        //params.fields = defineData.tableFields;
-        //params.interfaces = defineData.interfaces;
-        
         return params;
 
     }
     buildParamsByPage(moduleName,defineData){
-        let params = {
-            projectName:this.projectName,      
-        }
+        let params = this.buildGenericParams(moduleName,defineData.name);
         params.define = defineData;
-        params.moduleName = moduleName;
-        params.name = defineData.name;
-        params.moduleClassName = codeTools.firstUpper(moduleName);
-        params.nameClassName = codeTools.firstUpper(defineData.name);
-        //params.fields = defineData.tableFields;
         params.domains = [];
         params.interfaces = defineData.interfaces;
-
         params.interfaces.forEach(function(interfaceObj){
             interfaceObj.requestURL = interfaceObj.name;
             if(interfaceObj.requestMethod == 'get'){

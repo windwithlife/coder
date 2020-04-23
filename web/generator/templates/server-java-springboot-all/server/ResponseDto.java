@@ -2,10 +2,6 @@ package <%=data.packageName%>.entity;
 
 import java.io.Serializable;
 
-
-
-import com.simple.core.base.user.entity.*;
-import com.simple.server.bz.entity.*;
 import <%=data.packageName%>.entity.*;
 
 import java.util.List;

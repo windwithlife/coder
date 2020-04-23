@@ -9,38 +9,38 @@ import <%=data.packageName%>.entity.*;
 
 
 @Service
-public class <%=data.className%>Service {
+public class <%=data.nameClassName%>Service {
 	@Autowired
-	<%=data.className%>Repository dao;
-	public List<<%=data.className%>> findAll(){
+	<%=data.nameClassName%>Repository dao;
+	public List<<%=data.nameClassName%>> findAll(){
 		return  dao.findAll();
 		//return items;
 	}
-	public  List<<%=data.className%>> findByName(String name){
+	public  List<<%=data.nameClassName%>> findByName(String name){
 		return dao.findByName(name);
 	}
-	public  List<<%=data.className%>> findByNameLike(String name){
+	public  List<<%=data.nameClassName%>> findByNameLike(String name){
     		return dao.findByNameLike(name);
     }
 
-	public  <%=data.className%> findOneByName(String name){
+	public  <%=data.nameClassName%> findOneByName(String name){
     		return dao.findOneByName(name);
     	}
 
-	public <%=data.className%> findById(Long id){
-		return dao.findOne(id);
+	public <%=data.nameClassName%> findById(Long id){
+		return dao.findOneById(id);
 	}
-	public <%=data.className%> save(<%=data.className%> item){
+	public <%=data.nameClassName%> save(<%=data.nameClassName%> item){
 		return this.dao.save(item);
 	}
 	public void remove(Long id){
-		this.dao.delete(id);
+		this.dao.deleteById(id);
 	}
 	
 	<%
     data.fields.forEach(function(field){
         if(field.mapType=='ManyToOne'){%>
-    public List<<%=data.className%>> findBy<%=field.referModuleClass%>(Long id){
+    public List<<%=data.nameClassName%>> findBy<%=field.referModuleClass%>(Long id){
 		return dao.findBy<%=field.referModuleClass%>(id);
 	}    
     <%}})%>

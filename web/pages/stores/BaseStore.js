@@ -19,7 +19,7 @@ class BaseStore {
   }
 
   @action.bound
-  queryAll(){
+  queryAll(callback){
         let that = this;
         this.model.queryAll(function (response) {
             if (response && response.data) {
@@ -29,7 +29,10 @@ class BaseStore {
                     item.key = item.id
                 });
                 that.dataObject.list= response.data;
-                console.log('modulename is' + that._modelname);
+                //console.log('modulename is' + that._modelname);
+                if(callback){
+                    callback(response.data);
+                }
             }
         });
     }

@@ -13,14 +13,13 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.*;
 
-import com.simple.core.base.user.entity.*;
-import com.simple.server.bz.entity.*;
+
 import <%=data.packageName%>.entity.*;
 
 import java.util.List;
 
-
-public class <%=data.className%> implements Serializable {
+@Entity
+public class <%=data.nameClassName%> implements Serializable {
     private static final long serialVersionUID = 1L;
     
     @Id
@@ -59,7 +58,7 @@ public class <%=data.className%> implements Serializable {
         <%}%>
     <%})%>
 
-    public <%=data.className%>() {
+    public <%=data.nameClassName%>() {
     }
     
     <%data.fields.forEach(function(field){
@@ -92,6 +91,6 @@ public class <%=data.className%> implements Serializable {
       
 	@Override
 	public String toString() {
-		return "CLASS DATA: [" +"id=" + this.id +'name='+ this.name +"]";
+		return "CLASS DATA: [" +"id=" + this.id +"name="+ this.name +"]";
 	}
 }

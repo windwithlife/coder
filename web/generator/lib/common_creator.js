@@ -68,15 +68,15 @@ function initPathEnv() {
     config.workRootPath = currentPath;
 }
 
-function initProject(isFromFiles, setting) {
+function initProject(isFromFiles, releaseData) {
     initGenerators();
     if (isFromFiles==true){
         moduleDefines.loadDefinesFromFiles(config.workModulesPath());
         moduleDefines.loadContractsFromFiles(config.workContractsPath());
     }else{
         //moduleDefines.loadDefinesFromParams(setting.projectSetting, setting.modules);
-        moduleDefines.loadDefinesFromParams(setting.defines);
-        projectConfig.initFromSettingParams(setting.projectSetting);
+        moduleDefines.loadDefinesFromParams(releaseData);
+        projectConfig.initFromSettingParams(releaseData);
     }
     console.log("finished init project ! new project!");
 }
@@ -86,12 +86,12 @@ function getSelectorName(targetConfig){
     if (!targetConfig.sideType){
         targetConfig.sideType = 'web';
     }
-    if (!targetConfig.framework){
+    if ((!targetConfig.framework)|| (targetConfig.framework=='-1')){
         generatorSelector = generatorSelector + '-' + 'none';
     }else{
         generatorSelector = generatorSelector + '-' + targetConfig.framework;
     }
-    if (!targetConfig.platform){
+    if ((!targetConfig.platform)||(targetConfig.platform=='-1')){
         generatorSelector = generatorSelector + '-' + 'all';
        
     }else{
@@ -102,25 +102,25 @@ function getSelectorName(targetConfig){
     console.log(generatorSelector);
     return generatorSelector;
 }
-function generateCode(options) {
+function generateCode(release) {
     console.log('begin to create code!');
-    let targetOptions = options;
-    console.log(targetOptions);
+    //let targetOptions = release;
+    console.log(release);
     
     initGenerators();
     
-    var generator = findGeneratorByName(getSelectorName(targetOptions));
+    var generator = findGeneratorByName(getSelectorName(release));
     //console.log(generator);
     if (!generator) {
-        console.log("Generator named:[" + targetOptions.language + "] not found!");
+        console.log("Generator named:[" + release.language + "] not found!");
         return;
     }
 
-    generator.initEnv(targetOptions);
+    generator.initEnv(release);
 
 
-   //if ((targetOptions.hasFramework) && (targetOptions.hasFramework == true)){   
-        generator.generateFramework();
+    //if ((targetOptions.hasFramework) && (targetOptions.hasFramework == true)){   
+    generator.generateFramework(release);
     //}
 
     // if ((targetOptions.hasCommon) && (targetOptions.hasCommon == true)){   

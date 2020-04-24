@@ -32,7 +32,7 @@ function createView(moduleName,tableDefine,viewName){
 
     templateFilename = pathConfig.templateView() + templateFilename ;
     targetFileName   = pathConfig.targetView(moduleName)+ targetFileName;
-    var params = paramsHelper.buildParamsByTable(moduleName,tableDefine);
+    var params = paramsHelper.buildParamsForViewPage(moduleName,tableDefine);
     codeTools.generateCode(templateFilename,params,targetFileName);
 };
 
@@ -47,9 +47,13 @@ function generateStoreByInterfaces(moduleName,defines){
 function generateModuleByName(moduleDefine){
     
     console.log('module defines:' + JSON.stringify(moduleDefine));
-    // moduleDefine.tables.forEach(function(table){
-    //     generatePages(moduleDefine.name,table);
-    // });
+    //createView(moduleDefine.name,moduleDefine,'module_home');
+     moduleDefine.tables.forEach(function(table){
+         createView(moduleDefine.name,table,'home');
+         createView(moduleDefine.name,table,'detail');
+         createView(moduleDefine.name,table,'add');
+         createView(moduleDefine.name,table,'edit');
+     });
     moduleDefine.storeDomains.forEach(function(domainItem){
         generateStoreByInterfaces(moduleDefine.name,domainItem);
     });

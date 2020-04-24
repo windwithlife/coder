@@ -16,7 +16,7 @@ import <%=data.packageName%>.dao.*;
 //import io.swagger.annotations.ApiOperation;
 
 @Controller
-@RequestMapping("/<%=data.name%>")
+@RequestMapping("/<%=data.moduleName%>/<%=data.name%>")
 public class <%=data.nameClassName%>Controller {
 	@Autowired
 	<%=data.nameClassName%>Service service;
@@ -32,19 +32,19 @@ public class <%=data.nameClassName%>Controller {
    
 	@RequestMapping(value = "/queryAll", method = RequestMethod.GET)
 	@ResponseBody
-	public List<<%=data.nameClassName%>> findAll() {
+	public <%=data.responseListDtoClassName%> findAll() {
 		return service.findAll();
 	}
 	@ResponseBody
     @RequestMapping(value = "/query/{id}", method = RequestMethod.GET)
-    public <%=data.nameClassName%> findByKeyId(@PathVariable Long id) {
+    public <%=data.responseDtoClassName%> findByKeyId(@PathVariable Long id) {
        	System.out.println("input param Id:" + id);
        	<%=data.nameClassName%> result = service.findById(id);
     	return result;
     }
     @ResponseBody
     @RequestMapping(value = "/queryByNameLike/", method = RequestMethod.GET)
-    public List<<%=data.nameClassName%>> findByNameLike(@RequestParam("name") String name ) {
+    public <%=data.responseListDtoClassName%> findByNameLike(@RequestParam("name") String name ) {
            	System.out.println("input param Name:" + name);
             return service.findByNameLike(name);
 
@@ -53,7 +53,7 @@ public class <%=data.nameClassName%>Controller {
 
     @ResponseBody
     @RequestMapping(value = "/queryByName", method = RequestMethod.GET)
-    public List<<%=data.nameClassName%>> findByName(@RequestParam("name") String name ) {
+    public <%=data.responseListDtoClassName%> findByName(@RequestParam("name") String name ) {
            	System.out.println("input param Name:" + name);
             return service.findByName(name);
 
@@ -61,7 +61,7 @@ public class <%=data.nameClassName%>Controller {
 
     @ResponseBody
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public <%=data.nameClassName%> addSave(@RequestBody <%=data.nameClassName%> item) {
+	public  <%=data.responseDtoClassName%> addSave(@RequestBody <%=data.requestDtoClassName%> item) {
 
 		System.out.println("input device params:" + item.toString());
 		<%=data.nameClassName%> result = service.save(item);
@@ -73,17 +73,11 @@ public class <%=data.nameClassName%>Controller {
 
  	@ResponseBody
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
-    public <%=data.nameClassName%> updateSave(@RequestBody <%=data.nameClassName%> item,@PathVariable Long id) {
+    public <%=data.responseDtoClassName%>  updateSave(@RequestBody <%=data.requestDtoClassName%> item,@PathVariable Long id) {
      	System.out.println("input params id and name:" + item.toString());
-     	<%=data.nameClassName%> result= null;
+     	<%=data.responseDtoClassName%> result= null;
         try{
-          <%=data.nameClassName%> old = service.findById(id);
-          <%
-          data.fields.forEach(function(field){
-              if(field.mapType=='NULL'){%>
-                old.set<%=field.nameClassName%>(item.get<%=field.nameClassName%>());
-          <%}})%>
-          result = service.save(old);
+            result = service.update(item);
         }catch (Exception e){
                 System.out.println("***************failed to update item******  ***********");
                 e.printStackTrace();
@@ -106,8 +100,8 @@ public class <%=data.nameClassName%>Controller {
     @ResponseBody
     @RequestMapping(value = "/queryBy<%=fieldNameUpper%>", method = RequestMethod.GET)
     
-    public List<<%=data.nameClassName%>> queryBy<%=field.referModuleClass%>(@RequestParam("id") Long id) {
-        return List<<%=data.nameClassName%>> result = service.findBy<%=field.referModuleClass%>(id);
+    public <%=data.responseListDtoClassName%> queryBy<%=field.referModuleClass%>(@RequestParam("id") Long id) {
+        return <%=data.responseListDtoClassName%> result = service.findBy<%=field.referModuleClass%>(id);
       
     <%}})%>
    

@@ -140,6 +140,14 @@ export default class EditPage extends React.Component {
                     <Card size="small" title="模块基本信息" style={{ width: 500 }}  >
 
                         <Form ref={this.formRef} onFinish={that.onFinish.bind(that)}>
+                            <Form.Item
+                                name="id"
+                                noStyle='true'
+                            ></Form.Item>
+                           <Form.Item
+                                name="projectId"
+                                noStyle='true'
+                            ></Form.Item>
                             < Form.Item name="name" label="模块名称：">
                                 <Input />
 

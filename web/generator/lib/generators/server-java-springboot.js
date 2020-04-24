@@ -11,14 +11,14 @@ paramsHelper = new ParamsHelper();
 function generateEntity(moduleName,defineData){
     let templateFilename =   pathConfig.templateServer() + "/entity.java";
     let targetFileName = pathConfig.targetServer(moduleName,'entity') + codeTools.firstUpper(defineData.name) + ".java";
-    var params = paramsHelper.buildParamsByTable(moduleName,defineData);
+    var params = paramsHelper.buildParamsForServerTable(moduleName,defineData);
     codeTools.generateCode(templateFilename,params,targetFileName);
 
 };
 function generateDAO(moduleName,defineData){
     let templateFilename =   pathConfig.templateServer() + "/DAO.java";
     let targetFileName = pathConfig.targetServer(moduleName,"dao") + codeTools.firstUpper(defineData.name) + "Repository.java";
-    var params = paramsHelper.buildParamsByTable(moduleName,defineData);
+    var params = paramsHelper.buildParamsForServerTable(moduleName,defineData);
     codeTools.generateCode(templateFilename,params,targetFileName);
 
 };
@@ -26,14 +26,14 @@ function generateDAO(moduleName,defineData){
 function generateService(moduleName,defineData){
     let templateFilename =   pathConfig.templateServer() + "/service.java";
     let targetFileName = pathConfig.targetServer(moduleName,'service') + codeTools.firstUpper(defineData.name) + "Service.java";
-    var params = paramsHelper.buildParamsByTable(moduleName,defineData);
+    var params = paramsHelper.buildParamsForServerTable(moduleName,defineData);
     codeTools.generateCode(templateFilename,params,targetFileName);
 
 };
 function generateController(moduleName,defineData){
     let templateFilename =   pathConfig.templateServer() + "/controller.java";
     let targetFileName = pathConfig.targetServer(moduleName,'controller') + codeTools.firstUpper(defineData.name) + "Controller.java";
-    var params = paramsHelper.buildParamsByTable(moduleName,defineData);
+    var params = paramsHelper.buildParamsForServerTable(moduleName,defineData);
     codeTools.generateCode(templateFilename,params,targetFileName);
 
 };
@@ -52,6 +52,13 @@ function generateDTO(moduleName,defineData){
     codeTools.generateCode(templateFilename,params,targetFileName);
 };
 
+function generateClientAPI(moduleName,defineData){
+    let templateFilename =   pathConfig.templateServer() + "/ServiceClient.java";
+    let targetFileName = pathConfig.targetServer(moduleName,'client') + codeTools.firstUpper(defineData.name) + "Client.java";
+    var params = paramsHelper.buildParamsByServiceInterfaces(moduleName,defineData);
+    codeTools.generateCode(templateFilename,params,targetFileName);
+
+};
 function generateStore(moduleName,defineData){
     let templateFilename =   "/model.js";
     let targetFileName = codeTools.firstUpper(defineData.name) + "Store.js";
@@ -73,7 +80,9 @@ function generatePage(moduleName,defineData){
 };
 
 function generateModuleByName(moduleDefine){
-    
+    pathConfig.switchModulePackage(moduleDefine.name);
+    paramsHelper.switchModulePackage(moduleDefine.name);  
+
     //console.log('module defines:' + JSON.stringify(moduleDefine));
     moduleDefine.tables.forEach(function(item){
         generateEntity(moduleDefine.name,item);
@@ -94,6 +103,16 @@ function generateModuleByName(moduleDefine){
         //generateStore(moduleDefine.name,domainItem);
     });
 
+    //创建MicroService 的接口项目
+    let srcRootPath =  "/" + projectConfig.name + "-api" + "/src/main/java/";
+    pathConfig.switchSourceRootPath(srcRootPath);
+    moduleDefine.dtos.forEach(function(item){
+        generateDTO(moduleDefine.name,item);
+    });
+
+    generateClientAPI(moduleDefine.name,moduleDefine);
+
+    //修改项目所有相关的pom.xml文件。
 }
 
 
@@ -101,12 +120,16 @@ function generateFramework(release){
     if (!pathConfig.targetMicroServicesIsReady()){
         xtools.copyDirEx(pathConfig.templateMicroServicesCopyFiles(),pathConfig.targetMicroServicesCopyFiles());
     }
-    xtools.copyDirEx(pathConfig.templateCopyFiles("microserver"),pathConfig.targetCopyFiles(release.name));
+    let microServiceName = release.name+ "-service";
+    let microServiceAPIName = release.name+ "-api";
+    xtools.copyDirEx(pathConfig.templateCopyFiles("microserver"),pathConfig.targetCopyFiles(microServiceName));
+    xtools.copyDirEx(pathConfig.templateCopyFiles("microserver-api"),pathConfig.targetCopyFiles(microServiceAPIName));
+
 }
 
 
 function initPathEnv(proConfig){
-    let srcRootPath =  "/" + proConfig.name + "/src/main/java/";
+    let srcRootPath =  "/" + proConfig.name + "-service" + "/src/main/java/";
     pathConfig.initWithRootPath(srcRootPath,proConfig);
     paramsHelper.initParamsFromProject(proConfig);
     projectConfig = proConfig;

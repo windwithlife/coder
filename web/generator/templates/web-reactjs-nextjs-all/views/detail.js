@@ -1,129 +1,114 @@
+
+
 import React from 'react';
 //import model from './models/model.js';
-import Table from 'antd/lib/table';
+
 import Icon from 'antd/lib/icon';
 import Button from 'antd/lib/button';
-import Popconfirm from 'antd/lib/popconfirm';
 import {
     Collapse,
     Modal,
     Form,
+    Input,
     Card,
     Select,
-    Input
 } from 'antd';
 const { Panel } = Collapse;
 import { SettingOutlined } from '@ant-design/icons';
+const { TextArea } = Input;
 import router from 'next/router';
 import { inject, observer } from 'mobx-react';
+import EditTable from '../common/components/EditableTable';
 import NetworkHelper from '../common/components/models/network';
 
-const rowSelection = {
-};
-@inject('<%=data.tableName%>Store') 
+@inject('<%=data.tableName%>Store')
 @observer
 export default class DetailPage extends React.Component {
-    Store=()=>{
-        return this.props.<%=data.tableName%>Store;
-    }
+    formRef = React.createRef();
     state = {
-        visible: false,
-        operationTitle: "新增",
-        operationType: "add"
+        editMode: false,
     }
     constructor() {
         super();
-        this.startHeader();
-
+        this.projectName = "tempName";
     }
-    startHeader() {
+    Store = () => {
+        return this.props.<%=data.tableName%>Store;
+    }
+    StoreData = () => {
+        return this.props.<%=data.tableName%>Store.dataObject;
+    }
+    changeEditMode = (event) => {
+        event.stopPropagation();
+        console.log('click on edit model');
+        let nextMode = !this.state.editMode;
+        this.setState({ editMode: nextMode });
+    }
+    tableHeader() {
         var that = this;
 
         var fieldColumns = [];
 
         fieldColumns.push({
-            title: "模块名称",
+            title: "表的名称",
             dataIndex: 'name',
             key: 'name'
         });
+
         fieldColumns.push({
             title: "说明",
             dataIndex: 'description',
             key: 'description'
         });
 
-        fieldColumns.push({
-            title: "当前状态",
-            dataIndex: 'status',
-            key: 'status'
-        });
-
-        this.columns = [...fieldColumns, {
-            title: 'Action',
-            key: 'action',
-            render: (text, record, index) => (
-                <span hidden={!that.state.editMode} >
-                   
-                <span className = "ant-divider" />
-                <Popconfirm title = "Sure to delete?" onConfirm = {that.handleLineDelete.bind(that,index, record)} >
-                    < a href = "#" > Delete </a>
-                </Popconfirm>
-                <span className = "ant-divider" />
-                <a href = "#" onClick = {that.handleLineUpdate.bind(that,index, record)} > Edit </a>
-                <span className = "ant-divider" />
-                <a href = "#" onClick = {that.handleLineDetail.bind(that,record)} > Detail </a>
-            </span>
-        
-            )
-        }];
-
-
+        return fieldColumns;
     }
 
    
-    
-    componentDidMount() { //this.props.tablesStore.fetchAll();
-        console.log('DidMount');
+    componentDidMount() {
+        let that = this;
         let id = this.props.query.id;
-        console.log("edit id:=" + id);
-        this.props.modulesStore.queryByProjectId(id);
-        this.props.projectsStore.queryById(id);
+        if (!id){return;}
+        this.Store().queryById(id, function (values) {
+            console.log(values);
+            that.formRef.current.setFieldsValue(values);
+        });
     }
 
-    pagination() {
-        return {
-            showSizeChanger: true
-        }
+    handleLineUpdate(type,index, record) {
+        //let path ="<%=data.pageBasePath%>/<%data.pagePrefixName%>edit";
+        let path ="<%=data.pageBasePath%>/" + type + "_edit";
+        router.push({ pathname: path, query: { id: record.id } });
+
     }
-    
-    changeEditMode = (event) => {
-        event.stopPropagation();
-        console.log('click on edit model');
-        let nextMode = !this.state.editMode;
-        this.setState({editMode:nextMode});
+    handleLineDetail(type,record) {
+        let path ="<%=data.pageBasePath%>/" + type + "_detail";
+        console.log(path);
+        router.push({ pathname: path, query: { id: record.id } });
     }
-    handleLineDetail(record) {
-        router.push({ pathname: '/xmodule/detail', query: {moduleId: record.id }});
+    handleLineAdd(type) {
+        //let path ="<%=data.pageBasePath%>/<%data.pagePrefixName%>add";
+        let path ="<%=data.pageBasePath%>/" + type + "_add";
+        router.push({ pathname:path});
     }
-    handleLineAdd() {   
-        let id = this.props.query.id;
-        router.push({ pathname: '/xmodule/add' ,query: {projectId: id }});
-    }
-    handleLineUpdate(index, record) {
-        router.push({ pathname: '/xmodule/edit', query: {moduleId: record.id } });  
-    }
-    handleLineDelete(index, record) {
-        console.log(record.id);
-        this.props.modulesStore.removeById(index,record.id);
-    }
-    render() {
+
+    handleLineDelete(type,index, record) {
         let that = this;
-        let itemData = this.Store().dataObject.currentItem;
-        let editUrl = "/xproject/edit?id=" + this.props.query.id;
+        let id = record.id;
+        this.Store().removeById(id,function(value){
+            console.log('removed item ID is:' + id);
+        });
+    }
+
+    render() {
+
+        let that = this;
+        let itemData = that.StoreData().currentItem;
+        let items = that.StoreData().currentItem.children;
+        console.log('render module edit page');
         return (
             < div >
-               
-                    <Card size="small" title="基本信息" style={{ width: 500 }} extra={<a href={editUrl}>编辑项目基本信息</a>} >
+                <Card size="small" title="基本信息" style={{ width: 500 }} extra={<a href={editUrl}>基本信息</a>} >
                         <Form >
 <%data.fields.forEach(function(field){%>
                           < Form.Item name="<%=field.name%>" label="<%=field.description%>">
@@ -131,37 +116,15 @@ export default class DetailPage extends React.Component {
                           </Form.Item>
 <%});%>
                         </Form>
-                    </Card>
-                   
-                
+                </Card>
 
-                <Collapse accordion>
-                    <Panel header="详细信息：" key="4" extra={<SettingOutlined onClick={that.changeEditMode}></SettingOutlined>}>
-     
-                    <Form layout="inline" onSubmit = {this.handleSearch.bind(this)} >
-                < Form.Item  >
-                    <Button onClick = {this.handleLineAdd.bind(this)} hidden={!that.state.editMode}> 添加 </Button>
-                </Form.Item>
-
-            </Form>
-                < Table rowSelection={
-                    rowSelection
-                }
-                    columns={
-                        this.columns
-                    }
-                    dataSource={
-                        //that.props.tablesStore.items.slice()
-                        that.props.modulesStore.dataObject.list.slice()
-                    }
-                    pagination={
-                        this.pagination()
-                    }
-                    
-                />
-             </Panel>
-             </Collapse>
-
+                <EditTable title="列表" columns={that.tableHeader()} data={items}
+                    onAdd={that.handleLineAdd.bind(that,"table")}
+                    onDelete={that.handleLineDelete.bind(that,"table")}
+                    onUpdate={that.handleLineUpdate.bind(that,"table")}
+                    onDetail={that.handleLineDetail.bind(that,"table")}
+                ></EditTable>
+               
             </div>
         );
     }
@@ -170,3 +133,13 @@ export default class DetailPage extends React.Component {
 DetailPage.getInitialProps = async function (context) {
     return { query: context.query };
 }
+
+
+
+
+
+
+
+
+
+

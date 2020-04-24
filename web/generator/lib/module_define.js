@@ -62,13 +62,15 @@ class ModuleDefines {
         }
         return fields;
     }
-    buildInterface(name,method,inputType,outputType){
+    buildInterface(name,method,inputType,outputType,ownerName){
         let interfaceItem={name:name};
         interfaceItem.inputType =inputType;
         interfaceItem.inputName = 'inputObj';
         interfaceItem.outputType = outputType;
         interfaceItem.outputName = 'outputObj';
         interfaceItem.requestMethod = method;
+        interfaceItem.owner = 'table';
+        interfaceItem.ownerName = ownerName;
         return interfaceItem;
     }
     adjustModulesData(module) {
@@ -89,8 +91,12 @@ class ModuleDefines {
             //console.log(table);
             table.columns.forEach(function (col) {
                 let clsName = codeTools.firstUpper(col.name);
-                let fieldType = col.fieldType;
-                let fieldName = col.name;
+                col.nameClassName = clsName;
+                //let fieldType = col.fieldType;
+                //let fieldName = codeTools.firstUpper(col.name);
+                if (!col.description){
+                    col.description = codeTools.firstUpper(col.name);
+                }
                 if (col.referModule) {
                     let referModuleClass = codeTools.firstUpper(col.referModule);
 
@@ -158,17 +164,22 @@ class ModuleDefines {
 
             //创建缺省的接口,用于生成微服务的内部调用client.
             domainItem.interfaces = [];
-            domainItem.interfaces.push(that.buildInterface("queryAll","get","",responseListDtoClass));
-            domainItem.interfaces.push(that.buildInterface("queryById","get","Long",responseDto));
-            domainItem.interfaces.push(that.buildInterface("add","post",requestDtoClass,responseDtoClass));
-            domainItem.interfaces.push(that.buildInterface("edit","post",requestDtoClass,responseDtoClass));
-            domainItem.interfaces.push(that.buildInterface("remove","post","Long","Long"));
+            domainItem.interfaces.push(that.buildInterface("queryAll","get","",responseListDtoClass,table.name));
+            domainItem.interfaces.push(that.buildInterface("queryById","get","Long",responseDto,table.name));
+            domainItem.interfaces.push(that.buildInterface("add","post",requestDtoClass,responseDtoClass,table.name));
+            domainItem.interfaces.push(that.buildInterface("edit","post",requestDtoClass,responseDtoClass,table.name));
+            domainItem.interfaces.push(that.buildInterface("remove","post","Long","Long",table.name));
             module.tableDomains.push(domainItem);
-        });
+
+            table.requestDtoClassName = requestDtoClass;
+            table.responseDtoClassName = responseDtoClass;
+            table.responseListDtoClassName = responseListDtoClass;
 
       
         //分析各接口中的输入输出参数形成DTO对象定义项。
         module.interfaces.forEach(function (interfaceItem) {
+            interfaceItem.owner = 'module';
+            interfaceItem.ownerName = module.name;
             interfaceItem.inputType = '';
             if (interfaceItem.inputParams) {
                 console.log(interfaceItem.inputParams);
@@ -216,6 +227,10 @@ class ModuleDefines {
         module.moduleDomain= moduleDomain;
         module.domains.push(moduleDomain);
         module.storeDomains = module.domains;
+        module.clientInterfaces = [];
+        module.domains.forEach(function(domainItem){
+            module.clientInterfaces = module.clientInterfaces.concat(domainItem.interfaces);
+        })
         console.log('**************************' + module.name + '模块的所有域 Begin**********************');
         console.log(module.domains);
         console.log('**************************' + module.name + '模块的所有域 End**********************');

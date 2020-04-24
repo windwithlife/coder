@@ -14,6 +14,9 @@ var codeTools = require('./code_tools');
         this.platform ='all';
         console.log('init project config');
     }
+    switchModulePackage(moduleName){
+        this.basePackage= "com.simple.server.auto." + moduleName;
+    }
     initParamsFromProject(setting){
         this.sideType = setting.sideType;
         this.language = setting.language;
@@ -40,25 +43,50 @@ var codeTools = require('./code_tools');
 
         return params;
     }
-    buildParamsByTable(moduleName,tableDefine){
+
+
+    buildParamsForViewPage(moduleName,tableDefine){
+
+        let params = this.buildGenericParams(moduleName,tableDefine.name);
+        params.tableName = tableDefine.name;
+        params.pageBasePath = "/" + moduleName + "/";
+        params.pagePrefixName = tableDefine.name + "-";
+        params.tableClassName = codeTools.firstUpper(tableDefine.name);
+        params.refers = tableDefine.refers;
+        params.fields = tableDefine.columns;
+        params.fields.forEach(function(col){
+            if(col.chooseCategory){
+               col.needChoosed = true;
+            }
+            // Field Type
+            //let fieldType = col.fieldType;
+            let fieldColumnType = col.fieldType;
+            if (col.fieldType == 'int'){col.fieldColumnType = 'Long'};
+            if (col.fieldType == 'Text'){col.fieldColumnType = 'String'};
+        });
+        return params;
+
+    }
+    buildParamsForServerTable(moduleName,tableDefine){
 
         let params = this.buildGenericParams(moduleName,tableDefine.name);
         params.tableName = tableDefine.name;
         params.tableClassName = codeTools.firstUpper(tableDefine.name);
+        params.requestDtoClassName = table.requestDtoClassName;
+        params.responseDtoClassName = table.requestDtoClassName;
+        params.responseListDtoClassName =table.responseListDtoClassName; 
+
         params.refers = tableDefine.refers;
-        params.fields = [];
-        tableDefine.columns.forEach(function(col){
-            let clsName = codeTools.firstUpper(col.name);
-           
+        params.fields = tableDefine.columns;
+        params.fields.forEach(function(col){
+            if(col.chooseCategory){
+               col.needChoosed = true;
+            }
             // Field Type
-            let fieldType = col.fieldType;
+            //let fieldType = col.fieldType;
             let fieldColumnType = col.fieldType;
-            if (col.fieldType == 'int'){fieldColumnType = 'Long'};
-            if (col.fieldType == 'Text'){fieldColumnType = 'String'};
-            params.fields.push({def:col,name:col.name,nameClassName:clsName,className:clsName,
-                mapType:col.mapType,mapField:col.mapField,referModule:col.referModule,referModuleClassName:col.referModuleClassName,
-                columnType:fieldColumnType});
-            
+            if (col.fieldType == 'int'){col.fieldColumnType = 'Long'};
+            if (col.fieldType == 'Text'){col.fieldColumnType = 'String'};
         });
         return params;
 
@@ -86,6 +114,33 @@ var codeTools = require('./code_tools');
             }else{
                 interfaceObj.declaredPath = "/" + interfaceObj.name;
                 interfaceObj.requestPath = "/" + moduleName + "/" + interfaceObj.name;
+            }
+        })
+        return params;
+    }
+
+    buildParamsByServiceInterfaces(moduleName,defineData){
+        let params = this.buildGenericParams(moduleName,defineData.name);
+        params.define = defineData;
+        params.clientPath = "/v1/" + defineData.name;
+        params.clientServiceEndPoint = "/" + defineData.endPoint;
+        params.interfaces = defineData.clientInterfaces;
+        params.interfaces.forEach(function(interfaceObj){
+            let owner = interfaceObj.owner;
+            if(interfaceObj.requestMethod == 'get'){
+                interfaceObj.requestMethodName = 'query';
+                interfaceObj.requestMethodType = "GET";
+            }else{
+                interfaceObj.requestMethodName = 'post';
+                interfaceObj.requestMethodType = "POST";
+            }
+            interfaceObj.responseDataName = interfaceObj.name + 'Response';
+
+            if(owner=='module'){
+                interfaceObj.declaredPath = "/" + interfaceObj.name; 
+            }else if(owner=='table'){
+                interfaceObj.declaredPath = "/" + interfaceObj.ownerName + "/" + interfaceObj.name;
+    
             }
         })
         return params;

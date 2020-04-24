@@ -9,10 +9,10 @@ let  DataItem = {
         <%=field.name%>:'',
         <%}%>
     <%})%>
+    children:[],
 }
 let Data = {
     currentItem :DataItem,
-    
     list:[]
 }
 export default class ProjectStore extends BaseStore {
@@ -26,7 +26,7 @@ export default class ProjectStore extends BaseStore {
     @action.bound
     <%=interfaceObj.name%>(inputParams){
         let that = this;
-        this.model.<%=interfaceObj.requestName%>("/<%=interfaceObj.requestURL%>",inputParams,function (response) {
+        this.model.<%=interfaceObj.requestMethodName%>("<%=interfaceObj.requestPath%>",inputParams,function (response) {
             if (response && response.data) {
                 console.log(response.data);
                 that.dataObject.<%=interfaceObj.responseDataName%>= response.data;

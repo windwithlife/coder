@@ -35,6 +35,12 @@ let TargetRoot = '../files/';
         console.log('init papth config');
     }
   
+    switchSourceRootPath(srcRoot){
+        this.srcRoot = srcRoot;
+    }
+    switchModulePackage(moduleName){
+        this.basePackage= "com.simple.server.auto." + moduleName;
+    }
     initWithRootPath(srcRoot,projectConfig){
         this.srcRoot = srcRoot;
         this.currentRootPath = process.cwd();
@@ -142,13 +148,21 @@ let TargetRoot = '../files/';
         checkPath(pathName);
         return pathName;
     }
-    targetView(moduleName){
-        let pathName  = path.join(this.targetSrcRoot(),moduleName,'/');
+    targetView(moduleName,childName){
+        let childPath = '';
+        if (childName){
+            childPath = childName;
+        }
+        let pathName  = path.join(this.targetSrcRoot(),moduleName,'/',childPath);
         checkPath(pathName);
         return pathName;
     }
-    targetModel(moduleName){
-        let pathName  = path.join(this.targetSrcRoot(),moduleName,'/models/');
+    targetModel(moduleName,childName){
+        let childPath = '';
+        if (childName){
+            childPath = childName;
+        }
+        let pathName  = path.join(this.targetSrcRoot(),moduleName,'/models/',childPath);
         checkPath(pathName);
         return pathName;
     }

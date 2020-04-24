@@ -28,19 +28,19 @@ public class RoomController {
    
 	@RequestMapping(value = "/queryAll", method = RequestMethod.GET)
 	@ResponseBody
-	public List<Room> findAll() {
+	public RoomsResponse findAll() {
 		return service.findAll();
 	}
 	@ResponseBody
     @RequestMapping(value = "/query/{id}", method = RequestMethod.GET)
-    public Room findByKeyId(@PathVariable Long id) {
+    public RoomRequest findByKeyId(@PathVariable Long id) {
        	System.out.println("input param Id:" + id);
        	Room result = service.findById(id);
     	return result;
     }
     @ResponseBody
     @RequestMapping(value = "/queryByNameLike/", method = RequestMethod.GET)
-    public List<Room> findByNameLike(@RequestParam("name") String name ) {
+    public RoomsResponse findByNameLike(@RequestParam("name") String name ) {
            	System.out.println("input param Name:" + name);
             return service.findByNameLike(name);
 
@@ -49,7 +49,7 @@ public class RoomController {
 
     @ResponseBody
     @RequestMapping(value = "/queryByName", method = RequestMethod.GET)
-    public List<Room> findByName(@RequestParam("name") String name ) {
+    public RoomsResponse findByName(@RequestParam("name") String name ) {
            	System.out.println("input param Name:" + name);
             return service.findByName(name);
 
@@ -57,7 +57,7 @@ public class RoomController {
 
     @ResponseBody
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public Room addSave(@RequestBody Room item) {
+	public  RoomRequest addSave(@RequestBody RoomRequest item) {
 
 		System.out.println("input device params:" + item.toString());
 		Room result = service.save(item);
@@ -69,13 +69,11 @@ public class RoomController {
 
  	@ResponseBody
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
-    public Room updateSave(@RequestBody Room item,@PathVariable Long id) {
+    public RoomRequest  updateSave(@RequestBody RoomRequest item,@PathVariable Long id) {
      	System.out.println("input params id and name:" + item.toString());
-     	Room result= null;
+     	RoomRequest result= null;
         try{
-          Room old = service.findById(id);
-          
-          result = service.save(old);
+            result = service.update(item);
         }catch (Exception e){
                 System.out.println("***************failed to update item******  ***********");
                 e.printStackTrace();

@@ -37,7 +37,7 @@ export default class AddPage extends React.Component {
                         < Form.Item name="<%=field.name%>" label="<%=field.description%>">
                         <XSelect category="<%=field.choosedCategory%>" />
                         </Form.Item>
-   <%}else{%>
+   <%}else if(field.name!=='id'){%>
                           < Form.Item name="<%=field.name%>" label="<%=field.description%>">
                            <Input />
                           </Form.Item>

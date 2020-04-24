@@ -29,7 +29,7 @@ export default class ProjectStore extends BaseStore {
     @action.bound
     queryAll(inputParams){
         let that = this;
-        this.model.query("/MedicalLive/queryAll",inputParams,function (response) {
+        this.model.queryRaw("/MedicalLive/room/queryAll",inputParams,function (response) {
             if (response && response.data) {
                 console.log(response.data);
                 that.dataObject.queryAllResponse= response.data;
@@ -41,7 +41,7 @@ export default class ProjectStore extends BaseStore {
     @action.bound
     queryById(inputParams){
         let that = this;
-        this.model.query("/MedicalLive/queryById",inputParams,function (response) {
+        this.model.queryRaw("/MedicalLive/room/queryById",inputParams,function (response) {
             if (response && response.data) {
                 console.log(response.data);
                 that.dataObject.queryByIdResponse= response.data;
@@ -53,7 +53,7 @@ export default class ProjectStore extends BaseStore {
     @action.bound
     add(inputParams){
         let that = this;
-        this.model.post("/MedicalLive/add",inputParams,function (response) {
+        this.model.postRaw("/MedicalLive/room/save",inputParams,function (response) {
             if (response && response.data) {
                 console.log(response.data);
                 that.dataObject.addResponse= response.data;
@@ -63,9 +63,9 @@ export default class ProjectStore extends BaseStore {
     }
   
     @action.bound
-    edit(inputParams){
+    update(inputParams){
         let that = this;
-        this.model.post("/MedicalLive/edit",inputParams,function (response) {
+        this.model.postRaw("/MedicalLive/room/update",inputParams,function (response) {
             if (response && response.data) {
                 console.log(response.data);
                 that.dataObject.editResponse= response.data;
@@ -77,7 +77,7 @@ export default class ProjectStore extends BaseStore {
     @action.bound
     remove(inputParams){
         let that = this;
-        this.model.post("/MedicalLive/remove",inputParams,function (response) {
+        this.model.postRaw("/MedicalLive/room/remove",inputParams,function (response) {
             if (response && response.data) {
                 console.log(response.data);
                 that.dataObject.removeResponse= response.data;

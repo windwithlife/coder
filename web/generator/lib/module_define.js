@@ -166,8 +166,8 @@ class ModuleDefines {
             domainItem.interfaces = [];
             domainItem.interfaces.push(that.buildInterface("queryAll","get","",responseListDtoClass,table.name));
             domainItem.interfaces.push(that.buildInterface("queryById","get","Long",responseDto,table.name));
-            domainItem.interfaces.push(that.buildInterface("add","post",requestDtoClass,responseDtoClass,table.name));
-            domainItem.interfaces.push(that.buildInterface("edit","post",requestDtoClass,responseDtoClass,table.name));
+            domainItem.interfaces.push(that.buildInterface("save","post",requestDtoClass,responseDtoClass,table.name));
+            domainItem.interfaces.push(that.buildInterface("update","post",requestDtoClass,responseDtoClass,table.name));
             domainItem.interfaces.push(that.buildInterface("remove","post","Long","Long",table.name));
             module.tableDomains.push(domainItem);
 
@@ -175,7 +175,7 @@ class ModuleDefines {
             table.responseDtoClassName = responseDtoClass;
             table.responseListDtoClassName = responseListDtoClass;
 
-      
+        });
         //分析各接口中的输入输出参数形成DTO对象定义项。
         module.interfaces.forEach(function (interfaceItem) {
             interfaceItem.owner = 'module';

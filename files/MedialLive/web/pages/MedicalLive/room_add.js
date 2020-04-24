@@ -34,10 +34,6 @@ export default class AddPage extends React.Component {
                 <Form ref={this.formRef} name="control-ref" onFinish={this.onFinish.bind(that)}>
 
    
-                          < Form.Item name="id" label="Id">
-                           <Input />
-                          </Form.Item>
-
    
                           < Form.Item name="name" label="Name">
                            <Input />

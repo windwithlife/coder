@@ -72,9 +72,9 @@ var codeTools = require('./code_tools');
         let params = this.buildGenericParams(moduleName,tableDefine.name);
         params.tableName = tableDefine.name;
         params.tableClassName = codeTools.firstUpper(tableDefine.name);
-        params.requestDtoClassName = table.requestDtoClassName;
-        params.responseDtoClassName = table.requestDtoClassName;
-        params.responseListDtoClassName =table.responseListDtoClassName; 
+        params.requestDtoClassName = tableDefine.requestDtoClassName;
+        params.responseDtoClassName = tableDefine.requestDtoClassName;
+        params.responseListDtoClassName =tableDefine.responseListDtoClassName; 
 
         params.refers = tableDefine.refers;
         params.fields = tableDefine.columns;
@@ -100,10 +100,10 @@ var codeTools = require('./code_tools');
         params.interfaces = defineData.interfaces;
         params.interfaces.forEach(function(interfaceObj){
             if(interfaceObj.requestMethod == 'get'){
-                interfaceObj.requestMethodName = 'query';
+                interfaceObj.requestMethodName = 'queryRaw';
                 interfaceObj.requestMethodType = "GET";
             }else{
-                interfaceObj.requestMethodName = 'post';
+                interfaceObj.requestMethodName = 'postRaw';
                 interfaceObj.requestMethodType = "POST";
             }
             interfaceObj.responseDataName = interfaceObj.name + 'Response';
@@ -113,7 +113,7 @@ var codeTools = require('./code_tools');
                 interfaceObj.requestPath = "/" + moduleName + "/" + interfaceObj.name;
             }else{
                 interfaceObj.declaredPath = "/" + interfaceObj.name;
-                interfaceObj.requestPath = "/" + moduleName + "/" + interfaceObj.name;
+                interfaceObj.requestPath = "/" + moduleName + "/" + defineData.name+ "/" + interfaceObj.name;
             }
         })
         return params;

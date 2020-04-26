@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.simple.server.auto.MedicalLive.entity.*;
 import com.simple.server.auto.MedicalLive.service.*;
 import com.simple.server.auto.MedicalLive.dao.*;
+import com.simple.server.auto.MedicalLive.dto.*;
 
 
 //import io.swagger.annotations.ApiImplicitParam;

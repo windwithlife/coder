@@ -14,6 +14,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
+import com.simple.server.auto.MedicalLive.dto.*;
+
 @FeignClient(name ="MedicalLive", path = /v1/MedicalLive, url = "${staffjoy.account-service-endpoint}")
 // TODO Client side validation can be enabled as needed
 // @Validated
@@ -25,15 +27,15 @@ public interface MedicalLiveClient {
    
    @ResponseBody
    @RequestMapping(value = "/room/queryById", method = RequestMethod.GET)
-   public [object Object] queryById(@RequestBody Long request);
+   public RoomResponse queryById(@RequestBody Long request);
    
    @ResponseBody
-   @RequestMapping(value = "/room/add", method = RequestMethod.POST)
-   public RoomResponse add(@RequestBody RoomRequest request);
+   @RequestMapping(value = "/room/save", method = RequestMethod.POST)
+   public RoomResponse save(@RequestBody RoomRequest request);
    
    @ResponseBody
-   @RequestMapping(value = "/room/edit", method = RequestMethod.POST)
-   public RoomResponse edit(@RequestBody RoomRequest request);
+   @RequestMapping(value = "/room/update", method = RequestMethod.POST)
+   public RoomResponse update(@RequestBody RoomRequest request);
    
    @ResponseBody
    @RequestMapping(value = "/room/remove", method = RequestMethod.POST)

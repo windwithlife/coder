@@ -11,7 +11,7 @@ public class <%=data.nameClassName%> implements Serializable {
 
     <%
     data.fields.forEach(function(field){%>
-    private <%-field.type%> <%=field.name%>;         
+    private <%-field.fieldTypeClassName%> <%=field.name%>;         
     <%})%>
 
     public <%=data.nameClassName%>() {
@@ -22,10 +22,10 @@ public class <%=data.nameClassName%> implements Serializable {
     <%
     data.fields.forEach(function(field){%>
        
-    public <%-field.type%> get<%=field.className%>(){
+    public <%-field.fieldTypeClassName%> get<%=field.nameClassName%>(){
         return this.<%=field.name%>;
     }   
-    public void set<%=field.className%>(<%-field.type%> <%=field.name%>){
+    public void set<%=field.nameClassName%>(<%-field.fieldTypeClassName%> <%=field.name%>){
         this.<%=field.name%> = <%=field.name%>;
     }        
     <%})%>

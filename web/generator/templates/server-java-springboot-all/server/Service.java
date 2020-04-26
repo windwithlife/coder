@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import <%=data.packageName%>.dao.*;
 import <%=data.packageName%>.entity.*;
+import <%=data.packageName%>.dto.*;
 
 
 @Service
@@ -13,41 +14,41 @@ public class <%=data.nameClassName%>Service {
 	@Autowired
 	<%=data.nameClassName%>Repository dao;
 	public <%=data.responseListDtoClassName%> findAll(){
-		return  transfterEntity2ResponseListDto(dao.findAll());
+		return  transferEntity2ResponseListDto(dao.findAll());
 		//return items;
 	}
 	public <%=data.responseListDtoClassName%> findByName(String name){
-		return transfterEntity2ResponseListDto(dao.findByName(name));
+		return transferEntity2ResponseListDto(dao.findByName(name));
 	}
 	public  <%=data.responseListDtoClassName%> findByNameLike(String name){
-    		return transfterEntity2ResponseListDto(dao.findByNameLike(name));
+    		return transferEntity2ResponseListDto(dao.findByNameLike(name));
     }
 
 	public  <%=data.responseDtoClassName%> findOneByName(String name){
-    		return transfterEntity2ResponseDto(dao.findOneByName(name));
+    		return transferEntity2ResponseDto(dao.findOneByName(name));
     	}
 
 	public <%=data.responseDtoClassName%> findById(Long id){
-		return transfterEntity2ResponseDto(dao.findOneById(id));
+		return transferEntity2ResponseDto(dao.findOneById(id));
 	}
 	public <%=data.responseDtoClassName%> save(<%=data.requestDtoClassName%> item){
-		<%=data.nameClassName%> entityObj = transfterRequestDto2Entity(item);
-		return transfterEntity2ResponseDto(this.dao.save(entityObj));
+		<%=data.nameClassName%> entityObj = transferRequestDto2Entity(item);
+		return transferEntity2ResponseDto(this.dao.save(entityObj));
 	}
 
 	public <%=data.responseDtoClassName%> update(<%=data.requestDtoClassName%> item){
 
 		<%=data.responseDtoClassName%> result= null;
-		<%=data.nameClassName%> entityObj = null;
+		
         try{
-            <%=data.nameClassName%> oldEntity = dao.findById(id);
+            <%=data.nameClassName%> oldEntity = dao.findOneById(item.getId());
           <%
           data.fields.forEach(function(field){
               if(field.mapType=='NULL'){%>
-                old.set<%=field.nameClassName%>(item.get<%=field.nameClassName%>());
+                oldEntity.set<%=field.nameClassName%>(item.get<%=field.nameClassName%>());
           <%}})%>
-		  entityObj = dao.save(oldEntity);
-		  return transfterEntity2ResponseDto(entityObj);
+		  <%=data.nameClassName%> entityObj = dao.save(oldEntity);
+		  return transferEntity2ResponseDto(entityObj);
         }catch (Exception e){
                 System.out.println("***************failed to update item******  ***********");
                 e.printStackTrace();
@@ -56,47 +57,48 @@ public class <%=data.nameClassName%>Service {
 		
 	}
 	public void remove(Long id){
-		this.dao.deleteById(id);
+		this.dao.delete(id);
 	}
 	
 	<%
     data.fields.forEach(function(field){
         if(field.mapType=='ManyToOne'){%>
     public <%=data.responseListDtoClassName%> findBy<%=field.referModuleClass%>(Long id){
-		return transfterEntity2ResponseListDto(dao.findBy<%=field.referModuleClass%>(id));
+
+		return transferEntity2ResponseListDto(dao.findBy<%=field.referModuleClass%>(id));
 	}    
 	<%}})%>
 	
-    public <%=data.nameClassName%> transfterRequestDto2Entity(<%=data.requestDtoClassName%> inputDto){
+    public <%=data.nameClassName%> transferRequestDto2Entity(<%=data.requestDtoClassName%> inputDto){
 		<%=data.nameClassName%> newEntity = new <%=data.nameClassName%>();
 		<%
 		data.fields.forEach(function(field){
 			if(field.mapType=='NULL'){%>
 				newEntity.set<%=field.nameClassName%>(inputDto.get<%=field.nameClassName%>());
 		<%}})%>
-		return new Entity;
+		return newEntity;
 	}
 
-	public <%=data.responseDtoClassName%> transfterEntity2ResponseDto(<%=data.nameClassName%> entityObj){
+	public <%=data.responseDtoClassName%> transferEntity2ResponseDto(<%=data.nameClassName%> entityObj){
 		<%=data.responseDtoClassName%> response = new <%=data.responseDtoClassName%>();
 		<%
 		data.fields.forEach(function(field){
 			if(field.mapType=='NULL'){%>
 				response.set<%=field.nameClassName%>(entityObj.get<%=field.nameClassName%>());
 		<%}})%>
-		return new Entity;
+		return response;
 	}
 
-	public <%=data.responseDtoClassName%> transfterEntity2ResponseListDto(List<<%=data.nameClassName%>> entityObjs){
+	public <%=data.responseListDtoClassName%> transferEntity2ResponseListDto(List<<%=data.nameClassName%>> entityObjs){
 
 		<%=data.responseListDtoClassName%> responseList = new <%=data.responseListDtoClassName%>();
 
-	    for(int i; i< entityObjs.length(); i++){
-			<%=data.responseDtoClassName%> response = transfterEntity2ResponseDto(entityObjs.get(i));
+	    for(int i=0; i< entityObjs.size(); i++){
+			<%=data.responseDtoClassName%> response = transferEntity2ResponseDto(entityObjs.get(i));
 			
-			responseList.getItems().push(response);
+			responseList.getItems().add(response);
 		}
-		responseList.setItemCountentityObjs.length());
+		responseList.setItemsCount(new Long(entityObjs.size()));
 		return responseList;
 		
 	}

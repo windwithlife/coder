@@ -26,10 +26,10 @@ public class Room implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;  
     
-    private  name; 
+    private String name; 
         
     
-    private  title; 
+    private String title; 
         
     
 
@@ -37,24 +37,24 @@ public class Room implements Serializable {
     }
     
     
-    public  get(){
+    public Long getId(){
         return this.id;
     }   
-    public void set( id){
+    public void setId(Long id){
         this.id = id;
     } 
     
-    public  get(){
+    public String getName(){
         return this.name;
     }   
-    public void set( name){
+    public void setName(String name){
         this.name = name;
     } 
     
-    public  get(){
+    public String getTitle(){
         return this.title;
     }   
-    public void set( title){
+    public void setTitle(String title){
         this.title = title;
     } 
     

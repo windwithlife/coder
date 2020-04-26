@@ -32,17 +32,12 @@ class ModuleDefines {
     getProjectSetting() {
         return this.projectSetting;
     }
-    getModuleDefineByName(moduleName) {
-        //return this.modules[moduleName];
-        return this.moduleDefines[moduleName];
-    }
+   
     modules() {
         return this.defines;
     }
 
-    getServiceContractDefineByName(contractName) {
-        return this.contracts[contractName];
-    }
+   
 
     loadDefinesFromParams(release) {
 
@@ -81,6 +76,7 @@ class ModuleDefines {
         module.storeDomains = [];
         module.dtos = [];
         module.refers = [];
+        
         //调整table及列数据：
         module.tables.forEach(function (table) {
             table.refers = [];
@@ -97,15 +93,14 @@ class ModuleDefines {
                 if (!col.description){
                     col.description = codeTools.firstUpper(col.name);
                 }
+
+                col.mapType = "NULL";
                 if (col.referModule) {
                     let referModuleClass = codeTools.firstUpper(col.referModule);
-
-                    let mapType = "OneToOne";
-                    if (col.map == 1) { mapType = "OneToMany"; }
-                    if (col.map == 2) { mapType = "ManyToOne"; }
-                    if (col.map == 3) { mapType = "ManyToMany"; }
-                    if (col.map < 0) { mapType = "NULL"; }
-                    col.mapType=mapType;
+                    if (col.map == 1) { col.mapType = "OneToMany"; }
+                    if (col.map == 2) { col.mapType = "ManyToOne"; }
+                    if (col.map == 3) { col.mapType = "ManyToMany"; }
+                    if (col.map == 0) { col.mapType = "OneToOne"; }
                     col.referModuleClassName = referModuleClass;
                     table.refers.push({ name: col.referModule,nameClassName:referModuleClass, className: referModuleClass, mapType: mapType });
                 }
@@ -118,6 +113,7 @@ class ModuleDefines {
         module.tables.forEach(function (table) {
            
             console.log('开始生成表对应的缺省的DTO及缺省创建的接口 ************################');
+            console.log(table.columns);
             //console.log(table);
             let requestDtoDefines = [];
             let responseDtoDefines = [];
@@ -165,7 +161,7 @@ class ModuleDefines {
             //创建缺省的接口,用于生成微服务的内部调用client.
             domainItem.interfaces = [];
             domainItem.interfaces.push(that.buildInterface("queryAll","get","",responseListDtoClass,table.name));
-            domainItem.interfaces.push(that.buildInterface("queryById","get","Long",responseDto,table.name));
+            domainItem.interfaces.push(that.buildInterface("queryById","get","Long",responseDtoClass,table.name));
             domainItem.interfaces.push(that.buildInterface("save","post",requestDtoClass,responseDtoClass,table.name));
             domainItem.interfaces.push(that.buildInterface("update","post",requestDtoClass,responseDtoClass,table.name));
             domainItem.interfaces.push(that.buildInterface("remove","post","Long","Long",table.name));
@@ -282,42 +278,7 @@ class ModuleDefines {
         this.adjustContractsData();
 
     }
-    adjustContractsData() {
-        for (var contractName in this.contracts) {
-            var contract = this.contracts[contractName];
-            this.adjustContract(contract);
-
-        }
-    }
-    adjustContract(contract) {
-        contract.serviceCLS = firstUpperCase(contract.service_name);
-        contract.operations.forEach(function (operation) {
-            operation.requestCLS = firstUpperCase(contract.module) + firstUpperCase(operation.name) + "Request";
-            operation.responseCLS = firstUpperCase(contract.module) + firstUpperCase(operation.name) + "Response";
-            for (var field in operation.requestType) {
-                var fieldDef = { 'type': operation.requestType[field] };
-                fieldDef.nameCLS = firstUpperCase(field);
-                operation.requestType[field] = fieldDef;
-            }
-            for (var field in operation.responseType) {
-                var fieldResDef = { 'type': operation.responseType[field] };
-                fieldResDef.nameCLS = firstUpperCase(field);
-                operation.responseType[field] = fieldResDef;
-            }
-        })
-
-        var properties = {};
-
-        properties.define = contract;
-        properties.moduleName = contract.module;
-        properties.moduleNameCLS = firstUpperCase(properties.moduleName);
-
-        properties.serviceName = contract.service_name;
-        properties.serviceCLS = contract.serviceCLS;
-        properties.packageName = this.projectSetting.basePackage;
-    }
-
-
+  
     adjustData() {
         for (var moduleName in this.modules) {
             var module = this.modules[moduleName];
@@ -326,61 +287,8 @@ class ModuleDefines {
         }
     }
 
-    adjustFields(module) {
-        module.properties = {};
-        module.properties.isAssociation = module.isAssociation;
-        module.properties.moduleDefine = module.fields;
-        module.properties.moduleName = module.name;
-        module.properties.moduleNameCLS = firstUpperCase(module.name);
-
-        module.properties.packageName = this.projectSetting.basePackage;
-        module.properties.apiServer = this.projectSetting.apiServer;
-
-        module.properties.refers = {};
-        for (var field in module.fields) {
-            var fieldDef = module.fields[field];
-            fieldDef.name = field;
-            fieldDef.nameCLS = firstUpperCase(field);
-            if (fieldDef.refer) {
-
-                fieldDef.refer.moduleCLS = firstUpperCase(fieldDef.refer.module);
-                module.properties.refers[fieldDef.refer.module] = fieldDef.refer;
-
-                if (fieldDef.refer.map == 'ManyToMany') {
-                    var mapName = module.name + fieldDef.refer.module;
-                    fieldDef.refer.associationTable = mapName;
-                    fieldDef.show = "M2MList";
-                    var newMapModule = { isAssociation: 'yes' };
-                    newMapModule.name = mapName;
-                    newMapModule.fields = {};
-                    newMapModule.fields["id"] = { type: 'Long' };
-                    newMapModule.fields["name"] = { type: 'String' };
-                    newMapModule.fields[module.name + "Id"] = { type: 'Long' };
-                    newMapModule.fields[module.name + "Name"] = { type: 'String' };
-                    newMapModule.fields[fieldDef.refer.module + "Id"] = { type: 'Long' };
-                    newMapModule.fields[fieldDef.refer.module + "Name"] = { type: 'String' };
-
-                    this.modules[mapName] = newMapModule;
-                    this.projectSetting.enables.push(mapName);
-                    this.adjustFields(newMapModule);
-                }
-                if (fieldDef.refer.associationField == 'yes') {
-                    module.properties.isChildModule = true;
-                    module.properties.parentModule = fieldDef.refer.module;
-                    module.properties.parentMapField = field;
-                    var referModule = this.modules[fieldDef.refer.module];
-                    referModule.fields["v" + module.name] = { type: 'Long', dName: module.remark, show: 'list', refer: { module: module.name, map: "OneToMany", mapField: field } };
-                }
-            }
-        }
-
-    }
-
-    buildParams(module) {
-        var params = Object.assign({}, module.properties);
-        //params.moduleDefine = module.fields;
-        return params;
-    }
+   
+  
 }
 module.exports = ModuleDefines;
 

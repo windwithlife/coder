@@ -33,7 +33,7 @@ public class <%=data.nameClassName%> implements Serializable {
         }
         if (field.fieldType == 'Text'){%>
     @Column(columnDefinition="text")
-    private <%=field.columnType%> <%=field.name%>;      
+    private <%=field.fieldTypeClassName%> <%=field.name%>;      
         <%}else if(field.mapType=='OneToMany'){%>
 
     @OneToMany(cascade=CascadeType.REMOVE,fetch=FetchType.LAZY)
@@ -54,7 +54,7 @@ public class <%=data.nameClassName%> implements Serializable {
     private <%=field.referModuleClass%> <%=field.referModule%>;
         
         <%}else{%>
-    private <%=field.columnType%> <%=field.name%>; 
+    private <%=field.fieldTypeClassName%> <%=field.name%>; 
         <%}%>
     <%})%>
 
@@ -81,10 +81,10 @@ public class <%=data.nameClassName%> implements Serializable {
     }     
           
         <%}else{%>
-    public <%=field.columnType%> get<%=field.className%>(){
+    public <%=field.fieldTypeClassName%> get<%=field.nameClassName%>(){
         return this.<%=field.name%>;
     }   
-    public void set<%=field.className%>(<%=field.columnType%> <%=field.name%>){
+    public void set<%=field.nameClassName%>(<%=field.fieldTypeClassName%> <%=field.name%>){
         this.<%=field.name%> = <%=field.name%>;
     } 
     <%}})%>

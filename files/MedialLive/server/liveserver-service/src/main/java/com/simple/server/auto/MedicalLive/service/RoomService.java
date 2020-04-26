@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.simple.server.auto.MedicalLive.dao.*;
 import com.simple.server.auto.MedicalLive.entity.*;
+import com.simple.server.auto.MedicalLive.dto.*;
 
 
 @Service
@@ -13,37 +14,43 @@ public class RoomService {
 	@Autowired
 	RoomRepository dao;
 	public RoomsResponse findAll(){
-		return  transfterEntity2ResponseListDto(dao.findAll());
+		return  transferEntity2ResponseListDto(dao.findAll());
 		//return items;
 	}
 	public RoomsResponse findByName(String name){
-		return transfterEntity2ResponseListDto(dao.findByName(name));
+		return transferEntity2ResponseListDto(dao.findByName(name));
 	}
 	public  RoomsResponse findByNameLike(String name){
-    		return transfterEntity2ResponseListDto(dao.findByNameLike(name));
+    		return transferEntity2ResponseListDto(dao.findByNameLike(name));
     }
 
-	public  RoomRequest findOneByName(String name){
-    		return transfterEntity2ResponseDto(dao.findOneByName(name));
+	public  RoomResponse findOneByName(String name){
+    		return transferEntity2ResponseDto(dao.findOneByName(name));
     	}
 
-	public RoomRequest findById(Long id){
-		return transfterEntity2ResponseDto(dao.findOneById(id));
+	public RoomResponse findById(Long id){
+		return transferEntity2ResponseDto(dao.findOneById(id));
 	}
-	public RoomRequest save(RoomRequest item){
-		Room entityObj = transfterRequestDto2Entity(item);
-		return transfterEntity2ResponseDto(this.dao.save(entityObj));
+	public RoomResponse save(RoomRequest item){
+		Room entityObj = transferRequestDto2Entity(item);
+		return transferEntity2ResponseDto(this.dao.save(entityObj));
 	}
 
-	public RoomRequest update(RoomRequest item){
+	public RoomResponse update(RoomRequest item){
 
-		RoomRequest result= null;
-		Room entityObj = null;
+		RoomResponse result= null;
+		
         try{
-            Room oldEntity = dao.findById(id);
+            Room oldEntity = dao.findOneById(item.getId());
           
-		  entityObj = dao.save(oldEntity);
-		  return transfterEntity2ResponseDto(entityObj);
+                oldEntity.setId(item.getId());
+          
+                oldEntity.setName(item.getName());
+          
+                oldEntity.setTitle(item.getTitle());
+          
+		  Room entityObj = dao.save(oldEntity);
+		  return transferEntity2ResponseDto(entityObj);
         }catch (Exception e){
                 System.out.println("***************failed to update item******  ***********");
                 e.printStackTrace();
@@ -52,33 +59,45 @@ public class RoomService {
 		
 	}
 	public void remove(Long id){
-		this.dao.deleteById(id);
+		this.dao.delete(id);
 	}
 	
 	
 	
-    public Room transfterRequestDto2Entity(RoomRequest inputDto){
+    public Room transferRequestDto2Entity(RoomRequest inputDto){
 		Room newEntity = new Room();
 		
-		return new Entity;
-	}
-
-	public RoomRequest transfterEntity2ResponseDto(Room entityObj){
-		RoomRequest response = new RoomRequest();
+				newEntity.setId(inputDto.getId());
 		
-		return new Entity;
+				newEntity.setName(inputDto.getName());
+		
+				newEntity.setTitle(inputDto.getTitle());
+		
+		return newEntity;
 	}
 
-	public RoomRequest transfterEntity2ResponseListDto(List<Room> entityObjs){
+	public RoomResponse transferEntity2ResponseDto(Room entityObj){
+		RoomResponse response = new RoomResponse();
+		
+				response.setId(entityObj.getId());
+		
+				response.setName(entityObj.getName());
+		
+				response.setTitle(entityObj.getTitle());
+		
+		return response;
+	}
+
+	public RoomsResponse transferEntity2ResponseListDto(List<Room> entityObjs){
 
 		RoomsResponse responseList = new RoomsResponse();
 
-	    for(int i; i< entityObjs.length(); i++){
-			RoomRequest response = transfterEntity2ResponseDto(entityObjs.get(i));
+	    for(int i=0; i< entityObjs.size(); i++){
+			RoomResponse response = transferEntity2ResponseDto(entityObjs.get(i));
 			
-			responseList.getItems().push(response);
+			responseList.getItems().add(response);
 		}
-		responseList.setItemCountentityObjs.length());
+		responseList.setItemsCount(new Long(entityObjs.size()));
 		return responseList;
 		
 	}

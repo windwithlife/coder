@@ -12,6 +12,7 @@ import PageStore from '../xpage/models/PageStore';
 import WidgetStore from '../xwidget/models/WidgetStore';
 import TempalteStore from '../pagetemplate/models/TemplateStore';
 import ReleaseStore from '../projectrelease/models/ReleaseStore';
+import XReleaseStore from '../xrelease/models/ReleaseStore';
 //import TestStore from '../zxtable/models/TestStore.js'
 /*import AppStore from "./AppStore";
 
@@ -38,6 +39,7 @@ let stores = {
     widgetsStore: new WidgetStore(),
     templatesStore: new TempalteStore(),
     releasesStore: new ReleaseStore(),
+    xreleasesStore: new XReleaseStore(),
     
 }   
 

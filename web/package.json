@@ -20,6 +20,7 @@
     "mobx": "^5.15.4",
     "mobx-react": "^6.1.8",
     "next": "latest",
+    "node-yaml": "^4.0.1",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "shelljs": "^0.8.3"

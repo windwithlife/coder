@@ -73,7 +73,7 @@ var codeTools = require('./code_tools');
         params.tableName = tableDefine.name;
         params.tableClassName = codeTools.firstUpper(tableDefine.name);
         params.requestDtoClassName = tableDefine.requestDtoClassName;
-        params.responseDtoClassName = tableDefine.requestDtoClassName;
+        params.responseDtoClassName = tableDefine.responseDtoClassName;
         params.responseListDtoClassName =tableDefine.responseListDtoClassName; 
 
         params.refers = tableDefine.refers;
@@ -84,9 +84,9 @@ var codeTools = require('./code_tools');
             }
             // Field Type
             //let fieldType = col.fieldType;
-            let fieldColumnType = col.fieldType;
-            if (col.fieldType == 'int'){col.fieldColumnType = 'Long'};
-            if (col.fieldType == 'Text'){col.fieldColumnType = 'String'};
+            col.fieldTypeClassName = col.fieldColumnType = col.fieldType;
+            if (col.fieldType == 'int'){col.fieldTypeClassName = 'Long'};
+            if (col.fieldType == 'Text'){col.fieldTypeClassName = 'String'};
         });
         return params;
 
@@ -150,6 +150,14 @@ var codeTools = require('./code_tools');
         let params = this.buildGenericParams(moduleName,defineData.name);
         params.define = defineData;
         params.fields = defineData.defines;
+
+        params.fields.forEach(function(col){
+           
+            col.fieldTypeClassName =col.fieldType = col.type;
+            if (col.type == 'int'){col.fieldTypeClassName = 'Long'};
+            if (col.type == 'Text'){col.fieldTypeClassName = 'String'};
+            col.nameClassName = codeTools.firstUpper(col.name);
+        });
         return params;
 
     }

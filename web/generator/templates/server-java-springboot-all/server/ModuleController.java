@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import <%=data.packageName%>.entity.*;
 import <%=data.packageName%>.service.*;
 import <%=data.packageName%>.dao.*;
+import <%=data.packageName%>.dto.*;
 
 
 //import io.swagger.annotations.ApiImplicitParam;

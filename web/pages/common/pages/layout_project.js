@@ -60,6 +60,7 @@ componentDidMount() {
             >
           <Menu.Item key="/public/dictionary/home">组件仓库</Menu.Item>
           <Menu.Item key="/xproject/list">项目</Menu.Item>
+          <Menu.Item key="/xrelease/home">发布管理CI</Menu.Item>
           <Menu.Item key="/config/home">配置</Menu.Item>
         </Menu>
       </Header>

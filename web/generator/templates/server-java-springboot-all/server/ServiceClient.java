@@ -14,6 +14,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 
+import <%=data.packageName%>.dto.*;
+
 @FeignClient(name ="<%=data.nameClassName%>", path = <%=data.clientPath%>, url = "${staffjoy.account-service-endpoint}")
 // TODO Client side validation can be enabled as needed
 // @Validated

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.simple.server.auto.MedicalLive.entity.*;
 import com.simple.server.auto.MedicalLive.service.*;
 import com.simple.server.auto.MedicalLive.dao.*;
+import com.simple.server.auto.MedicalLive.dto.*;
 
 
 //import io.swagger.annotations.ApiImplicitParam;
@@ -33,9 +34,9 @@ public class RoomController {
 	}
 	@ResponseBody
     @RequestMapping(value = "/query/{id}", method = RequestMethod.GET)
-    public RoomRequest findByKeyId(@PathVariable Long id) {
+    public RoomResponse findByKeyId(@PathVariable Long id) {
        	System.out.println("input param Id:" + id);
-       	Room result = service.findById(id);
+       	RoomResponse result = service.findById(id);
     	return result;
     }
     @ResponseBody
@@ -57,10 +58,10 @@ public class RoomController {
 
     @ResponseBody
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
-	public  RoomRequest addSave(@RequestBody RoomRequest item) {
+	public  RoomResponse addSave(@RequestBody RoomRequest item) {
 
 		System.out.println("input device params:" + item.toString());
-		Room result = service.save(item);
+		RoomResponse result = service.save(item);
 		System.out.println("output device result data:" + result.toString());
 		return result;
 	}
@@ -69,9 +70,9 @@ public class RoomController {
 
  	@ResponseBody
     @RequestMapping(value = "/update/{id}", method = RequestMethod.POST)
-    public RoomRequest  updateSave(@RequestBody RoomRequest item,@PathVariable Long id) {
+    public RoomResponse  updateSave(@RequestBody RoomRequest item,@PathVariable Long id) {
      	System.out.println("input params id and name:" + item.toString());
-     	RoomRequest result= null;
+     	RoomResponse result= null;
         try{
             result = service.update(item);
         }catch (Exception e){

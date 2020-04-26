@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import <%=data.packageName%>.entity.*;
 import <%=data.packageName%>.service.*;
 import <%=data.packageName%>.dao.*;
+import <%=data.packageName%>.dto.*;
 
 
 //import io.swagger.annotations.ApiImplicitParam;
@@ -39,7 +40,7 @@ public class <%=data.nameClassName%>Controller {
     @RequestMapping(value = "/query/{id}", method = RequestMethod.GET)
     public <%=data.responseDtoClassName%> findByKeyId(@PathVariable Long id) {
        	System.out.println("input param Id:" + id);
-       	<%=data.nameClassName%> result = service.findById(id);
+       	<%=data.responseDtoClassName%> result = service.findById(id);
     	return result;
     }
     @ResponseBody
@@ -64,7 +65,7 @@ public class <%=data.nameClassName%>Controller {
 	public  <%=data.responseDtoClassName%> addSave(@RequestBody <%=data.requestDtoClassName%> item) {
 
 		System.out.println("input device params:" + item.toString());
-		<%=data.nameClassName%> result = service.save(item);
+		<%=data.responseDtoClassName%> result = service.save(item);
 		System.out.println("output device result data:" + result.toString());
 		return result;
 	}

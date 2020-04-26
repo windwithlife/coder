@@ -24,7 +24,7 @@ let sidebarMenu =
   name:"headerMenu",
   childrenList: [
     {id:11,name: "直播间",url:"/public/config",level:1,childrenList:[
-      {id:112,name: "直播列表",url:"/public/config",level:2},
+      {id:112,name: "直播列表",url:"/MedicalLive/room_home",level:2},
       {id:113,name: "直播对话",url:"/public/config",level:2},
     ]},
     {id:12,name: "通用维护",url:"/public/config",level:1,childrenList:[
